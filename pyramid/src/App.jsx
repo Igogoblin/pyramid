@@ -1,11 +1,11 @@
 import "./App.css";
+import Body from "./components/body/Body";
 
 function App() {
   return (
-    <div>
-      <h2>Test deploy</h2>
-      <p>add dev branch</p>
-    </div>
+    <>
+      <Body />
+    </>
   );
 }
 
