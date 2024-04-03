@@ -19,7 +19,7 @@ h1 {
   display: inline-block;
 }
 
-.btn-hover {
+.btn_hover {
   width: 200px;
   font-size: 16px;
   font-weight: 600;
@@ -37,14 +37,14 @@ h1 {
   transition: all 0.4s ease-in-out;
 }
 
-.btn-hover:hover {
+.btn_hover:hover {
   background-position: 100% 0;
   -o-transition: all 0.4s ease-in-out;
   -webkit-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
 }
 
-.btn-hover:focus {
+.btn_hover:focus {
   outline: none;
 }
 .btn-hover.color-1 {
@@ -57,7 +57,7 @@ h1 {
   );
   box-shadow: 0 4px 15px 0 rgba(49, 196, 190, 0.75);
 }
-.btn-hover.color-2 {
+.btn_hover.color-2 {
   background-image: linear-gradient(
     to right,
     #f5ce62,
@@ -87,7 +87,7 @@ h1 {
   );
   box-shadow: 0 4px 15px 0 rgba(252, 104, 110, 0.75);
 }
-.btn-hover.color-5 {
+.btn_hover.color_5 {
   background-image: linear-gradient(
     to right,
     #0ba360,
