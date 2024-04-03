@@ -1,4 +1,5 @@
 .main {
+  width: 80vw;
   display: flex;
   flex-direction: column;
 }
@@ -18,9 +19,9 @@
   border: none;
 }
 .area {
-  width: 400px;
-  height: 600px;
-  border: 1px solid green;
+  width: 100%;
+  height: 70vh;
+  /* border: 1px solid green; */
   position: relative;
 }
 
