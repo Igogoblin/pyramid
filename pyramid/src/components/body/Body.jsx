@@ -2,20 +2,34 @@ import BackCard from "../backCard/BackCard";
 import Res from "../reset/Res";
 import Retreat from "../retreat/Retreat";
 import s from "./body.module.css";
+import { useSelector } from "react-redux";
 
 const Body = () => {
-  const arr = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-    22, 23, 24, 25, 26, 27, 28,
-  ];
+  const card = useSelector((state) => state.pyramid.cards);
+  console.log(card);
+  // const arr = [
+  //   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+  //   22, 23, 24, 25, 26, 27, 28,
+  // ];
   // 15 - 5 21 - 6  28 - 7
   // style={{ width: "10%" }}
+  // background-image: url("../../assets/cover/card-cover-1.png");
+  // background-size: cover;
+
+  // background-repeat: no-repeat;
   return (
     <div className={s.main}>
       <div className={s.area}>
-        {arr.map((el) => (
-          <div key={el} className={s.level}>
-            {el}
+        {card.map((el) => (
+          <div
+            key={el.id}
+            className={s.level}
+            style={{
+              backgroundImage: `url(${el.way})`,
+              // backgroundImage: `url("/pyramid/src/assets/cards/clubs-1.svg")`,
+            }}
+          >
+            {/* {el} */}
           </div>
         ))}
       </div>
