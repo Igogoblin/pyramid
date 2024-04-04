@@ -13,25 +13,22 @@ const Body = () => {
   // ];
   // 15 - 5 21 - 6  28 - 7
   // style={{ width: "10%" }}
-  // background-image: url("../../assets/cover/card-cover-1.png");
-  // background-size: cover;
 
-  // background-repeat: no-repeat;
   return (
     <div className={s.main}>
       <div className={s.area}>
-        {card.map((el) => (
-          <div
-            key={el.id}
-            className={s.level}
-            style={{
-              backgroundImage: `url(${el.way})`,
-              // backgroundImage: `url("/pyramid/src/assets/cards/clubs-1.svg")`,
-            }}
-          >
-            {/* {el} */}
-          </div>
-        ))}
+        {card.map(
+          (el) =>
+            28 > el.id && (
+              <div
+                key={el.id}
+                className={s.level}
+                style={{
+                  backgroundImage: `url(${el.way})`,
+                }}
+              ></div>
+            )
+        )}
       </div>
       <div className={s.basement}>
         <div className={s.deck}>
