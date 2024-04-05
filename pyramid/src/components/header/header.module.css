@@ -1,31 +1,28 @@
-.Header {
-  background: rgb(255, 255, 255);
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0) 60%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  padding: 0px 10px 50px;
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }
 
-h1 {
+div > h1 {
   display: inline-block;
+  font-size: 4rem;
 }
 
-.buttons {
-  margin: 10%;
-  text-align: center;
-  display: inline-block;
+.tac_one_regular {
+  font-family: "Tac One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .btn_hover {
   width: 200px;
-  font-size: 16px;
+  font-size: 25px;
   font-weight: 600;
   color: #fff;
   cursor: pointer;
   margin: 20px;
+
   height: 55px;
   text-align: center;
   border: none;
