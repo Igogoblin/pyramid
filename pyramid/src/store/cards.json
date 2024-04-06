@@ -1,0 +1,262 @@
+[
+  {
+    "id": 0,
+    "point": 1,
+    "way": "/pyramid/src/assets/cards/clubs-1.svg"
+  },
+  {
+    "id": 1,
+    "point": 2,
+    "way": "/pyramid/src/assets/cards/clubs-2.svg"
+  },
+  {
+    "id": 2,
+    "point": 3,
+    "way": "/pyramid/src/assets/cards/clubs-3.svg"
+  },
+  {
+    "id": 3,
+    "point": 4,
+    "way": "/pyramid/src/assets/cards/clubs-4.svg"
+  },
+  {
+    "id": 4,
+    "point": 5,
+    "way": "/pyramid/src/assets/cards/clubs-5.svg"
+  },
+  {
+    "id": 5,
+    "point": 6,
+    "way": "/pyramid/src/assets/cards/clubs-6.svg"
+  },
+  {
+    "id": 6,
+    "point": 7,
+    "way": "/pyramid/src/assets/cards/clubs-7.svg"
+  },
+  {
+    "id": 7,
+    "point": 8,
+    "way": "/pyramid/src/assets/cards/clubs-8.svg"
+  },
+  {
+    "id": 8,
+    "point": 9,
+    "way": "/pyramid/src/assets/cards/clubs-9.svg"
+  },
+  {
+    "id": 9,
+    "point": 10,
+    "way": "/pyramid/src/assets/cards/clubs-10.svg"
+  },
+  {
+    "id": 10,
+    "point": 11,
+    "way": "/pyramid/src/assets/cards/clubs-11.svg"
+  },
+  {
+    "id": 11,
+    "point": 12,
+    "way": "/pyramid/src/assets/cards/clubs-12.svg"
+  },
+  {
+    "id": 12,
+    "point": 13,
+    "way": "/pyramid/src/assets/cards/clubs-13.svg"
+  },
+  {
+    "id": 13,
+    "point": 1,
+    "way": "/pyramid/src/assets/cards/diamonds-1.svg"
+  },
+  {
+    "id": 14,
+    "point": 2,
+    "way": "/pyramid/src/assets/cards/diamonds-2.svg"
+  },
+  {
+    "id": 15,
+    "point": 3,
+    "way": "/pyramid/src/assets/cards/diamonds-3.svg"
+  },
+  {
+    "id": 16,
+    "point": 4,
+    "way": "/pyramid/src/assets/cards/diamonds-4.svg"
+  },
+  {
+    "id": 17,
+    "point": 5,
+    "way": "/pyramid/src/assets/cards/diamonds-5.svg"
+  },
+  {
+    "id": 18,
+    "point": 6,
+    "way": "/pyramid/src/assets/cards/diamonds-6.svg"
+  },
+  {
+    "id": 19,
+    "point": 7,
+    "way": "/pyramid/src/assets/cards/diamonds-7.svg"
+  },
+  {
+    "id": 20,
+    "point": 8,
+    "way": "/pyramid/src/assets/cards/diamonds-8.svg"
+  },
+  {
+    "id": 21,
+    "point": 9,
+    "way": "/pyramid/src/assets/cards/diamonds-9.svg"
+  },
+  {
+    "id": 22,
+    "point": 10,
+    "way": "/pyramid/src/assets/cards/diamonds-10.svg"
+  },
+  {
+    "id": 23,
+    "point": 11,
+    "way": "/pyramid/src/assets/cards/diamonds-11.svg"
+  },
+  {
+    "id": 24,
+    "point": 12,
+    "way": "/pyramid/src/assets/cards/diamonds-12.svg"
+  },
+  {
+    "id": 25,
+    "point": 13,
+    "way": "/pyramid/src/assets/cards/diamonds-13.svg"
+  },
+  {
+    "id": 26,
+    "point": 1,
+    "way": "/pyramid/src/assets/cards/hearts-1.svg"
+  },
+  {
+    "id": 27,
+    "point": 2,
+    "way": "/pyramid/src/assets/cards/hearts-2.svg"
+  },
+  {
+    "id": 28,
+    "point": 3,
+    "way": "/pyramid/src/assets/cards/hearts-3.svg"
+  },
+  {
+    "id": 29,
+    "point": 4,
+    "way": "/pyramid/src/assets/cards/hearts-4.svg"
+  },
+  {
+    "id": 30,
+    "point": 5,
+    "way": "/pyramid/src/assets/cards/hearts-5.svg"
+  },
+  {
+    "id": 31,
+    "point": 6,
+    "way": "/pyramid/src/assets/cards/hearts-6.svg"
+  },
+  {
+    "id": 32,
+    "point": 7,
+    "way": "/pyramid/src/assets/cards/hearts-7.svg"
+  },
+  {
+    "id": 33,
+    "point": 8,
+    "way": "/pyramid/src/assets/cards/hearts-8.svg"
+  },
+  {
+    "id": 34,
+    "point": 9,
+    "way": "/pyramid/src/assets/cards/hearts-9.svg"
+  },
+  {
+    "id": 35,
+    "point": 10,
+    "way": "/pyramid/src/assets/cards/hearts-10.svg"
+  },
+  {
+    "id": 36,
+    "point": 11,
+    "way": "/pyramid/src/assets/cards/hearts-11.svg"
+  },
+  {
+    "id": 37,
+    "point": 12,
+    "way": "/pyramid/src/assets/cards/hearts-12.svg"
+  },
+  {
+    "id": 38,
+    "point": 13,
+    "way": "/pyramid/src/assets/cards/hearts-13.svg"
+  },
+  {
+    "id": 39,
+    "point": 1,
+    "way": "/pyramid/src/assets/cards/spades-1.svg"
+  },
+  {
+    "id": 40,
+    "point": 2,
+    "way": "/pyramid/src/assets/cards/spades-2.svg"
+  },
+  {
+    "id": 41,
+    "point": 3,
+    "way": "/pyramid/src/assets/cards/spades-3.svg"
+  },
+  {
+    "id": 42,
+    "point": 4,
+    "way": "/pyramid/src/assets/cards/spades-4.svg"
+  },
+  {
+    "id": 43,
+    "point": 5,
+    "way": "/pyramid/src/assets/cards/spades-5.svg"
+  },
+  {
+    "id": 44,
+    "point": 6,
+    "way": "/pyramid/src/assets/cards/spades-6.svg"
+  },
+  {
+    "id": 45,
+    "point": 7,
+    "way": "/pyramid/src/assets/cards/spades-7.svg"
+  },
+  {
+    "id": 46,
+    "point": 8,
+    "way": "/pyramid/src/assets/cards/spades-8.svg"
+  },
+  {
+    "id": 47,
+    "point": 9,
+    "way": "/pyramid/src/assets/cards/spades-9.svg"
+  },
+  {
+    "id": 48,
+    "point": 10,
+    "way": "/pyramid/src/assets/cards/spades-10.svg"
+  },
+  {
+    "id": 49,
+    "point": 11,
+    "way": "/pyramid/src/assets/cards/spades-11.svg"
+  },
+  {
+    "id": 50,
+    "point": 12,
+    "way": "/pyramid/src/assets/cards/spades-12.svg"
+  },
+  {
+    "id": 51,
+    "point": 13,
+    "way": "/pyramid/src/assets/cards/spades-13.svg"
+  }
+]

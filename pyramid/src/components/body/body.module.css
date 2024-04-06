@@ -1,0 +1,173 @@
+.main {
+  width: 80vw;
+  display: flex;
+  flex-direction: column;
+}
+
+.basement {
+  display: flex;
+  justify-content: space-around;
+}
+.basement div {
+  width: 73px;
+  height: 106px;
+  border: 1px solid rgb(111, 111, 221);
+}
+.deck {
+  min-width: 200px;
+  height: 106px;
+  display: flex;
+  justify-content: space-between;
+  border: none;
+}
+.back {
+  width: 73px;
+  background-image: url("../../assets/cover/card-cover-1.png");
+  background-size: cover;
+
+  background-repeat: no-repeat;
+  /* width: "100%";
+  height: "100%"; */
+}
+.area {
+  width: 100%;
+  height: 70vh;
+  /* border: 1px solid green; */
+}
+
+.level {
+  position: absolute;
+  width: 73px;
+  height: 109px;
+  /* border: 1px solid blue; */
+  background-image: url("../../assets/cards/clubs-7.svg");
+  background-size: cover;
+
+  background-repeat: no-repeat;
+}
+.level:nth-child(1) {
+  top: 10%;
+  left: 45%; /* Расположение первого уровня */
+}
+
+.level:nth-child(2) {
+  top: 15%;
+  left: 37%; /* Расположение второго уровня */
+}
+
+.level:nth-child(3) {
+  top: 15%;
+  left: 53%; /* Расположение второго уровня */
+}
+
+.level:nth-child(4) {
+  top: 20%;
+  left: 29%; /* Расположение третьего уровня */
+}
+.level:nth-child(5) {
+  top: 20%;
+  left: 45%; /* Расположение третьего уровня */
+}
+
+.level:nth-child(6) {
+  top: 20%;
+  left: 61%; /* Расположение третьего уровня */
+}
+
+.level:nth-child(7) {
+  top: 25%;
+  left: 21%; /* Расположение четвертого уровня */
+}
+.level:nth-child(8) {
+  top: 25%;
+  left: 37%; /* Расположение четвертого уровня */
+}
+
+.level:nth-child(9) {
+  top: 25%;
+  left: 53%; /* Расположение четвертого уровня */
+}
+
+.level:nth-child(10) {
+  top: 25%;
+  left: 69%; /* Расположение четвертого уровня */
+}
+.level:nth-child(11) {
+  top: 30%;
+  left: 13%; /* Расположение пятого уровня */
+}
+
+.level:nth-child(12) {
+  top: 30%;
+  left: 29%; /* Расположение пятого уровня */
+}
+.level:nth-child(13) {
+  top: 30%;
+  left: 45%; /* Расположение пятого уровня */
+}
+
+.level:nth-child(14) {
+  top: 30%;
+  left: 61%; /* Расположение пятого уровня */
+}
+
+.level:nth-child(15) {
+  top: 30%;
+  left: 77%; /* Расположение пятого уровня */
+}
+.level:nth-child(16) {
+  top: 35%;
+  left: 6%; /* Расположение шестого уровня */
+}
+
+.level:nth-child(17) {
+  top: 35%;
+  left: 21%; /* Расположение шестого уровня */
+}
+.level:nth-child(18) {
+  top: 35%;
+  left: 37%; /* Расположение шестого уровня */
+}
+
+.level:nth-child(19) {
+  top: 35%;
+  left: 53%; /* Расположение шестого уровня */
+}
+.level:nth-child(20) {
+  top: 35%;
+  left: 69%; /* Расположение шестого уровня */
+}
+
+.level:nth-child(21) {
+  top: 35%;
+  left: 84%; /* Расположение шестого уровня */
+}
+
+.level:nth-child(22) {
+  top: 40%;
+  left: 1%; /* Расположение седьмого уровня */
+}
+.level:nth-child(23) {
+  top: 40%;
+  left: 15%; /* Расположение седьмого уровня */
+}
+.level:nth-child(24) {
+  top: 40%;
+  left: 29%; /* Расположение седьмого уровня */
+}
+.level:nth-child(25) {
+  top: 40%;
+  left: 44%; /* Расположение седьмого уровня */
+}
+.level:nth-child(26) {
+  top: 40%;
+  left: 59%; /* Расположение седьмого уровня */
+}
+.level:nth-child(27) {
+  top: 40%;
+  left: 73%; /* Расположение седьмого уровня */
+}
+.level:nth-child(28) {
+  top: 40%;
+  left: 87%; /* Расположение седьмого уровня */
+}
