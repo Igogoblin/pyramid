@@ -7,12 +7,18 @@
 div > h1 {
   display: inline-block;
   font-size: 4rem;
+  color: #fff;
+  -webkit-text-stroke: 2px #0ba360;
 }
 
 .tac_one_regular {
   font-family: "Tac One", sans-serif;
   font-weight: 400;
   font-style: normal;
+}
+
+.no_display {
+  display: none;
 }
 
 .btn_hover {
