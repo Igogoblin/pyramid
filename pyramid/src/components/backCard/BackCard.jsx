@@ -1,8 +1,15 @@
+// import { show } from "../../store/cardSlice";
 import s from "../body/body.module.css";
+// import { useDispatch } from "react-redux";
 
 const BackCard = () => {
-  // style={{ background: "../../assets/cover/card-cover-1.png" }};
-  return <div className={s.back}></div>;
+  // const dispatch = useDispatch();
+  return (
+    <div
+      className={s.back}
+      // onClick={() => dispatch(show())}
+    ></div>
+  );
 };
 
 export default BackCard;
