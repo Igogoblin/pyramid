@@ -23,7 +23,7 @@ div > h1 {
 
 .btn_hover {
   width: 200px;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: 600;
   color: #fff;
   cursor: pointer;
@@ -159,4 +159,10 @@ div > h1 {
     #e2373f
   );
   box-shadow: 0 5px 15px rgba(242, 97, 103, 0.4);
+}
+
+@media screen and (min-width: 1024px) {
+  span {
+    color: rgba(0, 0, 0, 0);
+  }
 }
