@@ -15,17 +15,20 @@ const cardSlice = createSlice({
       "/pyramid/src/assets/backgrounds/space.jpg",
       "/pyramid/src/assets/backgrounds/sunflower.jpg",
     ],
-    backFontSize:1,
+    cardSize:0,
   },
   reducers: {
     show(state) {
       console.log(state);
     },
-//     setBackground(state,action){
-// console.log(action);
-//     }
+setSize(state,action){
+  let size = [-5,-4,-3,-2,-1,0,1,2,3,4];
+
+  console.log(action);
+  state.cardSize=size[action.payload];
+}
   },
 });
 
-export const { show } = cardSlice.actions;
+export const { show, setSize } = cardSlice.actions;
 export default cardSlice.reducer;
