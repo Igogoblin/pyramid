@@ -8,12 +8,22 @@ const cardSlice = createSlice({
     backFont: [
       "/pyramid/src/assets/backgrounds/clouds.jpg",
       "/pyramid/src/assets/backgrounds/default.jpg",
+      "/pyramid/src/assets/backgrounds/flowers.jpg",
+      "/pyramid/src/assets/backgrounds/flowers-field.jpg",
+      "/pyramid/src/assets/backgrounds/sand.jpg",
+      "/pyramid/src/assets/backgrounds/sea.jpg",
+      "/pyramid/src/assets/backgrounds/space.jpg",
+      "/pyramid/src/assets/backgrounds/sunflower.jpg",
     ],
+    backFontSize:1,
   },
   reducers: {
     show(state) {
       console.log(state);
     },
+//     setBackground(state,action){
+// console.log(action);
+//     }
   },
 });
 

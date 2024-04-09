@@ -13,6 +13,7 @@
   background-size: cover;
   background-repeat: no-repeat;
   border-radius: 8px;
+  cursor: pointer;
 }
 .bordSlider {
   border: 1px solid whitesmoke;
@@ -21,4 +22,9 @@
   border-radius: 8px;
   position: absolute;
   transition: transform 0.5s ease;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+body {
+  /* background-image: url("../../assets/backgrounds/clouds.jpg"); */
 }
