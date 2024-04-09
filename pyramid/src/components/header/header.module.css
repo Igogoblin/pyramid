@@ -9,6 +9,7 @@ div > h1 {
   font-size: 4rem;
   color: #fff;
   -webkit-text-stroke: 2px #0ba360;
+  margin: 5px;
 }
 
 .tac_one_regular {
@@ -17,7 +18,7 @@ div > h1 {
   font-style: normal;
 }
 
-.no_display {
+.mob_display {
   display: none;
 }
 
@@ -161,8 +162,39 @@ div > h1 {
   box-shadow: 0 5px 15px rgba(242, 97, 103, 0.4);
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (max-width: 1024px) {
   span {
-    color: rgba(0, 0, 0, 0);
+    display: none;
+  }
+
+  .mob_display {
+    display: inline-block;
+  }
+
+  .btn_hover {
+    margin: 20px 10px 10px;
+  }
+
+  div > h1 {
+    font-size: 55px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  span {
+    display: none;
+  }
+
+  .mob_display {
+    display: inline-block;
+  }
+
+  .btn_hover {
+    margin: 7px;
+  }
+
+  div > h1 {
+    font-size: 35px;
+    margin: 5px;
   }
 }

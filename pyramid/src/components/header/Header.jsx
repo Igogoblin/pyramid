@@ -43,7 +43,7 @@ export default function Header() {
         />{" "}
         <span>RESTART</span>
       </button>
-      <button className={`${s.btn_hover} ${s.color_5} ${s.no_display}`}>
+      <button className={`${s.btn_hover} ${s.color_5} ${s.mob_display}`}>
         <FontAwesomeIcon
           icon={faGear}
           style={{ color: "#ffffff" }}
