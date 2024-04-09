@@ -9,6 +9,7 @@ div > h1 {
   font-size: 4rem;
   color: #fff;
   -webkit-text-stroke: 2px #0ba360;
+  margin: 5px;
 }
 
 .tac_one_regular {
@@ -17,13 +18,13 @@ div > h1 {
   font-style: normal;
 }
 
-.no_display {
+.mob_display {
   display: none;
 }
 
 .btn_hover {
   width: 200px;
-  font-size: 25px;
+  font-size: 20px;
   font-weight: 600;
   color: #fff;
   cursor: pointer;
@@ -159,4 +160,41 @@ div > h1 {
     #e2373f
   );
   box-shadow: 0 5px 15px rgba(242, 97, 103, 0.4);
+}
+
+@media screen and (max-width: 1024px) {
+  span {
+    display: none;
+  }
+
+  .mob_display {
+    display: inline-block;
+  }
+
+  .btn_hover {
+    margin: 20px 10px 10px;
+  }
+
+  div > h1 {
+    font-size: 55px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  span {
+    display: none;
+  }
+
+  .mob_display {
+    display: inline-block;
+  }
+
+  .btn_hover {
+    margin: 7px;
+  }
+
+  div > h1 {
+    font-size: 35px;
+    margin: 5px;
+  }
 }
