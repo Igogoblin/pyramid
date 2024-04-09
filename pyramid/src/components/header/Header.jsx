@@ -19,7 +19,7 @@ export default function Header() {
           icon={faArrowLeft}
           style={{ color: "#ffffff" }}
         />{" "}
-        CANCEL
+        <span>CANCEL</span>
       </button>
       <button className={`${s.btn_hover} ${s.color_5}`}>
         {" "}
@@ -27,23 +27,23 @@ export default function Header() {
           icon={faLightbulb}
           style={{ color: "#ffffff" }}
         />{" "}
-        HINT
+        <span>HINT</span>
       </button>
       <button className={`${s.btn_hover} ${s.color_5}`}>
         <FontAwesomeIcon
           icon={faPlus}
           style={{ color: "#fafafa" }}
         />{" "}
-        NEW GAME
+        <span>NEW GAME</span>
       </button>
       <button className={`${s.btn_hover} ${s.color_5}`}>
         <FontAwesomeIcon
           icon={faRotateLeft}
           style={{ color: "#ffffff" }}
         />{" "}
-        RESTART
+        <span>RESTART</span>
       </button>
-      <button className={`${s.btn_hover} ${s.color_5} ${s.no_display}`}>
+      <button className={`${s.btn_hover} ${s.color_5} ${s.mob_display}`}>
         <FontAwesomeIcon
           icon={faGear}
           style={{ color: "#ffffff" }}
