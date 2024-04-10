@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 const Body = () => {
   const card = useSelector((state) => state.pyramid.cards);
-  const size = useSelector((state)=>state.pyramid.cardSize);
+  const size = useSelector((state) => state.pyramid.cardSize);
   console.log(size);
   // console.log(card);
   // const arr = [
@@ -33,8 +33,8 @@ const Body = () => {
                   // height: "18%"
                   // width: "80px",
                   // height: "116px"
-                  width: `calc(73px + ${size}px)`,
-                  height: `calc(109px + ${size*2}px)`
+                  width: `calc(49px + ${size}px)`,
+                  height: `calc(75px + ${size * 2}px)`,
                 }}
               ></div>
             )

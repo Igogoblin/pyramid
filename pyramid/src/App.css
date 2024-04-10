@@ -1,7 +1,7 @@
 body {
   display: flex;
   justify-content: center;
-  height: 1000px;
+  height: 100%;
   background-image: url("../src/assets/backgrounds/default.jpg");
   background-size: 100%;
   background-repeat: no-repeat;
