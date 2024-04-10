@@ -4,6 +4,6 @@ body {
   height: 1000px;
   background-image: url("../src/assets/backgrounds/default.jpg");
   background-size: 100%;
-  background-repeat:no-repeat;
+  background-repeat: no-repeat;
   background-size: cover;
 }
