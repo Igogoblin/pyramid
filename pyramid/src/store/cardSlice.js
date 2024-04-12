@@ -19,6 +19,7 @@ const cardSlice = createSlice({
     rez: [],
     rezCount: -1,
     otb: [],
+    activation: false,
   },
   reducers: {
     setSize(state, action) {
@@ -45,9 +46,22 @@ const cardSlice = createSlice({
     createOtb(state) {
       state.otb.push(state.rez[state.rezCount]);
     },
+    activationFalse(state) {
+      state.activation = false;
+    },
+    activationTrue(state) {
+      state.activation = true;
+    },
   },
 });
 
-export const { sortCards, setSize, createRez, showRez, createOtb } =
-  cardSlice.actions;
+export const {
+  sortCards,
+  setSize,
+  createRez,
+  showRez,
+  createOtb,
+  activationFalse,
+  activationTrue,
+} = cardSlice.actions;
 export default cardSlice.reducer;

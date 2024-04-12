@@ -1,9 +1,10 @@
 import { createRez, showRez } from "../../store/cardSlice";
 import s from "../body/body.module.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const BackCard = () => {
   const dispatch = useDispatch();
+  const activation = useSelector((state) => state.pyramid.activation);
 
   function next() {
     dispatch(createRez());
@@ -11,7 +12,18 @@ const BackCard = () => {
     // console.log("we push back card");
   }
 
-  return <div className={s.back} onClick={next}></div>;
+  return (
+    <div
+      className={s.back}
+      onClick={next}
+      style={{
+        ...(activation && {
+          pointerEvents: "none",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        }),
+      }}
+    ></div>
+  );
 };
 
 export default BackCard;
