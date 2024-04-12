@@ -7,17 +7,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { sortCards } from "../../store/cardSlice";
 
 const Body = () => {
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(sortCards());
     // dispatch(createRez());
   }, []);
   const card = useSelector((state) => state.pyramid.cards);
   const size = useSelector((state) => state.pyramid.cardSize);
-  const check = useSelector((state) => state.pyramid.rez);
-  const dispatch = useDispatch();
 
-  console.log(card);
-  console.log(check);
   return (
     <div className={s.main}>
       <div className={s.area}>
