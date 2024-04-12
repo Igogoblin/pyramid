@@ -17,6 +17,8 @@ const cardSlice = createSlice({
     ],
     cardSize: 0,
     rez: [],
+    rezCount: -1,
+    otb: [],
   },
   reducers: {
     setSize(state, action) {
@@ -24,8 +26,28 @@ const cardSlice = createSlice({
 
       state.cardSize = size[action.payload];
     },
+    sortCards(state) {
+      state.cards = state.cards.sort(() => Math.random() - 0.5);
+    },
+    createRez(state) {
+      if (state.rezCount === -1) {
+        state.cards.forEach((el, index) => {
+          if (index > 27) {
+            state.rez.push(el);
+          }
+        });
+      }
+    },
+    showRez(state) {
+      state.rezCount++;
+      // state.rez.push(state.rez[state.rezCount]);
+    },
+    createOtb(state) {
+      state.otb.push(state.rez[state.rezCount]);
+    },
   },
 });
 
-export const { show, setSize } = cardSlice.actions;
+export const { sortCards, setSize, createRez, showRez, createOtb } =
+  cardSlice.actions;
 export default cardSlice.reducer;
