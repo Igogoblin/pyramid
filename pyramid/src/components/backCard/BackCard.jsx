@@ -18,8 +18,8 @@ const BackCard = () => {
       onClick={next}
       style={{
         ...(activation && {
+          backgroundColor: "#00000080",
           pointerEvents: "none",
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
         }),
       }}
     ></div>
