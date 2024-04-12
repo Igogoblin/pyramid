@@ -16,15 +16,12 @@ const cardSlice = createSlice({
       "/pyramid/src/assets/backgrounds/sunflower.jpg",
     ],
     cardSize: 0,
+    rez: [],
   },
   reducers: {
-    show(state) {
-      console.log(state);
-    },
     setSize(state, action) {
       let size = [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8];
 
-      console.log(action);
       state.cardSize = size[action.payload];
     },
   },

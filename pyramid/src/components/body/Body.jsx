@@ -7,8 +7,7 @@ import { useSelector } from "react-redux";
 const Body = () => {
   const card = useSelector((state) => state.pyramid.cards);
   const size = useSelector((state) => state.pyramid.cardSize);
-  console.log(size);
-  // console.log(card);
+
   // const arr = [
   //   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
   //   22, 23, 24, 25, 26, 27, 28,
