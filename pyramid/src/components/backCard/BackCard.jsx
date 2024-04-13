@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 const BackCard = () => {
   const dispatch = useDispatch();
   const activation = useSelector((state) => state.pyramid.activation);
+  const check = useSelector((state) => state.pyramid);
 
   function next() {
     dispatch(createRez());
@@ -18,11 +19,30 @@ const BackCard = () => {
       onClick={next}
       style={{
         ...(activation && {
-          backgroundColor: "#00000080",
+          pointerEvents: "none",
+        }),
+        ...(check.rezCount == check.otb.length && {
           pointerEvents: "none",
         }),
       }}
-    ></div>
+    >
+      <div
+        style={{
+          width: "0px",
+          height: "0px",
+          ...(activation && {
+            backgroundColor: "#00000080",
+            width: "100%",
+            height: "100%",
+          }),
+          ...(check.rezCount == check.otb.length && {
+            backgroundColor: "#00000080",
+            width: "100%",
+            height: "100%",
+          }),
+        }}
+      ></div>
+    </div>
   );
 };
 

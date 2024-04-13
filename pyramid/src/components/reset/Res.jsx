@@ -36,11 +36,22 @@ const Res = () => {
           ...(activation &&
             !active && {
               pointerEvents: "none",
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
             }),
         }}
         onClick={toOtb}
+      >
+              <div
+        style={{
+          width: "0px",
+          height: "0px",
+          ...(activation && !active &&{
+            backgroundColor: "#00000080",
+            width: "100%",
+            height: "100%",
+          }),
+        }}
       ></div>
+      </div>
     )
   );
 };

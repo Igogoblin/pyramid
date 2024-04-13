@@ -24,11 +24,23 @@ const Retreat = () => {
           ...(activation &&
             !active && {
               pointerEvents: "none",
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
             }),
         }}
         onClick={check}
-      ></div>
+      >
+        <div
+          style={{
+            width: "0px",
+            height: "0px",
+            ...(activation &&
+              !active && {
+                backgroundColor: "#00000080",
+                width: "100%",
+                height: "100%",
+              }),
+          }}
+        ></div>
+      </div>
     )
   );
 };
