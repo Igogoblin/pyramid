@@ -20,6 +20,7 @@ const cardSlice = createSlice({
     rezCount: -1,
     otb: [],
     activation: false,
+    field: [],
   },
   reducers: {
     setSize(state, action) {
