@@ -7,3 +7,42 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
 }
+
+.footer-bottom {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.header-bottom {
+  display: none;
+}
+
+.footer-top {
+  display: none;
+}
+
+@media screen and (max-width: 500px) {
+  .header-bottom {
+    display: block;
+    position: fixed;
+    bottom: 10px;
+  }
+
+  .header-top {
+    display: none;
+  }
+
+  .footer-top {
+    display: flex;
+    position: fixed;
+    top: 0;
+    bottom: auto;
+  }
+
+  .footer-bottom {
+    display: none;
+  }
+}
