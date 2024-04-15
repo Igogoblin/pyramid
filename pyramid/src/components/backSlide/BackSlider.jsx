@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import s from "./backslider.module.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setColor } from "../../store/cardSlice";
 
 const BackSlider = () => {
   //   const [currentImage, setCurrentImage] = useState(1);
   const back = useSelector((state) => state.pyramid.backFont);
+  const dispatch = useDispatch();
 
   const [way, setWay] = useState("0px");
   const [backWay, setBackWay] = useState(1);
@@ -21,6 +23,8 @@ const BackSlider = () => {
       setWay("0px");
       setBackWay(1);
     }
+
+    dispatch(setColor(backWay));
   }
 
   useEffect(() => {

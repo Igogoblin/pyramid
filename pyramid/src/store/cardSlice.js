@@ -17,6 +17,7 @@ const cardSlice = createSlice({
     ],
     cardSize: 0,
     rez: [],
+    colors: 1,
   },
   reducers: {
     setSize(state, action) {
@@ -24,8 +25,11 @@ const cardSlice = createSlice({
 
       state.cardSize = size[action.payload];
     },
+    setColor(state, action) {
+      state.colors = action.payload;
+    },
   },
 });
 
-export const { show, setSize } = cardSlice.actions;
+export const { show, setSize, setColor } = cardSlice.actions;
 export default cardSlice.reducer;
