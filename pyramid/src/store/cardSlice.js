@@ -21,6 +21,7 @@ const cardSlice = createSlice({
     otb: [],
     activation: false,
     field: [],
+    colors: 1,
   },
   reducers: {
     setSize(state, action) {
@@ -53,6 +54,9 @@ const cardSlice = createSlice({
     activationTrue(state) {
       state.activation = true;
     },
+    setColor(state, action) {
+      state.colors = action.payload;
+    },
   },
 });
 
@@ -64,5 +68,7 @@ export const {
   createOtb,
   activationFalse,
   activationTrue,
+  setColor,
 } = cardSlice.actions;
+
 export default cardSlice.reducer;

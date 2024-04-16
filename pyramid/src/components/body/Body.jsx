@@ -1,17 +1,9 @@
-import { useEffect } from "react";
 import BackCard from "../backCard/BackCard";
 import Res from "../reset/Res";
-import Retreat from "../retreat/Retreat";
 import s from "./body.module.css";
-import { useDispatch, useSelector } from "react-redux";
-import { sortCards } from "../../store/cardSlice";
+import { useSelector } from "react-redux";
 
 const Body = () => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(sortCards());
-    // dispatch(createRez());
-  }, []);
   const card = useSelector((state) => state.pyramid.cards);
   const size = useSelector((state) => state.pyramid.cardSize);
 
@@ -38,8 +30,6 @@ const Body = () => {
           <BackCard />
           <Res />
         </div>
-
-        <Retreat />
       </div>
     </div>
   );
