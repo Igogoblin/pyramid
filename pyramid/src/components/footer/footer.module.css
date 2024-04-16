@@ -16,3 +16,8 @@
     display: none;
   }
 }
+
+.information {
+  border: 1px solid blue;
+  cursor: pointer;
+}

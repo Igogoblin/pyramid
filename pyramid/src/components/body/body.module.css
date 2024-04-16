@@ -13,8 +13,8 @@
 }
 .basement div {
   width: 73px;
-  height: 106px;
-  border: 1px solid rgb(111, 111, 221);
+  height: 109px;
+  /* border: 1px solid rgb(111, 111, 221); */
 }
 .deck {
   min-width: 200px;

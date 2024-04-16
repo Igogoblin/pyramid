@@ -1,14 +1,13 @@
 import { useState } from "react";
-import {useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import s from "./slider.module.css";
-import {setSize} from "../../store/cardSlice";
+import { setSize } from "../../store/cardSlice";
 
 function Slider() {
   const [value, setValue] = useState(5);
   const dispatch = useDispatch();
   const handleChange = (event) => {
     setValue(event.target.value);
-    console.log(event.target.value);
     dispatch(setSize(event.target.value));
   };
 
