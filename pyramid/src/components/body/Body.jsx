@@ -1,6 +1,5 @@
 import BackCard from "../backCard/BackCard";
 import Res from "../reset/Res";
-import Retreat from "../retreat/Retreat";
 import s from "./body.module.css";
 import { useSelector } from "react-redux";
 
@@ -31,8 +30,6 @@ const Body = () => {
           <BackCard />
           <Res />
         </div>
-
-        <Retreat />
       </div>
     </div>
   );

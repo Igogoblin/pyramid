@@ -4,17 +4,15 @@ import s from "./footer.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoePrints } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
-import { useState } from "react";
 
 const Footer = () => {
   const colors = useSelector((state) => state.pyramid.colors);
-  const [c] = useState(colors);
 
   return (
     <footer
       className={s.footer}
       style={{
-        ...(!c ? { color: "white" } : { color: "black" }),
+        ...(colors == 1 ? { color: "white" } : { color: "black" }),
       }}
     >
       <div className={s.mob_display}>
