@@ -16,11 +16,9 @@ const cardSlice = createSlice({
       "/pyramid/src/assets/backgrounds/sunflower.jpg",
     ],
     cardSize: 0,
-    rez: [],
+    rez: [], // это наша стопка на столе под "рубашкой"
     rezCount: -1,
-    otb: [],
-    activation: false,
-    field: [],
+    otb: [], // это стопка которая под картой которая сейчас играет
     colors: 1,
   },
   reducers: {
@@ -48,27 +46,13 @@ const cardSlice = createSlice({
     createOtb(state) {
       state.otb.push(state.rez[state.rezCount]);
     },
-    activationFalse(state) {
-      state.activation = false;
-    },
-    activationTrue(state) {
-      state.activation = true;
-    },
     setColor(state, action) {
       state.colors = action.payload;
     },
   },
 });
 
-export const {
-  sortCards,
-  setSize,
-  createRez,
-  showRez,
-  createOtb,
-  activationFalse,
-  activationTrue,
-  setColor,
-} = cardSlice.actions;
+export const { sortCards, setSize, createRez, showRez, createOtb, setColor } =
+  cardSlice.actions;
 
 export default cardSlice.reducer;

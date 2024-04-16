@@ -25,7 +25,7 @@ const Footer = () => {
       <div className={s.mob_display}>
         <BackSlider />
       </div>
-      <div onClick={info} className={s.info}>
+      <div onClick={info} className={s.information}>
         info
       </div>
       <div>00:01</div>
