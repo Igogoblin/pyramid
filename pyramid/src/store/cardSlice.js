@@ -18,7 +18,7 @@ const cardSlice = createSlice({
     cardSize: 0,
     rez: [], // это наша стопка на столе под "рубашкой"
     rezCount: -1,
-    otb: [], // это стопка которая под картой которая сейчас играет
+    otb: [], // это стопка которая под картой которая сейчас играет можно будет удалить
     colors: 1,
   },
   reducers: {
@@ -43,9 +43,9 @@ const cardSlice = createSlice({
       state.rezCount++;
       // state.rez.push(state.rez[state.rezCount]);
     },
-    createOtb(state) {
-      state.otb.push(state.rez[state.rezCount]);
-    },
+    // createOtb(state) {
+    //   state.otb.push(state.rez[state.rezCount]);
+    // },
     setColor(state, action) {
       state.colors = action.payload;
     },
