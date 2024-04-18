@@ -1,12 +1,16 @@
 import BackCard from "../backCard/BackCard";
 import Res from "../reset/Res";
 import s from "./body.module.css";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { sortCards } from "../../store/cardSlice";
 
 const Body = () => {
   const card = useSelector((state) => state.pyramid.cards);
   const size = useSelector((state) => state.pyramid.cardSize);
-
+  const dispatch = useDispatch();
+  if (card[0].id === 0) {
+    dispatch(sortCards());
+  }
   return (
     <div className={s.main}>
       <div className={s.area}>
