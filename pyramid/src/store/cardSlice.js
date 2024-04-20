@@ -49,10 +49,22 @@ const cardSlice = createSlice({
     setColor(state, action) {
       state.colors = action.payload;
     },
+    moveBack(state) {
+      if (state.rezCount > 0) {
+        state.rezCount--;
+      }
+    },
   },
 });
 
-export const { sortCards, setSize, createRez, showRez, createOtb, setColor } =
-  cardSlice.actions;
+export const {
+  sortCards,
+  setSize,
+  createRez,
+  showRez,
+  createOtb,
+  setColor,
+  moveBack,
+} = cardSlice.actions;
 
 export default cardSlice.reducer;

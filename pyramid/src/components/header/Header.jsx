@@ -7,47 +7,44 @@ import {
   faArrowLeft,
   faGear,
 } from "@fortawesome/free-solid-svg-icons";
+import { useDispatch } from "react-redux";
+import { moveBack } from "../../store/cardSlice";
 
 export default function Header() {
+  const dispatch = useDispatch();
+
+  const backMove = () => {
+    dispatch(moveBack());
+  };
   return (
     <div className={s.header}>
       <h1 className={s.tac_one_regular}>Pyramid</h1>
 
-      <button className={`${s.btn_hover} ${s.color_5}`}>
+      <button
+        className={`${s.btn_hover} ${s.color_5} ${s.tooltip}`}
+        data-tooltip="A Move Back"
+        // title="A Move Back"
+        onClick={backMove}
+      >
         {" "}
-        <FontAwesomeIcon
-          icon={faArrowLeft}
-          style={{ color: "#ffffff" }}
-        />{" "}
+        <FontAwesomeIcon icon={faArrowLeft} style={{ color: "#ffffff" }} />{" "}
         <span>CANCEL</span>
       </button>
       <button className={`${s.btn_hover} ${s.color_5}`}>
         {" "}
-        <FontAwesomeIcon
-          icon={faLightbulb}
-          style={{ color: "#ffffff" }}
-        />{" "}
+        <FontAwesomeIcon icon={faLightbulb} style={{ color: "#ffffff" }} />{" "}
         <span>HINT</span>
       </button>
       <button className={`${s.btn_hover} ${s.color_5}`}>
-        <FontAwesomeIcon
-          icon={faPlus}
-          style={{ color: "#fafafa" }}
-        />{" "}
+        <FontAwesomeIcon icon={faPlus} style={{ color: "#fafafa" }} />{" "}
         <span>NEW GAME</span>
       </button>
       <button className={`${s.btn_hover} ${s.color_5}`}>
-        <FontAwesomeIcon
-          icon={faRotateLeft}
-          style={{ color: "#ffffff" }}
-        />{" "}
+        <FontAwesomeIcon icon={faRotateLeft} style={{ color: "#ffffff" }} />{" "}
         <span>RESTART</span>
       </button>
       <button className={`${s.btn_hover} ${s.color_5} `}>
-        <FontAwesomeIcon
-          icon={faGear}
-          style={{ color: "#ffffff" }}
-        />{" "}
+        <FontAwesomeIcon icon={faGear} style={{ color: "#ffffff" }} />{" "}
         <span>OPTIONS</span>
       </button>
     </div>
