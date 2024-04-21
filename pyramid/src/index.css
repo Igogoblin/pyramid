@@ -85,3 +85,8 @@ select {
   width: 100vw;
   height: 100vh;
 }
+
+title {
+  background-color: aquamarine;
+  color: white;
+}

@@ -210,3 +210,27 @@ div > h1 {
     margin: 5px 5px 5px -2px;
   }
 }
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  background-color: #009245;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+}
