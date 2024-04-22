@@ -8,7 +8,7 @@ const Res = () => {
   // const dispatch = useDispatch();
   // function toOtb() {
   //   dispatch(createOtb());
-  // }
+  // } a?a:b
   return (
     card[itemCard] !== otb[otb.length - 1] && (
       <div

@@ -40,7 +40,8 @@ const CardItem = ({ el, index, animate }) => {
       className={`${s.level} ${animate ? s.animate : ""}`}
       style={{
         backgroundImage: comparison ? "none" : `url(${el.way})`,
-        // pointerEvents: comparison ? "none" : "",
+        //  pointerEvents: comparison ? "none" : "",
+        zIndex: comparison ? 0 : 10,
         width: `calc(49px + ${card.cardSize}px)`,
         height: `calc(75px + ${card.cardSize * 2}px)`,
       }}
