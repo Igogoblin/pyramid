@@ -4,12 +4,11 @@ import { setForRule } from "../../store/cardSlice";
 import PropTypes from "prop-types";
 import { useState } from "react";
 
-const CardItem = ({ el, index }) => {
+const CardItem = ({ el, index, animate }) => {
   const card = useSelector((state) => state.pyramid);
-  // const size = useSelector((state) => state.pyramid.cardSize);
-  // const test = useSelector((state) => state.pyramid.test);
 
   const [comparison, setComparison] = useState(false);
+
   const dispatch = useDispatch();
 
   function actionCard(forCard) {
@@ -34,18 +33,11 @@ const CardItem = ({ el, index }) => {
       }
     }
   }
-  // // Хук useEffect для сброса состояния comparison после рендеринга
-  // useEffect(() => { //если нужно будет !!!!!!!!!!!!!!!
-  //   if (comparison) {
-  //     // Логика после рендеринга, когда comparison равно true
-  //     setComparison(false); // Сброс состояния comparison в false
-  //   }
-  // }, [comparison]); // Зависимость от comparison
 
   return (
     <div
       key={el.id}
-      className={s.level}
+      className={`${s.level} ${animate ? s.animate : ""}`}
       style={{
         backgroundImage: comparison ? "none" : `url(${el.way})`,
         // pointerEvents: comparison ? "none" : "",

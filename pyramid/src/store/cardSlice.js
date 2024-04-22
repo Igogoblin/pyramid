@@ -23,6 +23,7 @@ const cardSlice = createSlice({
     rule: rule[0],
     forRule: rule[1],
     colors: 1,
+    hint: false,
   },
   reducers: {
     setSize(state, action) {
@@ -75,6 +76,9 @@ const cardSlice = createSlice({
         forRule: updateForRule,
       };
     },
+    setHint(state) {
+      state.hint = true;
+    },
   },
 });
 
@@ -88,6 +92,7 @@ export const {
   moveBack,
   // createRule,
   setForRule,
+  setHint,
 } = cardSlice.actions;
 
 export default cardSlice.reducer;

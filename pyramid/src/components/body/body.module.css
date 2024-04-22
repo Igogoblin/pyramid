@@ -41,6 +41,24 @@
   position: relative;
   margin: 0 auto;
 }
+/*  для анимации подсказки ------------------------------------------------- */
+@keyframes shakeAndScale {
+  0%,
+  100% {
+    transform: scale(1) translateX(0);
+  }
+  50% {
+    transform: scale(1.2) translateX(10px);
+  }
+}
+
+.animate {
+  width: 100px;
+  height: 100px;
+  background-color: #009245;
+  animation: shakeAndScale 1s infinite ease-in-out;
+}
+/*  для анимации подсказки ------------------------------------------------- */
 @media (max-width: 767px) {
   .area {
     width: 80%;
