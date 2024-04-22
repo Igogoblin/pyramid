@@ -4,6 +4,7 @@ import Slider from "../slider/Slider";
 import s from "./footer.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoePrints } from "@fortawesome/free-solid-svg-icons";
+import Timer from "./Timer";
 
 const Footer = () => {
   const c = useSelector((state) => state.pyramid);
@@ -25,13 +26,20 @@ const Footer = () => {
       <div className={s.mob_display}>
         <BackSlider />
       </div>
-      <div onClick={info} className={s.information}>
+      <div
+        onClick={info}
+        className={s.information}
+      >
         info
       </div>
-      <div>00:01</div>
+      <Timer />
       <div>
         {" "}
-        <FontAwesomeIcon icon={faShoePrints} style={{ color: "#ffffff" }} /> 00
+        <FontAwesomeIcon
+          icon={faShoePrints}
+          style={{ color: "#ffffff" }}
+        />{" "}
+        00
       </div>
     </footer>
   );
