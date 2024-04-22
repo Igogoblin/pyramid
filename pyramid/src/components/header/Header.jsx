@@ -8,7 +8,7 @@ import {
   faGear,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
-import { moveBack } from "../../store/cardSlice";
+import { moveBack, setHint } from "../../store/cardSlice";
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -30,7 +30,11 @@ export default function Header() {
         <FontAwesomeIcon icon={faArrowLeft} style={{ color: "#ffffff" }} />{" "}
         <span>CANCEL</span>
       </button>
-      <button className={`${s.btn_hover} ${s.color_5}`}>
+      <button
+        className={`${s.btn_hover} ${s.color_5}  ${s.tooltip}`}
+        data-tooltip="Hint"
+        onClick={() => dispatch(setHint())}
+      >
         {" "}
         <FontAwesomeIcon icon={faLightbulb} style={{ color: "#ffffff" }} />{" "}
         <span>HINT</span>

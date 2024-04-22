@@ -3,29 +3,37 @@ import Res from "../reset/Res";
 import s from "./body.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { sortCards } from "../../store/cardSlice";
+import CardItem from "../cardItem/cardItem";
+import { useState } from "react";
 
 const Body = () => {
   const card = useSelector((state) => state.pyramid.cards);
-  const size = useSelector((state) => state.pyramid.cardSize);
   const dispatch = useDispatch();
+  const [hint, setHint] = useState(false);
   if (card[0].id === 0) {
     dispatch(sortCards());
   }
+  // (hint){
+
+  //   for(let i = 0;i<28;i++){
+  //     if(card.cards[i]){
+  //       if()
+  //     }
+  //   }
+  //     }
+
   return (
     <div className={s.main}>
       <div className={s.area}>
         {card.map(
           (el, index) =>
             28 > index && (
-              <div
-                key={el.id}
-                className={s.level}
-                style={{
-                  backgroundImage: `url(${el.way})`,
-                  width: `calc(49px + ${size}px)`,
-                  height: `calc(75px + ${size * 2}px)`,
-                }}
-              ></div>
+              <CardItem
+                key={index}
+                el={el}
+                index={index}
+                {...(hint && { animation: "animate" })}
+              />
             )
         )}
       </div>

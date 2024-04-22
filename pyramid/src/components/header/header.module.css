@@ -228,9 +228,10 @@ div > h1 {
   transform: translateX(-50%);
   white-space: nowrap;
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity 1s ease-in-out;
 }
 
 .tooltip:hover::after {
   opacity: 1;
+  transition-delay: 0s;
 }

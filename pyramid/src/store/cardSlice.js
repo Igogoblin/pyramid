@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import allCards from "./cards.json";
+import rule from "./rule.json";
 
 const cardSlice = createSlice({
   name: "pyramid",
@@ -19,7 +20,10 @@ const cardSlice = createSlice({
     rez: [], // это наша стопка на столе под "рубашкой"
     rezCount: -1,
     otb: [], // это стопка которая под картой которая сейчас играет
+    rule: rule[0],
+    forRule: rule[1],
     colors: 1,
+    hint: false,
   },
   reducers: {
     setSize(state, action) {
@@ -54,6 +58,27 @@ const cardSlice = createSlice({
         state.rezCount--;
       }
     },
+    // createRule(state) {
+    //   if (state.rezCount === -1) {
+    //     state.forRule = new Array(24).fill(1);
+    //   }
+    //   это нужно для заполнения дляПравила массива всеми 1, если понадобится!!!
+    // },
+    // checkRule(state) {},
+    setForRule(state, action) {
+      const updateForRule = [...state.forRule];
+      console.log(updateForRule);
+      updateForRule[action.payload] = 0;
+      console.log(updateForRule[action.payload], action.payload);
+      console.log(updateForRule);
+      return {
+        ...state,
+        forRule: updateForRule,
+      };
+    },
+    setHint(state) {
+      state.hint = true;
+    },
   },
 });
 
@@ -65,6 +90,9 @@ export const {
   createOtb,
   setColor,
   moveBack,
+  // createRule,
+  setForRule,
+  setHint,
 } = cardSlice.actions;
 
 export default cardSlice.reducer;

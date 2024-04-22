@@ -8,6 +8,7 @@ const BackCard = () => {
   function next() {
     dispatch(createRez());
     dispatch(showRez());
+    // dispatch(createRule()); в будущем может понадобится
   }
 
   return <div className={s.back} onClick={next}></div>;
