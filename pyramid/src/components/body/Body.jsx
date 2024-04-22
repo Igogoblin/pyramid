@@ -7,33 +7,47 @@ import CardItem from "../cardItem/cardItem";
 import { useState } from "react";
 
 const Body = () => {
-  const card = useSelector((state) => state.pyramid.cards);
+  const card = useSelector((state) => state.pyramid);
+  const [hint] = useState(card.hint);
   const dispatch = useDispatch();
-  const [hint, setHint] = useState(false);
-  if (card[0].id === 0) {
+  if (card.cards[0].id === 0) {
     dispatch(sortCards());
   }
-  // (hint){
 
-  //   for(let i = 0;i<28;i++){
-  //     if(card.cards[i]){
-  //       if()
-  //     }
-  //   }
-  //     }
-
+  const checkHint = (index, forCard) => {
+    if (
+      card.forRule[card.rule[index].rule[0]] === 0 &&
+      card.forRule[card.rule[index].rule[1]] === 0
+    ) {
+      if (forCard.point === 13) {
+        console.log("Сработал элмент, ", forCard);
+        return true;
+      }
+      if (card.rezCount >= 0) {
+        if (forCard.point + card.rez[card.rezCount].point === 13) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
   return (
     <div className={s.main}>
       <div className={s.area}>
-        {card.map(
+        {card.cards.map(
           (el, index) =>
             28 > index && (
               <CardItem
                 key={index}
                 el={el}
                 index={index}
-                {...(hint && { animation: "animate" })}
-              />
+                animate={checkHint(index, el) && hint ? true : false}
+              >
+                {console.log("checkHint(index, el):", checkHint(index, el))}
+                {console.log("hint:", hint)}
+                {hint &&
+                  console.log(checkHint(index, el) && hint ? true : false)}
+              </CardItem>
             )
         )}
       </div>

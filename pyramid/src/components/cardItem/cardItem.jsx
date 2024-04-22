@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useDispatch, useSelector } from "react-redux";
 import s from "../body/body.module.css";
 import { setForRule } from "../../store/cardSlice";
@@ -16,7 +17,7 @@ const CardItem = ({ el, index, animate }) => {
     console.log(index); // индекс карты на поле
     console.log(card);
     console.log(comparison);
-
+    console.log(animate);
     if (
       card.forRule[card.rule[index].rule[0]] === 0 &&
       card.forRule[card.rule[index].rule[1]] === 0
@@ -45,7 +46,9 @@ const CardItem = ({ el, index, animate }) => {
         height: `calc(75px + ${card.cardSize * 2}px)`,
       }}
       onClick={() => actionCard(el)}
-    ></div>
+    >
+      {console.log("we get animate ", animate)}
+    </div>
   );
 };
 
@@ -54,4 +57,5 @@ export default CardItem;
 CardItem.propTypes = {
   el: PropTypes.object.isRequired, // Пропc `element` должен быть obj и обязательным
   index: PropTypes.number.isRequired, // Пропc `index` должен быть числом и обязательным
+  // animate: PropTypes.boolean.isRequired,
 };

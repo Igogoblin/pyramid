@@ -56,7 +56,7 @@
   width: 100px;
   height: 100px;
   background-color: #009245;
-  animation: shakeAndScale 1s infinite ease-in-out;
+  animation: shakeAndScale 1s ease-in-out;
 }
 /*  для анимации подсказки ------------------------------------------------- */
 @media (max-width: 767px) {

@@ -60,17 +60,14 @@ const cardSlice = createSlice({
     },
     // createRule(state) {
     //   if (state.rezCount === -1) {
-    //     state.forRule = new Array(24).fill(1);
+    //     state.forRule = new Array(28).fill(1);
     //   }
     //   это нужно для заполнения дляПравила массива всеми 1, если понадобится!!!
     // },
     // checkRule(state) {},
     setForRule(state, action) {
       const updateForRule = [...state.forRule];
-      console.log(updateForRule);
       updateForRule[action.payload] = 0;
-      console.log(updateForRule[action.payload], action.payload);
-      console.log(updateForRule);
       return {
         ...state,
         forRule: updateForRule,

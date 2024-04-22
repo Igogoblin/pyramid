@@ -16,6 +16,10 @@ export default function Header() {
   const backMove = () => {
     dispatch(moveBack());
   };
+  const hint = () => {
+    dispatch(setHint());
+    console.log("push hint");
+  };
   return (
     <div className={s.header}>
       <h1 className={s.tac_one_regular}>Pyramid</h1>
@@ -33,7 +37,7 @@ export default function Header() {
       <button
         className={`${s.btn_hover} ${s.color_5}  ${s.tooltip}`}
         data-tooltip="Hint"
-        onClick={() => dispatch(setHint())}
+        onClick={hint}
       >
         {" "}
         <FontAwesomeIcon icon={faLightbulb} style={{ color: "#ffffff" }} />{" "}
