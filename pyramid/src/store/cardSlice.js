@@ -24,6 +24,8 @@ const cardSlice = createSlice({
     forRule: rule[1],
     colors: 1,
     hint: false,
+    bodyPlay: 29,
+    doBack: false,
   },
   reducers: {
     setSize(state, action) {
@@ -76,6 +78,19 @@ const cardSlice = createSlice({
     setHint(state) {
       state.hint = true;
     },
+    setOtb(state) {
+      state.otb.push(state.rez[state.rezCount]);
+    },
+    setBodyGame(state, action) {
+      console.log(action.payload);
+      state.bodyPlay = action.payload;
+    },
+    setBackStep(state) {
+      state.doBack = true;
+    },
+    setBackStepNorm(state) {
+      state.doBack = false;
+    },
   },
 });
 
@@ -90,6 +105,10 @@ export const {
   // createRule,
   setForRule,
   setHint,
+  setOtb,
+  setBodyGame,
+  setBackStep,
+  setBackStepNorm,
 } = cardSlice.actions;
 
 export default cardSlice.reducer;
