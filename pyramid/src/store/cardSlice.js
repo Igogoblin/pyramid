@@ -24,7 +24,7 @@ const cardSlice = createSlice({
     forRule: rule[1],
     colors: 1,
     hint: false,
-    bodyPlay: 29,
+    bodyPlay: [29, -1],
     doBack: false,
   },
   reducers: {
@@ -83,7 +83,10 @@ const cardSlice = createSlice({
     },
     setBodyGame(state, action) {
       console.log(action.payload);
-      state.bodyPlay = action.payload;
+      state.bodyPlay[0] = action.payload;
+    },
+    setBodyGameToo(state, action) {
+      state.bodyPlay[1] = action.payload;
     },
     setBackStep(state) {
       state.doBack = true;
@@ -107,6 +110,7 @@ export const {
   setHint,
   setOtb,
   setBodyGame,
+  setBodyGameToo,
   setBackStep,
   setBackStepNorm,
 } = cardSlice.actions;
