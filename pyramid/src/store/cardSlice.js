@@ -44,6 +44,9 @@ const cardSlice = createSlice({
           }
         });
       }
+      if (state.rezCount === 23) {
+        state.rezCount = -1;
+      }
     },
     showRez(state) {
       state.rezCount++;
