@@ -40,6 +40,7 @@
   /* border: 1px solid green; */
   position: relative;
   margin: 0 auto;
+  z-index: 1;
 }
 /*  для анимации подсказки ------------------------------------------------- */
 @keyframes shakeAndScale {

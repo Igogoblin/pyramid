@@ -41,7 +41,7 @@ const CardItem = ({ el, index, animate }) => {
       style={{
         backgroundImage: comparison ? "none" : `url(${el.way})`,
         //  pointerEvents: comparison ? "none" : "",
-        zIndex: comparison ? 0 : 10,
+        zIndex: comparison ? 0 : 9,
         width: `calc(49px + ${card.cardSize}px)`,
         height: `calc(75px + ${card.cardSize * 2}px)`,
       }}

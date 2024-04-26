@@ -13,6 +13,13 @@ div > h1 {
   margin: 5px;
 }
 
+div h4 {
+  font-size: 20px;
+  margin-top: 5px;
+  text-align: center;
+  color: #009245;
+}
+
 .tac_one_regular {
   font-family: "Tac One", sans-serif;
   font-weight: 400;
@@ -23,6 +30,39 @@ div > h1 {
   display: none;
 }
 
+.options {
+  position: fixed;
+  top: 100px;
+  margin: auto;
+  z-index: 10;
+  width: 1350px;
+  height: 500px;
+  background: rgb(114, 216, 80);
+  border: #0ba360 5px solid;
+  border-radius: 10px;
+}
+
+.backgrounds {
+  display: flex;
+}
+
+.backgrounds img {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  /* border: 1px solid black; */
+  background-size: auto;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 10px auto;
+  justify-content: space-evenly;
+}
+
+.backgrounds img:hover {
+  box-shadow: 10px 5px 5px #0ba360;
+}
+
 .btn_hover {
   width: 150px;
   font-size: 20px;
@@ -30,7 +70,6 @@ div > h1 {
   color: #fff;
   cursor: pointer;
   margin: 20px;
-
   height: 55px;
   text-align: center;
   border: none;
@@ -196,6 +235,12 @@ div > h1 {
 
   .mob_display {
     display: inline-block;
+  }
+
+  .options {
+    width: 300px;
+    margin: 0 auto;
+    display: block;
   }
 
   .btn_hover {
