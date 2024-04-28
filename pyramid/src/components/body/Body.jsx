@@ -25,6 +25,7 @@ const Body = () => {
           return true;
         }
       }
+      // ----------------------------------------------
       let ourArr = card.cards.filter((i, ind) => {
         if (ind < 28) {
           if (
@@ -36,6 +37,8 @@ const Body = () => {
         }
         return false;
       });
+      console.log(ourArr);
+      //----------------------------------------------------
       const findAllIndices = (arr) => {
         const result = [];
         for (let i = 0; i < arr.length; i++) {
@@ -47,9 +50,10 @@ const Body = () => {
             }
           }
         }
+        console.log(result);
         return result;
       };
-      return findAllIndices(ourArr).some((element) => element === index)
+      return findAllIndices(ourArr).some((element) => element === forCard.id)
         ? true
         : false;
     }
