@@ -2,17 +2,12 @@ import BackCard from "../backCard/BackCard";
 import Res from "../reset/Res";
 import s from "./body.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { setBodyGameToo, setHint, sortCards } from "../../store/cardSlice";
+import { setBodyGameToo, sortCards } from "../../store/cardSlice";
 import CardItem from "../cardItem/cardItem";
 
 const Body = () => {
   const card = useSelector((state) => state.pyramid);
   const dispatch = useDispatch();
-  if (card.hint) {
-    setTimeout(() => {
-      dispatch(setHint(false));
-    }, 500);
-  }
   if (card.cards[0].id === 0) {
     dispatch(sortCards());
   }

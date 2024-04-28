@@ -12,13 +12,18 @@ import { moveBack, setHint } from "../../store/cardSlice";
 
 export default function Header() {
   const dispatch = useDispatch();
+  // const card = useSelector((state) => state.pyramid);
 
   const backMove = () => {
     dispatch(moveBack());
   };
   const hint = () => {
     dispatch(setHint(true));
+    setTimeout(() => {
+      dispatch(setHint(false));
+    }, 1000);
   };
+
   return (
     <div className={s.header}>
       <h1 className={s.tac_one_regular}>Pyramid</h1>
