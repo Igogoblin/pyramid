@@ -25,8 +25,34 @@ const Body = () => {
           return true;
         }
       }
+      let ourArr = card.cards.filter((i, ind) => {
+        if (ind < 28) {
+          if (
+            card.forRule[card.rule[ind].rule[0]] === 0 &&
+            card.forRule[card.rule[ind].rule[1]] === 0
+          ) {
+            return true;
+          }
+        }
+        return false;
+      });
+      const findAllIndices = (arr) => {
+        const result = [];
+        for (let i = 0; i < arr.length; i++) {
+          const currentElement = arr[i].point;
+          for (let j = i + 1; j < arr.length; j++) {
+            if (arr[j].point + currentElement === 13) {
+              result.push(arr[i].id);
+              result.push(arr[j].id);
+            }
+          }
+        }
+        return result;
+      };
+      return findAllIndices(ourArr).some((element) => element === index)
+        ? true
+        : false;
     }
-
     return false;
   };
 
