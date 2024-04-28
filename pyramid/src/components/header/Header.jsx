@@ -17,8 +17,7 @@ export default function Header() {
     dispatch(moveBack());
   };
   const hint = () => {
-    dispatch(setHint());
-    console.log("push hint");
+    dispatch(setHint(true));
   };
   return (
     <div className={s.header}>

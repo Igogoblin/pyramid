@@ -2,22 +2,21 @@ import BackCard from "../backCard/BackCard";
 import Res from "../reset/Res";
 import s from "./body.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { setBodyGameToo, sortCards } from "../../store/cardSlice";
+import { setBodyGameToo, setHint, sortCards } from "../../store/cardSlice";
 import CardItem from "../cardItem/cardItem";
-import { useState } from "react";
 
 const Body = () => {
   const card = useSelector((state) => state.pyramid);
-  const [hint] = useState(card.hint);
-
-  // if (card.hint === true) {
-  //   console.log("srabotalo!!!!!!!!!!!!!!!!!");
-  // }
   const dispatch = useDispatch();
+  if (card.hint) {
+    setTimeout(() => {
+      dispatch(setHint(false));
+    }, 500);
+  }
   if (card.cards[0].id === 0) {
     dispatch(sortCards());
   }
-  /* здесь передаем обьект когда словим того кто должен */
+
   const checkHint = (index, forCard) => {
     if (
       card.forRule[card.rule[index].rule[0]] === 0 &&
@@ -32,6 +31,7 @@ const Body = () => {
         }
       }
     }
+
     return false;
   };
 
@@ -53,7 +53,7 @@ const Body = () => {
                 key={index}
                 el={el}
                 index={index}
-                animate={checkHint(index, el) && hint ? true : false}
+                animate={checkHint(index, el) && card.hint}
                 bodyGame={checkPlay(index)}
               ></CardItem>
             )

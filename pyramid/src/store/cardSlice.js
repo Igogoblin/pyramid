@@ -60,7 +60,7 @@ const cardSlice = createSlice({
     },
     moveBack(state) {
       if (state.rezCount > 0) {
-        state.rezCount--;
+        // state.rezCount--; // after memory !!!
       }
     },
     // createRule(state) {
@@ -78,8 +78,8 @@ const cardSlice = createSlice({
         forRule: updateForRule,
       };
     },
-    setHint(state) {
-      state.hint = true;
+    setHint(state, action) {
+      state.hint = action.payload;
     },
     setOtb(state) {
       state.otb.push(state.rez[state.rezCount]);
