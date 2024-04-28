@@ -23,6 +23,15 @@ export default function Header() {
     dispatch(moveBack());
   };
 
+  const hint = () => {
+    dispatch(setHint(true));
+    setTimeout(() => {
+      dispatch(setHint(false));
+    }, 1000);
+  };
+
+
+
   const openOptions = () => {
     if (!options) {
       setOptions(true);
@@ -30,6 +39,7 @@ export default function Header() {
       setOptions(false);
     }
   };
+
   return (
     <div className={s.header}>
       <h1 className={s.tac_one_regular}>Pyramid</h1>
@@ -40,23 +50,23 @@ export default function Header() {
         // title="A Move Back"
         onClick={backMove}
       >
-        {" "}
-        <FontAwesomeIcon
-          icon={faArrowLeft}
-          style={{ color: "#ffffff" }}
-        />{" "}
+
+        <FontAwesomeIcon icon={faArrowLeft} style={{ color: "#ffffff" }} />{" "}
+
+       
+
         <span>CANCEL</span>
       </button>
       <button
         className={`${s.btn_hover} ${s.color_5}  ${s.tooltip}`}
-        data-tooltip='Hint'
-        onClick={() => dispatch(setHint())}
+
+        data-tooltip="Hint"
+        onClick={hint}
       >
-        {" "}
-        <FontAwesomeIcon
-          icon={faLightbulb}
-          style={{ color: "#ffffff" }}
-        />{" "}
+        <FontAwesomeIcon icon={faLightbulb} style={{ color: "#ffffff" }} />{" "}
+
+        
+
         <span>HINT</span>
       </button>
       <button

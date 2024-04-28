@@ -42,24 +42,21 @@
   margin: 0 auto;
   z-index: 1;
 }
-/*  для анимации подсказки ------------------------------------------------- */
+/*  для анимации подсказки (hint) start------------------------------------------------- */
 @keyframes shakeAndScale {
   0%,
   100% {
-    transform: scale(1) translateX(0);
+    transform: scale(1) translateX(0) rotate(0);
   }
   50% {
-    transform: scale(1.2) translateX(10px);
+    transform: scale(1.2) translateX(10px) rotate(10deg);
   }
 }
 
 .animate {
-  width: 100px;
-  height: 100px;
-  background-color: #009245;
-  animation: shakeAndScale 1s infinite ease-in-out;
+  animation: shakeAndScale 1s ease-in-out;
 }
-/*  для анимации подсказки ------------------------------------------------- */
+/*  для анимации подсказки (hint) finish------------------------------------------------- */
 @media (max-width: 767px) {
   .area {
     width: 80%;

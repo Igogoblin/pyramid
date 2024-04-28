@@ -2,38 +2,85 @@ import BackCard from "../backCard/BackCard";
 import Res from "../reset/Res";
 import s from "./body.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { sortCards } from "../../store/cardSlice";
+import { setBodyGameToo, sortCards } from "../../store/cardSlice";
 import CardItem from "../cardItem/cardItem";
-import { useState } from "react";
 
 const Body = () => {
-  const card = useSelector((state) => state.pyramid.cards);
+  const card = useSelector((state) => state.pyramid);
   const dispatch = useDispatch();
-  const [hint, setHint] = useState(false);
-  if (card[0].id === 0) {
+  if (card.cards[0].id === 0) {
     dispatch(sortCards());
   }
-  // (hint){
 
-  //   for(let i = 0;i<28;i++){
-  //     if(card.cards[i]){
-  //       if()
-  //     }
-  //   }
-  //     }
+  const checkHint = (index, forCard) => {
+    if (
+      card.forRule[card.rule[index].rule[0]] === 0 &&
+      card.forRule[card.rule[index].rule[1]] === 0
+    ) {
+      if (forCard.point === 13) {
+        return true;
+      }
+      if (card.rezCount >= 0) {
+        if (forCard.point + card.rez[card.rezCount].point === 13) {
+          return true;
+        }
+      }
+      // ----------------------------------------------
+      let ourArr = card.cards.filter((i, ind) => {
+        if (ind < 28) {
+          if (
+            card.forRule[card.rule[ind].rule[0]] === 0 &&
+            card.forRule[card.rule[ind].rule[1]] === 0
+          ) {
+            return true;
+          }
+        }
+        return false;
+      });
+      console.log(ourArr);
+      //----------------------------------------------------
+      const findAllIndices = (arr) => {
+        const result = [];
+        for (let i = 0; i < arr.length; i++) {
+          const currentElement = arr[i].point;
+          for (let j = i + 1; j < arr.length; j++) {
+            if (arr[j].point + currentElement === 13) {
+              result.push(arr[i].id);
+              result.push(arr[j].id);
+            }
+          }
+        }
+        console.log(result);
+        return result;
+      };
+      return findAllIndices(ourArr).some((element) => element === forCard.id)
+        ? true
+        : false;
+    }
+    return false;
+  };
+
+  const checkPlay = (index) => {
+    if (card.bodyPlay[0] === index) {
+      dispatch(setBodyGameToo(-1));
+      return true;
+    }
+    return false;
+  };
 
   return (
     <div className={s.main}>
       <div className={s.area}>
-        {card.map(
+        {card.cards.map(
           (el, index) =>
             28 > index && (
               <CardItem
                 key={index}
                 el={el}
                 index={index}
-                {...(hint && { animation: "animate" })}
-              />
+                animate={checkHint(index, el) && card.hint}
+                bodyGame={checkPlay(index)}
+              ></CardItem>
             )
         )}
       </div>
