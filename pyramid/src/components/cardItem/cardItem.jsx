@@ -14,15 +14,14 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
   const card = useSelector((state) => state.pyramid);
 
   const [comparison, setComparison] = useState(false);
-  //
 
   const dispatch = useDispatch();
 
   function actionCard(forCard) {
-    console.log(forCard); //обькт карты с данными
-    console.log(index); // индекс карты на поле
-    console.log(card);
-    console.log("el", el);
+    // console.log(forCard); //обькт карты с данными
+    // console.log(index); // индекс карты на поле
+    // console.log(card);
+    // console.log("el", el);
     // console.log(comparison);
     // console.log(animate);
     if (

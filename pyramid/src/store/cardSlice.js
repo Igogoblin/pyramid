@@ -85,7 +85,6 @@ const cardSlice = createSlice({
       state.otb.push(state.rez[state.rezCount]);
     },
     setBodyGame(state, action) {
-      console.log(action.payload);
       state.bodyPlay[0] = action.payload;
     },
     setBodyGameToo(state, action) {
