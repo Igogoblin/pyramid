@@ -64,11 +64,13 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
       key={el.id}
       className={`${s.level} ${animate ? s.animate : ""}`}
       style={{
+
         backgroundImage:
           comparison || card.forRule[index] === 0 ? "none" : `url(${el.way})`,
         zIndex: comparison || card.forRule[index] === 0 ? 0 : 9,
         pointerEvents:
           comparison || card.forRule[index] === 0 ? "none" : "auto",
+
         width: `calc(49px + ${card.cardSize}px)`,
         height: `calc(75px + ${card.cardSize * 2}px)`,
         transform: bodyGame ? "scale(1.2)" : "scale(1)",
