@@ -14,7 +14,6 @@ div > h1 {
 }
 
 div h4 {
-  font-size: 20px;
   margin-top: 5px;
   text-align: center;
   color: #009245;
@@ -31,7 +30,7 @@ div h4 {
 }
 
 .options {
-  position: fixed;
+  position: absolute;
   top: 100px;
   margin: auto;
   z-index: 10;
@@ -40,26 +39,55 @@ div h4 {
   background: rgb(114, 216, 80);
   border: #0ba360 5px solid;
   border-radius: 10px;
+  color: #009245;
+  font-size: 20px;
+  text-align: center;
+  font-weight: 900;
 }
 
-.backgrounds {
+.backgrounds,
+.backs {
   display: flex;
 }
 
-.backgrounds img {
+.block {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 15px auto;
+  width: 50%;
+}
+
+.backs {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.block img {
   display: inline-block;
   width: 100px;
   height: 100px;
-  /* border: 1px solid black; */
   background-size: auto;
   background-repeat: no-repeat;
   border-radius: 8px;
   cursor: pointer;
-  margin: 10px auto;
+  margin: 2% auto;
   justify-content: space-evenly;
 }
 
-.backgrounds img:hover {
+.backs img {
+  display: inline-block;
+  width: 60px;
+  height: 90px;
+  background-size: auto;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 5px auto;
+  justify-content: space-evenly;
+}
+
+.backgrounds img:hover,
+.backs img:hover {
   box-shadow: 10px 5px 5px #0ba360;
 }
 
@@ -237,10 +265,47 @@ div h4 {
     display: inline-block;
   }
 
-  .options {
-    width: 300px;
-    margin: 0 auto;
+  .backgrounds {
     display: block;
+  }
+
+  .block {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 15px auto;
+    width: 100%;
+  }
+
+  .options {
+    width: 100vw;
+    display: block;
+    position: fixed;
+    top: 250px;
+    left: 0px;
+    z-index: 10;
+    background: rgb(114, 216, 80);
+    border: #0ba360 5px solid;
+    border-radius: 10px;
+    color: #009245;
+    font-size: 15px;
+    text-align: center;
+    font-weight: 900;
+  }
+
+  .backs {
+    max-width: 100vw;
+  }
+
+  .backgrounds img {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto;
+  }
+
+  .backs img {
+    width: 40px;
+    height: 65px;
+    margin: 10px auto;
   }
 
   .btn_hover {

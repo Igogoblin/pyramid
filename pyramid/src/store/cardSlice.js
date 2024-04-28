@@ -16,6 +16,13 @@ const cardSlice = createSlice({
       "/pyramid/src/assets/backgrounds/space.jpg",
       "/pyramid/src/assets/backgrounds/sunflower.jpg",
     ],
+    backs: [
+      "/pyramid/src/assets/card_backs/card-cover-1.png",
+      "/pyramid/src/assets/card_backs/card-cover-2.png",
+      "/pyramid/src/assets/card_backs/card-cover-2.svg",
+      "/pyramid/src/assets/card_backs/card-cover-3.png",
+      "/pyramid/src/assets/card_backs/card-cover-4.png",
+    ],
     cardSize: 0,
     rez: [], // это наша стопка на столе под "рубашкой"
     rezCount: -1,
