@@ -24,6 +24,8 @@ const cardSlice = createSlice({
     forRule: rule[1],
     colors: 1,
     hint: false,
+    bodyPlay: [29, -1],
+    doBack: false,
   },
   reducers: {
     setSize(state, action) {
@@ -42,6 +44,9 @@ const cardSlice = createSlice({
           }
         });
       }
+      if (state.rezCount === 23) {
+        state.rezCount = -1;
+      }
     },
     showRez(state) {
       state.rezCount++;
@@ -55,29 +60,41 @@ const cardSlice = createSlice({
     },
     moveBack(state) {
       if (state.rezCount > 0) {
-        state.rezCount--;
+        // state.rezCount--; // after memory !!!
       }
     },
     // createRule(state) {
     //   if (state.rezCount === -1) {
-    //     state.forRule = new Array(24).fill(1);
+    //     state.forRule = new Array(28).fill(1);
     //   }
     //   это нужно для заполнения дляПравила массива всеми 1, если понадобится!!!
     // },
     // checkRule(state) {},
     setForRule(state, action) {
       const updateForRule = [...state.forRule];
-      console.log(updateForRule);
       updateForRule[action.payload] = 0;
-      console.log(updateForRule[action.payload], action.payload);
-      console.log(updateForRule);
       return {
         ...state,
         forRule: updateForRule,
       };
     },
-    setHint(state) {
-      state.hint = true;
+    setHint(state, action) {
+      state.hint = action.payload;
+    },
+    setOtb(state) {
+      state.otb.push(state.rez[state.rezCount]);
+    },
+    setBodyGame(state, action) {
+      state.bodyPlay[0] = action.payload;
+    },
+    setBodyGameToo(state, action) {
+      state.bodyPlay[1] = action.payload;
+    },
+    setBackStep(state) {
+      state.doBack = true;
+    },
+    setBackStepNorm(state) {
+      state.doBack = false;
     },
   },
 });
@@ -93,6 +110,11 @@ export const {
   // createRule,
   setForRule,
   setHint,
+  setOtb,
+  setBodyGame,
+  setBodyGameToo,
+  setBackStep,
+  setBackStepNorm,
 } = cardSlice.actions;
 
 export default cardSlice.reducer;
