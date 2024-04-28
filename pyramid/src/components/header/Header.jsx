@@ -12,7 +12,6 @@ import { moveBack, setHint } from "../../store/cardSlice";
 
 export default function Header() {
   const dispatch = useDispatch();
-  // const card = useSelector((state) => state.pyramid);
 
   const backMove = () => {
     dispatch(moveBack());
@@ -34,7 +33,6 @@ export default function Header() {
         // title="A Move Back"
         onClick={backMove}
       >
-        {" "}
         <FontAwesomeIcon icon={faArrowLeft} style={{ color: "#ffffff" }} />{" "}
         <span>CANCEL</span>
       </button>
@@ -43,7 +41,6 @@ export default function Header() {
         data-tooltip="Hint"
         onClick={hint}
       >
-        {" "}
         <FontAwesomeIcon icon={faLightbulb} style={{ color: "#ffffff" }} />{" "}
         <span>HINT</span>
       </button>
