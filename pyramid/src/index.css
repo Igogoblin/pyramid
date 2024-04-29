@@ -32,9 +32,12 @@ dd {
 /* Set core body defaults */
 body {
   min-height: 100vh;
+  min-width: 100vw;
   scroll-behavior: smooth;
   text-rendering: optimizeSpeed;
   line-height: 1.5;
+  margin: 0;
+  padding: 0;
 }
 
 /* Remove list styles on ul, ol elements with a class attribute */
@@ -75,4 +78,15 @@ select {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+title {
+  background-color: aquamarine;
+  color: white;
 }
