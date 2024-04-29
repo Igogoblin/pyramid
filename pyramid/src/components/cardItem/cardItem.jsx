@@ -44,8 +44,7 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
       //   dispatch(setBackStep());
       //   dispatch(setShowCard(index));
       //   return;
-      // }
-      if (card.rezCount >= 0) {
+      
         if (forCard.point + card.rez[card.rezCount].point === 13) {
           setComparison(true);
           dispatch(setForRule(index));
