@@ -6,6 +6,8 @@ import {
   setBodyGame,
   setBackStep,
   setBodyGameToo,
+  setShowCard,
+  setHint,
 } from "../../store/cardSlice";
 import PropTypes from "prop-types";
 import { useState } from "react";
@@ -24,6 +26,7 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
     // console.log("el", el);
     // console.log(comparison);
     // console.log(animate);
+    dispatch(setHint(false));
     if (
       card.forRule[card.rule[index].rule[0]] === 0 &&
       card.forRule[card.rule[index].rule[1]] === 0
@@ -31,13 +34,23 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
       if (forCard.point === 13) {
         setComparison(true);
         dispatch(setForRule(index));
+        dispatch(setShowCard(index));
         return;
       }
+      // для первоочередном взаимодействии карт с поля
+      // if (card.cards[card.bodyPlay[0]].point + forCard.point) {
+      //   setComparison(true);
+      //   dispatch(setForRule(index));
+      //   dispatch(setBackStep());
+      //   dispatch(setShowCard(index));
+      //   return;
+      // }
       if (card.rezCount >= 0) {
         if (forCard.point + card.rez[card.rezCount].point === 13) {
           setComparison(true);
           dispatch(setForRule(index));
           dispatch(setBackStep());
+          dispatch(setShowCard(index));
           return;
         }
       }
@@ -51,6 +64,7 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
           setComparison(true);
           dispatch(setForRule(index));
           dispatch(setForRule(card.bodyPlay[0]));
+          dispatch(setShowCard(index));
         }
 
         dispatch(setBodyGame(29));
@@ -64,7 +78,6 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
       key={el.id}
       className={`${s.level} ${animate ? s.animate : ""}`}
       style={{
-
         backgroundImage:
           comparison || card.forRule[index] === 0 ? "none" : `url(${el.way})`,
         zIndex: comparison || card.forRule[index] === 0 ? 0 : 9,

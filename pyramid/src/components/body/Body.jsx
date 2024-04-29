@@ -30,7 +30,8 @@ const Body = () => {
         if (ind < 28) {
           if (
             card.forRule[card.rule[ind].rule[0]] === 0 &&
-            card.forRule[card.rule[ind].rule[1]] === 0
+            card.forRule[card.rule[ind].rule[1]] === 0 &&
+            i.show === true
           ) {
             return true;
           }
@@ -42,9 +43,11 @@ const Body = () => {
       const findAllIndices = (arr) => {
         const result = [];
         for (let i = 0; i < arr.length; i++) {
-          const currentElement = arr[i].point;
           for (let j = i + 1; j < arr.length; j++) {
-            if (arr[j].point + currentElement === 13) {
+            if (
+              arr[j].point + arr[i].point === 13 &&
+              card.cards[index].show === true
+            ) {
               result.push(arr[i].id);
               result.push(arr[j].id);
             }

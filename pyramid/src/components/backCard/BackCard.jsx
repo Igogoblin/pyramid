@@ -1,6 +1,7 @@
 import {
   createRez,
   setBackStepNorm,
+  setHint,
   setOtb,
   showRez,
 } from "../../store/cardSlice";
@@ -15,6 +16,7 @@ const BackCard = () => {
     dispatch(createRez());
     dispatch(showRez());
     dispatch(setOtb());
+    dispatch(setHint(false));
     // dispatch(createRule()); в будущем может понадобится
   }
 
