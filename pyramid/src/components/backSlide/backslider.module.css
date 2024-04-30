@@ -1,5 +1,4 @@
 .place {
-  /* text-align: center; */
   display: flex;
   gap: 10px;
   position: relative;
@@ -21,7 +20,6 @@
   border-radius: 8px;
   position: absolute;
   transition: transform 0.5s ease;
-  /* cursor: pointer; */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 body {

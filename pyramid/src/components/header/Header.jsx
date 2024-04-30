@@ -23,6 +23,13 @@ export default function Header() {
     dispatch(moveBack());
   };
 
+  const hint = () => {
+    dispatch(setHint(true));
+    setTimeout(() => {
+      dispatch(setHint(false));
+    }, 1000);
+  };
+
   const openOptions = () => {
     if (!options) {
       setOptions(true);
@@ -30,6 +37,7 @@ export default function Header() {
       setOptions(false);
     }
   };
+
   return (
     <div className={s.header}>
       <div className={s.buttons}>

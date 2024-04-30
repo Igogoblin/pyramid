@@ -2,20 +2,18 @@ import { useSelector } from "react-redux";
 // import { createOtb } from "../../store/cardSlice";
 
 const Res = () => {
-  const card = useSelector((state) => state.pyramid.rez);
-  const otb = useSelector((state) => state.pyramid.otb);
-  const itemCard = useSelector((state) => state.pyramid.rezCount);
-  // const dispatch = useDispatch();
-  // function toOtb() {
-  //   dispatch(createOtb());
-  // } a?a:b
+
+  const card = useSelector((state) => state.pyramid);
+
+
   return (
-    card[itemCard] !== otb[otb.length - 1] && (
+    // card[itemCard] !== otb[otb.length - 1] && ( // уходит из рез в отб
+    card.rezCount >= 0 &&
+    !card.doBack && (
       <div
         style={{
-          backgroundImage: `url(${card[itemCard].way})`,
+          backgroundImage: `url(${card.rez[card.rezCount].way})`,
         }}
-        // onClick={toOtb}
       ></div>
     )
   );
