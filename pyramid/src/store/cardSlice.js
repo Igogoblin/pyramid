@@ -15,6 +15,7 @@ import cardCover3 from "../assets/card_backs//card-cover-3.png";
 import cardCover4 from "../assets/card_backs//card-cover-4.png";
 import cardCover5 from "../assets/card_backs//card-cover-5.svg";
 
+
 const cardSlice = createSlice({
   name: "pyramid",
   initialState: {
