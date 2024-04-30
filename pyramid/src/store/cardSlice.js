@@ -1,28 +1,35 @@
 import { createSlice } from "@reduxjs/toolkit";
 import allCards from "./cards.json";
 import rule from "./rule.json";
+import clouds from "../assets/backgrounds/clouds.jpg";
+import flowers from "../assets/backgrounds/flowers.jpg";
+import osnova from "../assets/backgrounds/default.jpg";
+import flowersField from "../assets/backgrounds/flowers-field.jpg";
+import sand from "../assets/backgrounds/sand.jpg";
+import sea from "../assets/backgrounds/sea.jpg";
+import space from "../assets/backgrounds/space.jpg";
+import sunflower from "../assets/backgrounds/sunflower.jpg";
+import cardCover1 from "../assets/card_backs//card-cover-1.png";
+import cardCover2 from "../assets/card_backs//card-cover-2.png";
+import cardCover3 from "../assets/card_backs//card-cover-3.png";
+import cardCover4 from "../assets/card_backs//card-cover-4.png";
+import cardCover5 from "../assets/card_backs//card-cover-5.svg";
 
 const cardSlice = createSlice({
   name: "pyramid",
   initialState: {
     cards: allCards,
     backFont: [
-      "/pyramid/src/assets/backgrounds/clouds.jpg",
-      "/pyramid/src/assets/backgrounds/default.jpg",
-      "/pyramid/src/assets/backgrounds/flowers.jpg",
-      "/pyramid/src/assets/backgrounds/flowers-field.jpg",
-      "/pyramid/src/assets/backgrounds/sand.jpg",
-      "/pyramid/src/assets/backgrounds/sea.jpg",
-      "/pyramid/src/assets/backgrounds/space.jpg",
-      "/pyramid/src/assets/backgrounds/sunflower.jpg",
+      clouds,
+      osnova,
+      flowers,
+      flowersField,
+      sand,
+      sea,
+      space,
+      sunflower,
     ],
-    backs: [
-      "/pyramid/src/assets/card_backs/card-cover-1.png",
-      "/pyramid/src/assets/card_backs/card-cover-2.png",
-      "/pyramid/src/assets/card_backs/card-cover-2.svg",
-      "/pyramid/src/assets/card_backs/card-cover-3.png",
-      "/pyramid/src/assets/card_backs/card-cover-4.png",
-    ],
+    backs: [cardCover1, cardCover2, cardCover3, cardCover4, cardCover5],
     cardSize: 0,
     rez: [], // это наша стопка на столе под "рубашкой"
     rezCount: -1,
