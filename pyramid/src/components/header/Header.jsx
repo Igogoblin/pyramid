@@ -32,68 +32,74 @@ export default function Header() {
   };
   return (
     <div className={s.header}>
-      <h1 className={s.tac_one_regular}>Pyramid</h1>
+      <div className={s.buttons}>
+        <h1 className={s.tac_one_regular}>Pyramid</h1>
 
-      <button
-        className={`${s.btn_hover} ${s.color_5} ${s.tooltip}`}
-        data-tooltip='A Move Back'
-        // title="A Move Back"
-        onClick={backMove}
-      >
-        {" "}
-        <FontAwesomeIcon
-          icon={faArrowLeft}
-          style={{ color: "#ffffff" }}
-        />{" "}
-        <span>CANCEL</span>
-      </button>
-      <button
-        className={`${s.btn_hover} ${s.color_5}  ${s.tooltip}`}
-        data-tooltip='Hint'
-        onClick={() => dispatch(setHint())}
-      >
-        {" "}
-        <FontAwesomeIcon
-          icon={faLightbulb}
-          style={{ color: "#ffffff" }}
-        />{" "}
-        <span>HINT</span>
-      </button>
-      <button
-        className={`${s.btn_hover} ${s.color_5} ${s.tooltip}`}
-        data-tooltip='New Game'
-      >
-        <FontAwesomeIcon
-          icon={faPlus}
-          style={{ color: "#fafafa" }}
-        />{" "}
-        <span>NEW GAME</span>
-      </button>
-      <button
-        className={`${s.btn_hover} ${s.color_5} ${s.tooltip}`}
-        data-tooltip='Restart This Game'
-      >
-        <FontAwesomeIcon
-          icon={faRotateLeft}
-          style={{ color: "#ffffff" }}
-        />{" "}
-        <span>RESTART</span>
-      </button>
-      <button
-        className={`${s.btn_hover} ${s.color_5} ${s.tooltip}`}
-        data-tooltip='Options'
-        onClick={openOptions}
-      >
-        <FontAwesomeIcon
-          icon={faGear}
-          style={{ color: "#ffffff" }}
-        />{" "}
-        <span>OPTIONS</span>
-      </button>
+        <button
+          className={`${s.btn_hover} ${s.color_5} ${s.tooltip}`}
+          data-tooltip='A Move Back'
+          // title="A Move Back"
+          onClick={backMove}
+        >
+          {" "}
+          <FontAwesomeIcon
+            icon={faArrowLeft}
+            style={{ color: "#ffffff" }}
+          />{" "}
+          <span>CANCEL</span>
+        </button>
+        <button
+          className={`${s.btn_hover} ${s.color_5}  ${s.tooltip}`}
+          data-tooltip='Hint'
+          onClick={() => dispatch(setHint())}
+        >
+          {" "}
+          <FontAwesomeIcon
+            icon={faLightbulb}
+            style={{ color: "#ffffff" }}
+          />{" "}
+          <span>HINT</span>
+        </button>
+        <button
+          className={`${s.btn_hover} ${s.color_5} ${s.tooltip}`}
+          data-tooltip='New Game'
+        >
+          <FontAwesomeIcon
+            icon={faPlus}
+            style={{ color: "#fafafa" }}
+          />{" "}
+          <span>NEW GAME</span>
+        </button>
+        <button
+          className={`${s.btn_hover} ${s.color_5} ${s.tooltip}`}
+          data-tooltip='Restart This Game'
+        >
+          <FontAwesomeIcon
+            icon={faRotateLeft}
+            style={{ color: "#ffffff" }}
+          />{" "}
+          <span>RESTART</span>
+        </button>
+        <button
+          className={`${s.btn_hover} ${s.color_5} ${s.tooltip}`}
+          data-tooltip='Options'
+          onClick={openOptions}
+        >
+          <FontAwesomeIcon
+            icon={faGear}
+            style={{ color: "#ffffff" }}
+          />{" "}
+          <span>OPTIONS</span>
+        </button>
+      </div>
       <div
         className={`${s.block_options}`}
         style={{ display: options ? "block" : "none" }}
       >
+        <div
+          onClick={openOptions}
+          className={s.close_options}
+        ></div>
         <div className={`${s.options}`}>
           <h4>Backgrounds:</h4>
           <div className={`${s.backgrounds}`}>
@@ -127,6 +133,10 @@ export default function Header() {
             <Timer />
           </div>
         </div>
+        <div
+          onClick={openOptions}
+          className={`${s.close_options_bottom} ${s.close_options}`}
+        ></div>
       </div>
     </div>
   );

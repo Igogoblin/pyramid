@@ -37,8 +37,12 @@ div h4 {
   z-index: 10;
 }
 
+.close_options {
+  height: 100px;
+}
+
 .options {
-  margin: 100px auto;
+  margin: auto;
 
   width: 1350px;
   height: 500px;
@@ -267,12 +271,32 @@ div h4 {
     display: none;
   }
 
+  .buttons {
+    position: fixed;
+    top: 90%;
+
+    margin: auto;
+  }
+
   .mob_display {
     display: inline-block;
   }
 
   .backgrounds {
     display: block;
+  }
+
+  .block_options {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+  }
+
+  .close_options_bottom {
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    height: 300px;
   }
 
   .block {
