@@ -45,7 +45,7 @@ export default function Header() {
 
         <button
           className={`${s.btn_hover} ${s.color_5} ${s.tooltip}`}
-          data-tooltip='A Move Back'
+          data-tooltip="A Move Back"
           // title="A Move Back"
           onClick={backMove}
         >
@@ -58,8 +58,8 @@ export default function Header() {
         </button>
         <button
           className={`${s.btn_hover} ${s.color_5}  ${s.tooltip}`}
-          data-tooltip='Hint'
-          onClick={() => dispatch(setHint())}
+          data-tooltip="Hint"
+          onClick={hint}
         >
           {" "}
           <FontAwesomeIcon
@@ -70,33 +70,24 @@ export default function Header() {
         </button>
         <button
           className={`${s.btn_hover} ${s.color_5} ${s.tooltip}`}
-          data-tooltip='New Game'
+          data-tooltip="New Game"
         >
-          <FontAwesomeIcon
-            icon={faPlus}
-            style={{ color: "#fafafa" }}
-          />{" "}
+          <FontAwesomeIcon icon={faPlus} style={{ color: "#fafafa" }} />{" "}
           <span>NEW GAME</span>
         </button>
         <button
           className={`${s.btn_hover} ${s.color_5} ${s.tooltip}`}
-          data-tooltip='Restart This Game'
+          data-tooltip="Restart This Game"
         >
-          <FontAwesomeIcon
-            icon={faRotateLeft}
-            style={{ color: "#ffffff" }}
-          />{" "}
+          <FontAwesomeIcon icon={faRotateLeft} style={{ color: "#ffffff" }} />{" "}
           <span>RESTART</span>
         </button>
         <button
           className={`${s.btn_hover} ${s.color_5} ${s.tooltip}`}
-          data-tooltip='Options'
+          data-tooltip="Options"
           onClick={openOptions}
         >
-          <FontAwesomeIcon
-            icon={faGear}
-            style={{ color: "#ffffff" }}
-          />{" "}
+          <FontAwesomeIcon icon={faGear} style={{ color: "#ffffff" }} />{" "}
           <span>OPTIONS</span>
         </button>
       </div>
@@ -104,10 +95,7 @@ export default function Header() {
         className={`${s.block_options}`}
         style={{ display: options ? "block" : "none" }}
       >
-        <div
-          onClick={openOptions}
-          className={s.close_options}
-        ></div>
+        <div onClick={openOptions} className={s.close_options}></div>
         <div className={`${s.options}`}>
           <h4>Backgrounds:</h4>
           <div className={`${s.backgrounds}`}>
@@ -132,11 +120,11 @@ export default function Header() {
             <img src={backCard[3]} />
             <img src={backCard[4]} />
           </div>
-          <div className='backs'>
+          <div className="backs">
             <h4>Card Size</h4>
             <Slider />
           </div>
-          <div className='backs'>
+          <div className="backs">
             <br />
             <Timer />
           </div>
