@@ -1,13 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import allCards from "./cards.json";
 import rule from "./rule.json";
+import clouds from "../assets/backgrounds/clouds.jpg";
 
 const cardSlice = createSlice({
   name: "pyramid",
   initialState: {
     cards: allCards,
     backFont: [
-      "/pyramid/src/assets/backgrounds/clouds.jpg",
+      // "/pyramid/src/assets/backgrounds/clouds.jpg",
+      clouds,
       "/pyramid/src/assets/backgrounds/default.jpg",
       "/pyramid/src/assets/backgrounds/flowers.jpg",
       "/pyramid/src/assets/backgrounds/flowers-field.jpg",

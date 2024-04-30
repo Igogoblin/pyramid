@@ -8,6 +8,6 @@ export default defineConfig({
   build: {
     minify: false,
     sourcemap: true,
-    assetsDir: "src",
+    imagePath: "/pyramid/src/assets/",
   },
 });
