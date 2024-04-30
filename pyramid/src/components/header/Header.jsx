@@ -1,5 +1,4 @@
 import s from "./header.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faRotateLeft,
   faLightbulb,
