@@ -103,6 +103,9 @@ const cardSlice = createSlice({
     setBackStepNorm(state) {
       state.doBack = false;
     },
+    setShowCard(state, action) {
+      state.cards[action.payload].show = false;
+    },
   },
 });
 
@@ -122,6 +125,7 @@ export const {
   setBodyGameToo,
   setBackStep,
   setBackStepNorm,
+  setShowCard,
 } = cardSlice.actions;
 
 export default cardSlice.reducer;
