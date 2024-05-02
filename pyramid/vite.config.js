@@ -5,9 +5,9 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   base: "/pyramid/",
   plugins: [react()],
-  build: {
-    minify: false,
-    sourcemap: true,
-    imagePath: "/pyramid/src/assets/",
-  },
+  // build: {
+  //   minify: false,
+  //   sourcemap: true,
+  //   imagePath: "/pyramid/src/assets/",
+  // },
 });
