@@ -29,11 +29,21 @@ div h4 {
   display: none;
 }
 
-.options {
+.block_options {
   position: absolute;
-  top: 100px;
-  margin: auto;
+  height: 100vh;
+  width: 100vw;
+  background: rgba(0, 0, 0, 0.5);
   z-index: 10;
+}
+
+.close_options {
+  height: 100px;
+}
+
+.options {
+  margin: auto;
+
   width: 1350px;
   height: 500px;
   background: rgb(114, 216, 80);
@@ -261,12 +271,32 @@ div h4 {
     display: none;
   }
 
+  .buttons {
+    position: fixed;
+    top: 90%;
+
+    margin: auto;
+  }
+
   .mob_display {
     display: inline-block;
   }
 
   .backgrounds {
     display: block;
+  }
+
+  .block_options {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+  }
+
+  .close_options_bottom {
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    height: 300px;
   }
 
   .block {
@@ -280,7 +310,7 @@ div h4 {
     width: 100vw;
     display: block;
     position: fixed;
-    top: 250px;
+    top: 100px;
     left: 0px;
     z-index: 10;
     background: rgb(114, 216, 80);
