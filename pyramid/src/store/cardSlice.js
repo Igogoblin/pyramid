@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import allCards from "./cards.json";
+// import allCards from "./cards.json";
+import allCards from "./cards";
 import rule from "./rule.json";
 import clouds from "../assets/backgrounds/clouds.jpg";
 import flowers from "../assets/backgrounds/flowers.jpg";
@@ -15,11 +16,10 @@ import cardCover3 from "../assets/card_backs//card-cover-3.png";
 import cardCover4 from "../assets/card_backs//card-cover-4.png";
 import cardCover5 from "../assets/card_backs//card-cover-5.svg";
 
-
 const cardSlice = createSlice({
   name: "pyramid",
   initialState: {
-    cards: allCards,
+    cards: [...allCards],
     backFont: [
       clouds,
       osnova,
