@@ -34,8 +34,6 @@ body {
 @media screen and (max-width: 500px) {
   .header-bottom {
     display: block;
-    position: fixed;
-    bottom: 10px;
   }
 
   .header-top {
