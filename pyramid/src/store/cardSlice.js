@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 // import allCards from "./cards.json";
 import allCards from "./cards";
+import twoPart from "./twoPart";
 import rule from "./rule.json";
 import clouds from "../assets/backgrounds/clouds.jpg";
 import flowers from "../assets/backgrounds/flowers.jpg";
@@ -10,16 +11,16 @@ import sand from "../assets/backgrounds/sand.jpg";
 import sea from "../assets/backgrounds/sea.jpg";
 import space from "../assets/backgrounds/space.jpg";
 import sunflower from "../assets/backgrounds/sunflower.jpg";
-import cardCover1 from "../assets/card_backs//card-cover-1.png";
-import cardCover2 from "../assets/card_backs//card-cover-2.png";
-import cardCover3 from "../assets/card_backs//card-cover-3.png";
-import cardCover4 from "../assets/card_backs//card-cover-4.png";
-import cardCover5 from "../assets/card_backs//card-cover-5.svg";
+import cardCover1 from "../assets/card_backs/card-cover-1.png";
+import cardCover2 from "../assets/card_backs/card-cover-2.png";
+import cardCover3 from "../assets/card_backs/card-cover-3.png";
+import cardCover4 from "../assets/card_backs/card-cover-4.png";
+import cardCover5 from "../assets/card_backs/card-cover-5.svg";
 
 const cardSlice = createSlice({
   name: "pyramid",
   initialState: {
-    cards: [...allCards],
+    cards: [...allCards, ...twoPart],
     backFont: [
       clouds,
       osnova,
