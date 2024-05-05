@@ -2,49 +2,49 @@
   {
     "id": 0,
     "point": 1,
-    "way": "../assets/cards/clubs-1.svg",
+    "way": "/pyramid/src/assets/cards/clubs-1.svg",
     "show": true
   },
   {
     "id": 1,
     "point": 2,
-    "way": "../assets/cards/clubs-2.svg",
+    "way": "/pyramid/src/assets/cards/clubs-2.svg",
     "show": true
   },
   {
     "id": 2,
     "point": 3,
-    "way": "../assets/cards/clubs-3.svg",
+    "way": "/pyramid/src/assets/cards/clubs-3.svg",
     "show": true
   },
   {
     "id": 3,
     "point": 4,
-    "way": "../assets/cards/clubs-4.svg",
+    "way": "/pyramid/src/assets/cards/clubs-4.svg",
     "show": true
   },
   {
     "id": 4,
     "point": 5,
-    "way": "../assets/cards/clubs-5.svg",
+    "way": "/pyramid/src/assets/cards/clubs-5.svg",
     "show": true
   },
   {
     "id": 5,
     "point": 6,
-    "way": "../assets/cards/clubs-6.svg",
+    "way": "/pyramid/src/assets/cards/clubs-6.svg",
     "show": true
   },
   {
     "id": 6,
     "point": 7,
-    "way": "../assets/cards/clubs-7.svg",
+    "way": "/pyramid/src/assets/cards/clubs-7.svg",
     "show": true
   },
   {
     "id": 7,
     "point": 8,
-    "way": "../assets/cards/clubs-8.svg",
+    "way": "/pyramid/src/assets/cards/clubs-8.svg",
     "show": true
   },
   {
