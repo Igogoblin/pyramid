@@ -9,6 +9,5 @@ export default defineConfig({
     minify: false,
     sourcemap: true,
     imagePath: "/pyramid/src/assets/",
-    assetsInlineLimit: 0,
   },
 });
