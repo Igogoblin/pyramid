@@ -7,21 +7,19 @@ import {
   faGear,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { moveBack, setHint } from "../../store/cardSlice";
+import { setHint } from "../../store/cardSlice";
 import { useState } from "react";
 import Timer from "../footer/Timer";
 import Slider from "../slider/Slider";
 import Button from "../Button/Button";
+// import { Link } from "react-router-dom";
 
 export default function Header() {
   const dispatch = useDispatch();
   const [options, setOptions] = useState(false);
   const back = useSelector((state) => state.pyramid.backFont);
   const backCard = useSelector((state) => state.pyramid.backs);
-
-  // const backMove = () => {
-  //   dispatch(moveBack());
-  // };
+  const cards = useSelector((state) => state.pyramid);
 
   const hint = () => {
     dispatch(setHint(true));
@@ -37,7 +35,11 @@ export default function Header() {
       setOptions(false);
     }
   };
-
+  const restart = () => {
+    console.log("push restart");
+    localStorage.setItem("restartPyramid", JSON.stringify(cards.cards));
+    localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
+  };
   return (
     <div className={s.header}>
       <div className={s.buttons}>
@@ -56,20 +58,26 @@ export default function Header() {
           data_tooltip="Hint"
           onClick={hint}
         />
+        <a href="/">
+          <Button
+            icon={faPlus}
+            span={"NEW GAME"}
+            data_tooltip="New Game"
+            // onClick={hint}
+          />
+        </a>
 
-        <Button
-          icon={faPlus}
-          span={"NEW GAME"}
-          data_tooltip="New Game"
-          // onClick={hint}
-        />
+        {/* <Link to="/"> */}
+        <a href="/">
+          <Button
+            icon={faRotateLeft}
+            span={"RESTART"}
+            data_tooltip="Restart This Game"
+            onClick={restart}
+          />
+        </a>
 
-        <Button
-          icon={faRotateLeft}
-          span={"RESTART"}
-          data_tooltip="Restart This Game"
-          // onClick={hint}
-        />
+        {/* </Link> */}
 
         <Button
           icon={faGear}
@@ -82,10 +90,7 @@ export default function Header() {
         className={`${s.block_options}`}
         style={{ display: options ? "block" : "none" }}
       >
-        <div
-          onClick={openOptions}
-          className={s.close_options}
-        ></div>
+        <div onClick={openOptions} className={s.close_options}></div>
         <div className={`${s.options}`}>
           <h4>Backgrounds:</h4>
           <div className={`${s.backgrounds}`}>
