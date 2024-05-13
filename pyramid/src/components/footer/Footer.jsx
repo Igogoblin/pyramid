@@ -17,7 +17,9 @@ const Footer = () => {
     <footer
       className={s.footer}
       style={{
-        ...(colors == 1 ? { color: "white" } : { color: "black" }),
+        ...(colors == 1 || colors == 6
+          ? { color: "white" }
+          : { color: "black" }),
       }}
     >
       <div className={s.mob_display}>
