@@ -5,7 +5,14 @@ import rule from "./rule.json";
 const cardSlice = createSlice({
   name: "pyramid",
   initialState: {
-    cards: allCards,
+
+    restart: false,
+    cards:
+      localStorage.getItem("restartPyramidTrue") == "true"
+        ? JSON.parse(localStorage.getItem("restartPyramid"))
+        : allCards,
+    // cards: allCards,
+
     backFont: [
       "/pyramid/src/assets/backgrounds/clouds.jpg",
       "/pyramid/src/assets/backgrounds/default.jpg",
@@ -33,6 +40,7 @@ const cardSlice = createSlice({
     hint: false,
     bodyPlay: [29, -1],
     doBack: false,
+    backCard: [0],
   },
   reducers: {
     setSize(state, action) {
@@ -106,6 +114,9 @@ const cardSlice = createSlice({
     setShowCard(state, action) {
       state.cards[action.payload].show = false;
     },
+    setCardBackIndex(state, action) {
+      state.backCard = action.payload;
+    },
   },
 });
 
@@ -126,6 +137,7 @@ export const {
   setBackStep,
   setBackStepNorm,
   setShowCard,
+  setCardBackIndex,
 } = cardSlice.actions;
 
 export default cardSlice.reducer;
