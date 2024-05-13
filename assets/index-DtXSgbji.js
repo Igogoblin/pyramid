@@ -10295,7 +10295,9 @@ const rule = [
 const cardSlice = createSlice({
   name: "pyramid",
   initialState: {
-    cards: allCards,
+    restart: false,
+    cards: localStorage.getItem("restartPyramidTrue") == "true" ? JSON.parse(localStorage.getItem("restartPyramid")) : allCards,
+    // cards: allCards,
     backFont: [
       "/pyramid/src/assets/backgrounds/clouds.jpg",
       "/pyramid/src/assets/backgrounds/default.jpg",
@@ -10324,7 +10326,8 @@ const cardSlice = createSlice({
     colors: 1,
     hint: false,
     bodyPlay: [29, -1],
-    doBack: false
+    doBack: false,
+    backCard: [0]
   },
   reducers: {
     setSize(state, action) {
@@ -10394,6 +10397,9 @@ const cardSlice = createSlice({
     },
     setShowCard(state, action) {
       state.cards[action.payload].show = false;
+    },
+    setCardBackIndex(state, action) {
+      state.backCard = action.payload;
     }
   }
 });
@@ -10413,7 +10419,8 @@ const {
   setBodyGameToo,
   setBackStep,
   setBackStepNorm,
-  setShowCard
+  setShowCard,
+  setCardBackIndex
 } = cardSlice.actions;
 const cardSlice$1 = cardSlice.reducer;
 function Timer() {
@@ -10430,6 +10437,9 @@ function Timer() {
     let seconds = Math.floor(timer / 1e3 % 60);
     minutes = String(minutes).padStart(2, "0");
     seconds = String(seconds).padStart(2, "0");
+    if (seconds > 0) {
+      localStorage.setItem("restartPyramidTrue", JSON.stringify(false));
+    }
     return `${minutes}:${seconds}`;
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: formatTime() });
@@ -13340,6 +13350,7 @@ function Header() {
   const [options2, setOptions] = reactExports.useState(false);
   const back2 = useSelector((state) => state.pyramid.backFont);
   const backCard = useSelector((state) => state.pyramid.backs);
+  const cards = useSelector((state) => state.pyramid);
   const hint = () => {
     dispatch(setHint(true));
     setTimeout(() => {
@@ -13352,6 +13363,17 @@ function Header() {
     } else {
       setOptions(false);
     }
+  };
+  const restart = () => {
+    console.log("push restart");
+    localStorage.setItem("restartPyramid", JSON.stringify(cards.cards));
+    localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
+  };
+  const changeBackground = (index) => {
+    dispatch(setColor(index));
+  };
+  const changeCardBack = (index) => {
+    dispatch(setCardBackIndex(index));
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: s$4.header, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: s$4.buttons, children: [
@@ -13373,22 +13395,23 @@ function Header() {
           onClick: hint
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
+      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
         Button,
         {
           icon: faPlus,
           span: "NEW GAME",
           data_tooltip: "New Game"
         }
-      ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
+      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
         Button,
         {
           icon: faRotateLeft,
           span: "RESTART",
-          data_tooltip: "Restart This Game"
+          data_tooltip: "Restart This Game",
+          onClick: restart
         }
-      ),
+      ) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         Button,
         {
@@ -13415,27 +13438,36 @@ function Header() {
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `${s$4.options}`, children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { children: "Backgrounds:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `${s$4.backgrounds}`, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `${s$4.block}`, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: back2[1] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: back2[0] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: back2[2] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: back2[3] })
-              ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `${s$4.block}`, children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: back2[4] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: back2[5] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: back2[6] }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: back2[7] })
-              ] })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `${s$4.block}`, children: back2.map(
+                (el2, index) => index < 4 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "img",
+                  {
+                    src: back2[index],
+                    onClick: () => changeBackground(index)
+                  },
+                  index
+                )
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `${s$4.block}`, children: back2.map(
+                (el2, index) => index > 3 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "img",
+                  {
+                    src: back2[index],
+                    onClick: () => changeBackground(index)
+                  },
+                  index
+                )
+              ) })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { children: "Backs:" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `${s$4.backs}`, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: backCard[0] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: backCard[1] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: backCard[2] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: backCard[3] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: backCard[4] })
-            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `${s$4.backs}`, children: backCard.map((el2, index) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "img",
+              {
+                src: backCard[index],
+                onClick: () => changeCardBack(index)
+              },
+              index
+            )) }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "backs", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { children: "Card Size" }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(Slider, {})
@@ -13477,6 +13509,8 @@ const s$2 = {
 };
 const BackCard = () => {
   const dispatch = useDispatch();
+  const backImage = useSelector((state) => state.pyramid.backs);
+  const backImageIndex = useSelector((state) => state.pyramid.backCard);
   function next() {
     dispatch(setBackStepNorm());
     dispatch(createRez());
@@ -13484,7 +13518,14 @@ const BackCard = () => {
     dispatch(setOtb());
     dispatch(setHint(false));
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: s$2.back, onClick: next });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    "div",
+    {
+      className: s$2.back,
+      onClick: next,
+      style: { backgroundImage: `url(${backImage[backImageIndex]})` }
+    }
+  );
 };
 const Res = () => {
   const card = useSelector((state) => state.pyramid);
@@ -13587,7 +13628,6 @@ const Body = () => {
         }
         return false;
       });
-      console.log(ourArr);
       const findAllIndices = (arr) => {
         const result = [];
         for (let i = 0; i < arr.length; i++) {
@@ -13598,7 +13638,6 @@ const Body = () => {
             }
           }
         }
-        console.log(result);
         return result;
       };
       return findAllIndices(ourArr).some((element) => element === forCard.id) ? true : false;
@@ -13671,9 +13710,9 @@ const BackSlider = () => {
     )
   ] });
 };
-const footer = "_footer_x5v43_1";
-const mob_display = "_mob_display_x5v43_29";
-const information = "_information_x5v43_39";
+const footer = "_footer_15zzt_1";
+const mob_display = "_mob_display_15zzt_31";
+const information = "_information_15zzt_41";
 const s = {
   footer,
   mob_display,
@@ -13690,7 +13729,7 @@ const Footer = () => {
     {
       className: s.footer,
       style: {
-        ...colors == 1 ? { color: "white" } : { color: "black" }
+        ...colors == 1 || colors == 6 ? { color: "white" } : { color: "black" }
       },
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: s.mob_display, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Slider, {}) }),
@@ -13746,4 +13785,4 @@ const store = configureStore({
 client.createRoot(document.getElementById("root")).render(
   /* @__PURE__ */ jsxRuntimeExports.jsx(React$1.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Provider_default, { store, children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) }) })
 );
-//# sourceMappingURL=index-1zu1Rh89.js.map
+//# sourceMappingURL=index-DtXSgbji.js.map

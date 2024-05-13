@@ -661,7 +661,7 @@ div h4 {
 body {
   /* background-image: url("../../assets/backgrounds/clouds.jpg"); */
 }
-._footer_x5v43_1 {
+._footer_15zzt_1 {
   /* border-top: 1px solid black; */
   height: 90px;
 
@@ -671,19 +671,21 @@ body {
   padding: 10px 0;
   align-items: center;
   gap: 10px;
-  color: white;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 @media screen and (max-width: 500px) {
-  ._mob_display_x5v43_29 {
+  ._mob_display_15zzt_31 {
     display: none;
   }
 }
 
-._information_x5v43_39 {
+._information_15zzt_41 {
   border: 1px solid blue;
   cursor: pointer;
-}/* Box sizing rules */
+}
+/* Box sizing rules */
 *,
 *::before,
 *::after {
