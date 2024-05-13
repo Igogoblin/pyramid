@@ -38,7 +38,7 @@ const Body = () => {
         }
         return false;
       });
-      console.log(ourArr);
+      // console.log(ourArr);
       //----------------------------------------------------
       const findAllIndices = (arr) => {
         const result = [];
@@ -53,7 +53,7 @@ const Body = () => {
             }
           }
         }
-        console.log(result);
+        // console.log(result);
         return result;
       };
       return findAllIndices(ourArr).some((element) => element === forCard.id)
