@@ -38,6 +38,7 @@ const cardSlice = createSlice({
     hint: false,
     bodyPlay: [29, -1],
     doBack: false,
+    backCard: [0],
   },
   reducers: {
     setSize(state, action) {
@@ -111,6 +112,9 @@ const cardSlice = createSlice({
     setShowCard(state, action) {
       state.cards[action.payload].show = false;
     },
+    setCardBackIndex(state, action) {
+      state.backCard = action.payload;
+    },
   },
 });
 
@@ -131,6 +135,7 @@ export const {
   setBackStep,
   setBackStepNorm,
   setShowCard,
+  setCardBackIndex,
 } = cardSlice.actions;
 
 export default cardSlice.reducer;

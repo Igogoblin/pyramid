@@ -12,6 +12,8 @@ import { useState } from "react";
 import Timer from "../footer/Timer";
 import Slider from "../slider/Slider";
 import Button from "../Button/Button";
+import { setColor } from "../../store/cardSlice";
+import { setCardBackIndex } from "../../store/cardSlice";
 // import { Link } from "react-router-dom";
 
 export default function Header() {
@@ -35,11 +37,21 @@ export default function Header() {
       setOptions(false);
     }
   };
+
   const restart = () => {
     console.log("push restart");
     localStorage.setItem("restartPyramid", JSON.stringify(cards.cards));
     localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
   };
+
+  const changeBackground = (index) => {
+    dispatch(setColor(index));
+  };
+
+  const changeCardBack = (index) => {
+    dispatch(setCardBackIndex(index));
+  };
+
   return (
     <div className={s.header}>
       <div className={s.buttons}>
@@ -90,30 +102,47 @@ export default function Header() {
         className={`${s.block_options}`}
         style={{ display: options ? "block" : "none" }}
       >
-        <div onClick={openOptions} className={s.close_options}></div>
+        <div
+          onClick={openOptions}
+          className={s.close_options}
+        ></div>
         <div className={`${s.options}`}>
           <h4>Backgrounds:</h4>
           <div className={`${s.backgrounds}`}>
             <div className={`${s.block}`}>
-              <img src={back[1]} />
-              <img src={back[0]} />
-              <img src={back[2]} />
-              <img src={back[3]} />
+              {back.map(
+                (el, index) =>
+                  index < 4 && (
+                    <img
+                      src={back[index]}
+                      key={index}
+                      onClick={() => changeBackground(index)}
+                    />
+                  )
+              )}
             </div>
             <div className={`${s.block}`}>
-              <img src={back[4]} />
-              <img src={back[5]} />
-              <img src={back[6]} />
-              <img src={back[7]} />
+              {back.map(
+                (el, index) =>
+                  index > 3 && (
+                    <img
+                      src={back[index]}
+                      key={index}
+                      onClick={() => changeBackground(index)}
+                    />
+                  )
+              )}
             </div>
           </div>
           <h4>Backs:</h4>
           <div className={`${s.backs}`}>
-            <img src={backCard[0]} />
-            <img src={backCard[1]} />
-            <img src={backCard[2]} />
-            <img src={backCard[3]} />
-            <img src={backCard[4]} />
+            {backCard.map((el, index) => (
+              <img
+                src={backCard[index]}
+                key={index}
+                onClick={() => changeCardBack(index)}
+              />
+            ))}
           </div>
           <div className="backs">
             <h4>Card Size</h4>
