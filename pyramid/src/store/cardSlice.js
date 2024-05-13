@@ -5,12 +5,14 @@ import rule from "./rule.json";
 const cardSlice = createSlice({
   name: "pyramid",
   initialState: {
+
     restart: false,
     cards:
       localStorage.getItem("restartPyramidTrue") == "true"
         ? JSON.parse(localStorage.getItem("restartPyramid"))
         : allCards,
     // cards: allCards,
+
     backFont: [
       "/pyramid/src/assets/backgrounds/clouds.jpg",
       "/pyramid/src/assets/backgrounds/default.jpg",
