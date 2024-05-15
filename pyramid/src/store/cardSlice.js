@@ -4,42 +4,55 @@ import rule from "./rule.json";
 
 const cardSlice = createSlice({
   name: "pyramid",
-  initialState: {
-    restart: false,
-    cards:
-      localStorage.getItem("restartPyramidTrue") == "true"
-        ? JSON.parse(localStorage.getItem("restartPyramid"))
-        : allCards,
-    // cards: allCards,
-    backFont: [
-      "/pyramid/src/assets/backgrounds/clouds.jpg",
-      "/pyramid/src/assets/backgrounds/default.jpg",
-      "/pyramid/src/assets/backgrounds/flowers.jpg",
-      "/pyramid/src/assets/backgrounds/flowers-field.jpg",
-      "/pyramid/src/assets/backgrounds/sand.jpg",
-      "/pyramid/src/assets/backgrounds/sea.jpg",
-      "/pyramid/src/assets/backgrounds/space.jpg",
-      "/pyramid/src/assets/backgrounds/sunflower.jpg",
-    ],
-    backs: [
-      "/pyramid/src/assets/card_backs/card-cover-1.png",
-      "/pyramid/src/assets/card_backs/card-cover-2.png",
-      "/pyramid/src/assets/card_backs/card-cover-3.png",
-      "/pyramid/src/assets/card_backs/card-cover-4.png",
-      "/pyramid/src/assets/card_backs/card-cover-5.svg",
-    ],
-    cardSize: 0,
-    rez: [], // это наша стопка на столе под "рубашкой"
-    rezCount: -1,
-    otb: [], // это стопка которая под картой которая сейчас играет
-    rule: rule[0],
-    forRule: rule[1],
-    colors: 1,
-    hint: false,
-    bodyPlay: [29, -1],
-    doBack: false,
-    backCard: [0],
-  },
+
+  initialState:
+    // localStorage.getItem("stepTrue") == "true"
+    //   ? JSON.parse(
+    //       localStorage.getItem(`$step{JSON.parse(localStorage.getItem(steps)}`)
+    //     )
+    //   :
+    {
+      restart: false,
+      cards:
+        localStorage.getItem("restartPyramidTrue") == "true"
+          ? JSON.parse(localStorage.getItem("restartPyramid"))
+          : allCards,
+      // cards: allCards,
+      backFont: [
+        "/pyramid/src/assets/backgrounds/clouds.jpg",
+        "/pyramid/src/assets/backgrounds/default.jpg",
+        "/pyramid/src/assets/backgrounds/flowers.jpg",
+        "/pyramid/src/assets/backgrounds/flowers-field.jpg",
+        "/pyramid/src/assets/backgrounds/sand.jpg",
+        "/pyramid/src/assets/backgrounds/sea.jpg",
+        "/pyramid/src/assets/backgrounds/space.jpg",
+        "/pyramid/src/assets/backgrounds/sunflower.jpg",
+      ],
+      backs: [
+        "/pyramid/src/assets/card_backs/card-cover-1.png",
+        "/pyramid/src/assets/card_backs/card-cover-2.png",
+        "/pyramid/src/assets/card_backs/card-cover-3.png",
+        "/pyramid/src/assets/card_backs/card-cover-4.png",
+        "/pyramid/src/assets/card_backs/card-cover-5.svg",
+      ],
+      cardSize: 0,
+      rez: [], // это наша стопка на столе под "рубашкой"
+      rezCount: -1,
+      otb: [], // это стопка которая под картой которая сейчас играет
+      rule: rule[0],
+      forRule: rule[1],
+      colors: localStorage.getItem("bgcolor")
+        ? JSON.parse(localStorage.getItem("bgcolor"))
+        : 1,
+      hint: false,
+      bodyPlay: [29, -1],
+      doBack: false,
+      backCard: localStorage.getItem("backCard")
+        ? JSON.parse(localStorage.getItem("backCard"))
+        : 0,
+      steps: 0,
+      backStep: false,
+    },
   reducers: {
     setSize(state, action) {
       let size = [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8];
@@ -70,6 +83,7 @@ const cardSlice = createSlice({
     },
     setColor(state, action) {
       state.colors = action.payload;
+      localStorage.setItem("bgcolor", JSON.stringify(action.payload));
     },
     moveBack(state) {
       if (state.rezCount > 0) {
@@ -114,6 +128,29 @@ const cardSlice = createSlice({
     },
     setCardBackIndex(state, action) {
       state.backCard = action.payload;
+      localStorage.setItem("backCard", JSON.stringify(action.payload));
+    },
+    setSteps(state) {
+      state.steps = state.steps + 1;
+
+      localStorage.setItem(`step${state.steps}`, JSON.stringify(state));
+    },
+    stepBack(state) {
+      let step = state.steps - 1;
+      state.backStep = true;
+      console.log(JSON.parse(localStorage.getItem(`step1`)));
+      console.log(
+        JSON.parse(
+          localStorage.getItem(
+            `step${JSON.parse(localStorage.getItem(`step${step}`))}`
+          )
+        )
+      );
+      console.log(step);
+      // const rezult = JSON.parse(localStorage.getItem(`step${step}`));
+      // console.log(rezult);
+
+      // state = rezult;
     },
   },
 });
@@ -136,6 +173,8 @@ export const {
   setBackStepNorm,
   setShowCard,
   setCardBackIndex,
+  setSteps,
+  stepBack,
 } = cardSlice.actions;
 
 export default cardSlice.reducer;

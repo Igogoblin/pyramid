@@ -8,6 +8,7 @@ import {
   setBodyGameToo,
   setShowCard,
   setHint,
+  setSteps,
 } from "../../store/cardSlice";
 import PropTypes from "prop-types";
 import { useState } from "react";
@@ -35,6 +36,7 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
         setComparison(true);
         dispatch(setForRule(index));
         dispatch(setShowCard(index));
+        dispatch(setSteps());
         return;
       }
       // для первоочередном взаимодействии карт с поля
@@ -50,6 +52,7 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
           dispatch(setForRule(index));
           dispatch(setBackStep());
           dispatch(setShowCard(index));
+          dispatch(setSteps());
           return;
         }
       }
@@ -64,6 +67,7 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
           dispatch(setForRule(index));
           dispatch(setForRule(card.bodyPlay[0]));
           dispatch(setShowCard(index));
+          dispatch(setSteps());
         }
 
         dispatch(setBodyGame(29));

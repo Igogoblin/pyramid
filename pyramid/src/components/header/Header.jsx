@@ -7,18 +7,23 @@ import {
   faGear,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { setHint } from "../../store/cardSlice";
 import { useState } from "react";
 import Timer from "../footer/Timer";
 import Slider from "../slider/Slider";
 import Button from "../Button/Button";
-import { setColor } from "../../store/cardSlice";
-import { setCardBackIndex } from "../../store/cardSlice";
+import {
+  setColor,
+  stepBack,
+  setCardBackIndex,
+  setHint,
+} from "../../store/cardSlice";
+
 // import { Link } from "react-router-dom";
 
 export default function Header() {
   const dispatch = useDispatch();
   const [options, setOptions] = useState(false);
+  // const [reload, setReload] = useState(false);
   const back = useSelector((state) => state.pyramid.backFont);
   const backCard = useSelector((state) => state.pyramid.backs);
   const cards = useSelector((state) => state.pyramid);
@@ -52,6 +57,12 @@ export default function Header() {
     dispatch(setCardBackIndex(index));
   };
 
+  const backMove = () => {
+    dispatch(stepBack());
+
+    localStorage.setItem("stepTrue", JSON.stringify(cards.backStep));
+  };
+
   return (
     <div className={s.header}>
       <div className={s.buttons}>
@@ -61,7 +72,7 @@ export default function Header() {
           icon={faArrowLeft}
           span={"CANCEL"}
           data_tooltip="One Move Back"
-          // onClick={backMove}
+          onClick={backMove}
         />
 
         <Button
@@ -75,7 +86,6 @@ export default function Header() {
             icon={faPlus}
             span={"NEW GAME"}
             data_tooltip="New Game"
-            // onClick={hint}
           />
         </a>
 
