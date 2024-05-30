@@ -44,7 +44,6 @@ export default function Header() {
   };
 
   const restart = () => {
-    console.log("push restart");
     localStorage.setItem("restartPyramid", JSON.stringify(cards.cards));
     localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
   };
@@ -59,8 +58,10 @@ export default function Header() {
 
   const backMove = () => {
     dispatch(stepBack());
-
+    localStorage.setItem("restartPyramid", JSON.stringify(cards.cards));
+    localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
     localStorage.setItem("stepTrue", JSON.stringify(cards.backStep));
+    localStorage.setItem("steps", cards.steps);
   };
 
   return (
