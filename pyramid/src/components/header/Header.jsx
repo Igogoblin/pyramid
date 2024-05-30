@@ -60,7 +60,8 @@ export default function Header() {
     dispatch(stepBack());
     localStorage.setItem("restartPyramid", JSON.stringify(cards.cards));
     localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
-    localStorage.setItem("stepTrue", JSON.stringify(cards.backStep));
+    localStorage.setItem("stepTrue", true);
+    console.log(localStorage.getItem("stepTrue"));
     localStorage.setItem("steps", cards.steps);
   };
 
@@ -68,14 +69,14 @@ export default function Header() {
     <div className={s.header}>
       <div className={s.buttons}>
         <h1 className={s.tac_one_regular}>Pyramid</h1>
-
-        <Button
-          icon={faArrowLeft}
-          span={"CANCEL"}
-          data_tooltip="One Move Back"
-          onClick={backMove}
-        />
-
+        <a href="/">
+          <Button
+            icon={faArrowLeft}
+            span={"CANCEL"}
+            data_tooltip="One Move Back"
+            onClick={backMove}
+          />
+        </a>
         <Button
           icon={faLightbulb}
           span={"HINT"}

@@ -6,7 +6,6 @@ const cardSlice = createSlice({
   name: "pyramid",
 
   initialState: {
-    restart: false,
     cards:
       localStorage.getItem("restartPyramidTrue") == "true"
         ? JSON.parse(localStorage.getItem("restartPyramid"))
@@ -31,18 +30,17 @@ const cardSlice = createSlice({
     cardSize: 0,
     rez:
       // localStorage.getItem("stepTrue") == "true"
-      //   ? JSON.parse(
+      //   ? (JSON.parse(
       //       localStorage.getItem(`step${localStorage.getItem("steps")}`)
       //     ).rez
       // :
       [], // это наша стопка на столе под "рубашкой" //
     rezCount:
-      // localStorage.getItem("stepTrue") == "true"
-      //   ? JSON.parse(
-      //       localStorage.getItem(`step${localStorage.getItem("steps")}`)
-      //     ).rezCount
-      //   :
-      -1, //
+      localStorage.getItem("stepTrue") == "true"
+        ? JSON.parse(
+            localStorage.getItem(`step${localStorage.getItem("steps")}`)
+          ).rezCount
+        : -1, //
     otb: [], // это стопка которая под картой которая сейчас играет //
     rule: rule[0],
     forRule: rule[1], //
@@ -55,7 +53,12 @@ const cardSlice = createSlice({
     backCard: localStorage.getItem("backCard")
       ? JSON.parse(localStorage.getItem("backCard"))
       : 0, //
-    steps: 0, //
+    steps:
+      localStorage.getItem("stepTrue") == "true"
+        ? JSON.parse(
+            localStorage.getItem(`step${localStorage.getItem("steps")}`)
+          ).steps
+        : 0, //
     backStep: false,
   },
   reducers: {
@@ -143,9 +146,12 @@ const cardSlice = createSlice({
     stepBack(state) {
       state.steps = state.steps - 1;
       state.backStep = true;
-      console.log(
-        JSON.parse(localStorage.getItem(`step${localStorage.getItem("steps")}`))
-      );
+
+      // console.log(
+      //   JSON.parse(localStorage.getItem(`step${localStorage.getItem("steps")}`))
+      //     .rezCount
+      // );
+
       // const rezult = JSON.parse(localStorage.getItem(`step${step}`));
       // console.log(rezult);
 
