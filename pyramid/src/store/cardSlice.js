@@ -29,21 +29,30 @@ const cardSlice = createSlice({
     ],
     cardSize: 0,
     rez:
-      // localStorage.getItem("stepTrue") == "true"
-      //   ? (JSON.parse(
-      //       localStorage.getItem(`step${localStorage.getItem("steps")}`)
-      //     ).rez
-      // :
-      [], // это наша стопка на столе под "рубашкой" //
+      localStorage.getItem("stepTrue") == "true"
+        ? JSON.parse(
+            localStorage.getItem(`step${localStorage.getItem("steps")}`)
+          ).rez
+        : [], // это наша стопка на столе под "рубашкой" //
     rezCount:
       localStorage.getItem("stepTrue") == "true"
         ? JSON.parse(
             localStorage.getItem(`step${localStorage.getItem("steps")}`)
           ).rezCount
         : -1, //
-    otb: [], // это стопка которая под картой которая сейчас играет //
+    otb:
+      localStorage.getItem("stepTrue") == "true"
+        ? JSON.parse(
+            localStorage.getItem(`step${localStorage.getItem("steps")}`)
+          ).otb
+        : [], // это стопка которая под картой которая сейчас играет //
     rule: rule[0],
-    forRule: rule[1], //
+    forRule:
+      localStorage.getItem("stepTrue") == "true"
+        ? JSON.parse(
+            localStorage.getItem(`step${localStorage.getItem("steps")}`)
+          ).forRule
+        : rule[1], //
     colors: localStorage.getItem("bgcolor")
       ? JSON.parse(localStorage.getItem("bgcolor"))
       : 1,
@@ -147,10 +156,10 @@ const cardSlice = createSlice({
       state.steps = state.steps - 1;
       state.backStep = true;
 
-      // console.log(
-      //   JSON.parse(localStorage.getItem(`step${localStorage.getItem("steps")}`))
-      //     .rezCount
-      // );
+      console.log(
+        JSON.parse(localStorage.getItem(`step${localStorage.getItem("steps")}`))
+          .rezCount
+      );
 
       // const rezult = JSON.parse(localStorage.getItem(`step${step}`));
       // console.log(rezult);

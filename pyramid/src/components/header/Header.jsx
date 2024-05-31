@@ -57,6 +57,9 @@ export default function Header() {
   };
 
   const backMove = () => {
+    if (cards.rezCount === 0) {
+      return restart();
+    }
     dispatch(stepBack());
     localStorage.setItem("restartPyramid", JSON.stringify(cards.cards));
     localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
@@ -84,11 +87,7 @@ export default function Header() {
           onClick={hint}
         />
         <a href="/">
-          <Button
-            icon={faPlus}
-            span={"NEW GAME"}
-            data_tooltip="New Game"
-          />
+          <Button icon={faPlus} span={"NEW GAME"} data_tooltip="New Game" />
         </a>
 
         {/* <Link to="/"> */}
@@ -114,10 +113,7 @@ export default function Header() {
         className={`${s.block_options}`}
         style={{ display: options ? "block" : "none" }}
       >
-        <div
-          onClick={openOptions}
-          className={s.close_options}
-        ></div>
+        <div onClick={openOptions} className={s.close_options}></div>
         <div className={`${s.options}`}>
           <h4>Backgrounds:</h4>
           <div className={`${s.backgrounds}`}>

@@ -13,6 +13,7 @@ const Body = () => {
   }
 
   const checkHint = (index, forCard) => {
+    // if (!forCard) return false;
     if (
       card.forRule[card.rule[index].rule[0]] === 0 &&
       card.forRule[card.rule[index].rule[1]] === 0
