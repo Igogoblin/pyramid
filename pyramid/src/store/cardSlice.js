@@ -5,7 +5,6 @@ import rule from "./rule.json";
 const cardSlice = createSlice({
   name: "pyramid",
   initialState: {
-
     restart: false,
     cards:
       localStorage.getItem("restartPyramidTrue") == "true"
