@@ -28,7 +28,8 @@ const cardSlice = createSlice({
       "/pyramid/src/assets/card_backs/card-cover-4.png",
       "/pyramid/src/assets/card_backs/card-cover-5.svg",
     ],
-    cardSize: 0,
+    cardHeight: 0,
+    cardWidth: 0,
     rez:
       localStorage.getItem("stepTrue") == "true"
         ? JSON.parse(
@@ -73,9 +74,11 @@ const cardSlice = createSlice({
   },
   reducers: {
     setSize(state, action) {
-      let size = [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8];
+      let height = [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8];
+      let width = [-7, -5, -4, -3, -1, 0, 1, 3, 4, 5];
 
-      state.cardSize = size[action.payload];
+      state.cardHeight = height[action.payload];
+      state.cardWidth = width[action.payload];
     },
     sortCards(state) {
       state.cards = state.cards.sort(() => Math.random() - 0.5);
