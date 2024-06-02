@@ -18,10 +18,7 @@ export default function Timer() {
 
     minutes = String(minutes).padStart(2, "0");
     seconds = String(seconds).padStart(2, "0");
-    if (seconds > 0) {
-      localStorage.setItem("restartPyramidTrue", JSON.stringify(false));
-      localStorage.setItem("stepTrue", false);
-    }
+
     return `${minutes}:${seconds}`;
   }
 

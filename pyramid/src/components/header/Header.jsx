@@ -7,7 +7,7 @@ import {
   faGear,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Timer from "../footer/Timer";
 import Slider from "../slider/Slider";
 import Button from "../Button/Button";
@@ -23,6 +23,7 @@ import {
 export default function Header() {
   const dispatch = useDispatch();
   const [options, setOptions] = useState(false);
+
   // const [reload, setReload] = useState(false);
   const back = useSelector((state) => state.pyramid.backFont);
   const backCard = useSelector((state) => state.pyramid.backs);
@@ -57,16 +58,21 @@ export default function Header() {
   };
 
   const backMove = () => {
-    if (cards.rezCount === 0) {
+    if (cards.steps <= 0) {
       return restart();
     }
     dispatch(stepBack());
     localStorage.setItem("restartPyramid", JSON.stringify(cards.cards));
     localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
     localStorage.setItem("stepTrue", true);
-    console.log(localStorage.getItem("stepTrue"));
-    localStorage.setItem("steps", cards.steps);
+    // console.log(localStorage.getItem("stepTrue"));
+    localStorage.setItem("steps", cards.steps - 1);
   };
+
+  useEffect(() => {
+    localStorage.setItem("restartPyramydTrue", false);
+    localStorage.setItem("stepTrue", false);
+  }, []);
 
   return (
     <div className={s.header}>
