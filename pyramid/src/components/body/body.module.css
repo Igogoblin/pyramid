@@ -59,7 +59,7 @@
 /*  для анимации подсказки (hint) finish------------------------------------------------- */
 @media (max-width: 767px) {
   .area {
-    width: 80%;
+    width: 90%;
     min-width: 350px;
     margin: 20% auto;
   }

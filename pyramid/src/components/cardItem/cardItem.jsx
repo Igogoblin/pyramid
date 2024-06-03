@@ -11,11 +11,24 @@ import {
   setSteps,
 } from "../../store/cardSlice";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const CardItem = ({ el, index, animate, bodyGame }) => {
   const card = useSelector((state) => state.pyramid);
+  //const {width = 0 } = useWindowSize();
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   const [comparison, setComparison] = useState(false);
 
   const dispatch = useDispatch();
@@ -27,6 +40,7 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
     // console.log("el", el);
     // console.log(comparison);
     // console.log(animate);
+    console.log(windowWidth);
     dispatch(setHint(false));
     if (
       card.forRule[card.rule[index].rule[0]] === 0 &&
@@ -88,8 +102,9 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
         pointerEvents:
           comparison || card.forRule[index] === 0 ? "none" : "auto",
 
-        width: `calc(80px + ${card.cardWidth}px)`,
-        height: `calc(120px + ${card.cardHeight}px)`,
+        width: windowWidth < 500 ? "55px" : `calc(80px + ${card.cardWidth}px)`,
+        height:
+          windowWidth < 500 ? "83px" : `calc(120px + ${card.cardHeight}px)`,
         transform: bodyGame ? "scale(1.2)" : "scale(1)",
       }}
       onClick={() => actionCard(el)}

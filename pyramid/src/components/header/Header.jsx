@@ -9,7 +9,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import Timer from "../footer/Timer";
-import Slider from "../slider/Slider";
 import Button from "../Button/Button";
 import {
   setColor,
@@ -93,7 +92,11 @@ export default function Header() {
           onClick={hint}
         />
         <a href="/">
-          <Button icon={faPlus} span={"NEW GAME"} data_tooltip="New Game" />
+          <Button
+            icon={faPlus}
+            span={"NEW GAME"}
+            data_tooltip="New Game"
+          />
         </a>
 
         {/* <Link to="/"> */}
@@ -119,7 +122,10 @@ export default function Header() {
         className={`${s.block_options}`}
         style={{ display: options ? "block" : "none" }}
       >
-        <div onClick={openOptions} className={s.close_options}></div>
+        <div
+          onClick={openOptions}
+          className={s.close_options}
+        ></div>
         <div className={`${s.options}`}>
           <h4>Backgrounds:</h4>
           <div className={`${s.backgrounds}`}>
@@ -158,10 +164,7 @@ export default function Header() {
               />
             ))}
           </div>
-          <div className="backs">
-            <h4>Card Size</h4>
-            <Slider />
-          </div>
+
           <div className="backs">
             <br />
             <Timer />
