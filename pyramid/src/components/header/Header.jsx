@@ -67,7 +67,7 @@ export default function Header() {
     localStorage.setItem("restartPyramidTrue", false);
     localStorage.setItem("stepTrue", false);
   }, []);
-
+  // localStorage.clear();
   return (
     <div className={s.header}>
       <div className={s.buttons}>
@@ -87,11 +87,7 @@ export default function Header() {
           onClick={hint}
         />
         <a href="/">
-          <Button
-            icon={faPlus}
-            span={"NEW GAME"}
-            data_tooltip="New Game"
-          />
+          <Button icon={faPlus} span={"NEW GAME"} data_tooltip="New Game" />
         </a>
 
         {/* <Link to="/"> */}
@@ -117,10 +113,7 @@ export default function Header() {
         className={`${s.block_options}`}
         style={{ display: options ? "block" : "none" }}
       >
-        <div
-          onClick={openOptions}
-          className={s.close_options}
-        ></div>
+        <div onClick={openOptions} className={s.close_options}></div>
         <div className={`${s.options}`}>
           <h4>Backgrounds:</h4>
           <div className={`${s.backgrounds}`}>

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import allCards from "./cards.json";
 import rule from "./rule.json";
-
+// localStorage.clear();
 const cardSlice = createSlice({
   name: "pyramid",
 
@@ -9,7 +9,7 @@ const cardSlice = createSlice({
     cards:
       localStorage.getItem("restartPyramidTrue") == "true" ||
       localStorage.getItem("stepTrue") == "true"
-        ? JSON.parse(localStorage.getItem("step0")).cards
+        ? JSON.parse(localStorage.getItem("step1")).cards
         : allCards,
     backFont: [
       "/pyramid/src/assets/backgrounds/clouds.jpg",
@@ -119,6 +119,9 @@ const cardSlice = createSlice({
     // },
     // checkRule(state) {},
     setForRule(state, action) {
+      if (state.steps == 0) {
+        localStorage.setItem("step0", JSON.stringify(state));
+      }
       const updateForRule = [...state.forRule];
       updateForRule[action.payload] = 0;
       return {
@@ -166,7 +169,7 @@ const cardSlice = createSlice({
       localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
     },
     stepBack(state) {
-      if (state.steps > 0) {
+      if (state.steps > 1) {
         state.steps = state.steps - 1;
         //localStorage.setItem("step0", JSON.stringify(state));
         //localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
@@ -174,11 +177,11 @@ const cardSlice = createSlice({
         // console.log(localStorage.getItem("stepTrue"));
         // localStorage.setItem("stepNum", state.steps - 1);
         localStorage.setItem("stepNum", state.steps);
-      } else {
-        localStorage("мы сюда не заходим");
+      } else if (state.steps <= 1) {
         state.steps = 0;
-        localStorage.setItem("step0", JSON.stringify(state));
-        localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
+        localStorage.setItem("stepNum", state.steps);
+        // localStorage.setItem("step0", JSON.stringify(state));
+        localStorage.setItem("stepTrue", true);
       }
 
       // state.backStep = true;
