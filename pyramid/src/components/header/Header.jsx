@@ -15,6 +15,7 @@ import {
   stepBack,
   setCardBackIndex,
   setHint,
+  restart,
 } from "../../store/cardSlice";
 
 // import { Link } from "react-router-dom";
@@ -26,7 +27,7 @@ export default function Header() {
   // const [reload, setReload] = useState(false);
   const back = useSelector((state) => state.pyramid.backFont);
   const backCard = useSelector((state) => state.pyramid.backs);
-  const cards = useSelector((state) => state.pyramid);
+  // const cards = useSelector((state) => state.pyramid);
 
   const hint = () => {
     dispatch(setHint(true));
@@ -43,9 +44,8 @@ export default function Header() {
     }
   };
 
-  const restart = () => {
-    localStorage.setItem("restartPyramid", JSON.stringify(cards.cards));
-    localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
+  const restartButton = () => {
+    dispatch(restart());
   };
 
   const changeBackground = (index) => {
@@ -57,19 +57,14 @@ export default function Header() {
   };
 
   const backMove = () => {
-    if (cards.steps <= 0) {
-      return restart();
-    }
+    // if (cards.steps <= 0) {
+    //   return restartButton();
+    // }
     dispatch(stepBack());
-    localStorage.setItem("restartPyramid", JSON.stringify(cards.cards));
-    localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
-    localStorage.setItem("stepTrue", true);
-    // console.log(localStorage.getItem("stepTrue"));
-    localStorage.setItem("steps", cards.steps - 1);
   };
 
   useEffect(() => {
-    localStorage.setItem("restartPyramydTrue", false);
+    localStorage.setItem("restartPyramidTrue", false);
     localStorage.setItem("stepTrue", false);
   }, []);
 
@@ -105,7 +100,7 @@ export default function Header() {
             icon={faRotateLeft}
             span={"RESTART"}
             data_tooltip="Restart This Game"
-            onClick={restart}
+            onClick={restartButton}
           />
         </a>
 

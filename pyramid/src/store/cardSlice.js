@@ -9,7 +9,7 @@ const cardSlice = createSlice({
     cards:
       localStorage.getItem("restartPyramidTrue") == "true" ||
       localStorage.getItem("stepTrue") == "true"
-        ? JSON.parse(localStorage.getItem("restartPyramid"))
+        ? JSON.parse(localStorage.getItem("step0")).cards
         : allCards,
     backFont: [
       "/pyramid/src/assets/backgrounds/clouds.jpg",
@@ -33,26 +33,26 @@ const cardSlice = createSlice({
     rez:
       localStorage.getItem("stepTrue") == "true"
         ? JSON.parse(
-            localStorage.getItem(`step${localStorage.getItem("steps")}`)
+            localStorage.getItem(`step${localStorage.getItem("stepNum")}`)
           ).rez
         : [], // это наша стопка на столе под "рубашкой" //
     rezCount:
       localStorage.getItem("stepTrue") == "true"
         ? JSON.parse(
-            localStorage.getItem(`step${localStorage.getItem("steps")}`)
+            localStorage.getItem(`step${localStorage.getItem("stepNum")}`)
           ).rezCount
         : -1, //
     otb:
       localStorage.getItem("stepTrue") == "true"
         ? JSON.parse(
-            localStorage.getItem(`step${localStorage.getItem("steps")}`)
+            localStorage.getItem(`step${localStorage.getItem("stepNum")}`)
           ).otb
         : [], // это стопка которая под картой которая сейчас играет //
     rule: rule[0],
     forRule:
       localStorage.getItem("stepTrue") == "true"
         ? JSON.parse(
-            localStorage.getItem(`step${localStorage.getItem("steps")}`)
+            localStorage.getItem(`step${localStorage.getItem("stepNum")}`)
           ).forRule
         : rule[1], //
     colors: localStorage.getItem("bgcolor")
@@ -67,7 +67,7 @@ const cardSlice = createSlice({
     steps:
       localStorage.getItem("stepTrue") == "true"
         ? JSON.parse(
-            localStorage.getItem(`step${localStorage.getItem("steps")}`)
+            localStorage.getItem(`step${localStorage.getItem("stepNum")}`)
           ).steps
         : 0, //
     backStep: false,
@@ -156,11 +156,31 @@ const cardSlice = createSlice({
 
       localStorage.setItem(`step${state.steps}`, JSON.stringify(state));
 
-      localStorage.setItem("steps", state.steps);
+      localStorage.setItem("stepNum", state.steps);
       console.log("Мы сохранили шаг по номером - ", `steps${state.steps}`);
     },
+    restart(state) {
+      localStorage("мы сюда не заходим");
+      state.steps = 0;
+      localStorage.setItem("step0", JSON.stringify(state));
+      localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
+    },
     stepBack(state) {
-      state.steps = state.steps - 1;
+      if (state.steps > 0) {
+        state.steps = state.steps - 1;
+        //localStorage.setItem("step0", JSON.stringify(state));
+        //localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
+        localStorage.setItem("stepTrue", true);
+        // console.log(localStorage.getItem("stepTrue"));
+        // localStorage.setItem("stepNum", state.steps - 1);
+        localStorage.setItem("stepNum", state.steps);
+      } else {
+        localStorage("мы сюда не заходим");
+        state.steps = 0;
+        localStorage.setItem("step0", JSON.stringify(state));
+        localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
+      }
+
       // state.backStep = true;
 
       // console.log(
@@ -200,6 +220,7 @@ export const {
   setCardBackIndex,
   setSteps,
   stepBack,
+  restart,
 } = cardSlice.actions;
 
 export default cardSlice.reducer;
