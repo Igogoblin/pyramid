@@ -4,6 +4,7 @@ import {
   setHint,
   setOtb,
   showRez,
+  setSteps,
 } from "../../store/cardSlice";
 import s from "../body/body.module.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,6 +20,7 @@ const BackCard = () => {
     dispatch(showRez());
     dispatch(setOtb());
     dispatch(setHint(false));
+    dispatch(setSteps());
     // dispatch(createRule()); в будущем может понадобится
   }
 

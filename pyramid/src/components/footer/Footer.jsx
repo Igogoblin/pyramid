@@ -9,6 +9,7 @@ import Timer from "./Timer";
 const Footer = () => {
   const c = useSelector((state) => state.pyramid);
   const colors = useSelector((state) => state.pyramid.colors);
+
   function info() {
     console.log(c);
   }
@@ -41,7 +42,7 @@ const Footer = () => {
           icon={faShoePrints}
           style={{ color: "#ffffff" }}
         />{" "}
-        00
+        {c.steps}
       </div>
     </footer>
   );

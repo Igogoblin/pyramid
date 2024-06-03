@@ -1,17 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import allCards from "./cards.json";
 import rule from "./rule.json";
-
+// localStorage.clear();
 const cardSlice = createSlice({
   name: "pyramid",
-  initialState: {
-    restart: false,
-    cards:
-      localStorage.getItem("restartPyramidTrue") == "true"
-        ? JSON.parse(localStorage.getItem("restartPyramid"))
-        : allCards,
-    // cards: allCards,
 
+  initialState: {
+    cards:
+      localStorage.getItem("restartPyramidTrue") == "true" ||
+      localStorage.getItem("stepTrue") == "true"
+        ? JSON.parse(localStorage.getItem("step1")).cards
+        : allCards,
     backFont: [
       "/pyramid/src/assets/backgrounds/clouds.jpg",
       "/pyramid/src/assets/backgrounds/default.jpg",
@@ -29,23 +28,57 @@ const cardSlice = createSlice({
       "/pyramid/src/assets/card_backs/card-cover-4.png",
       "/pyramid/src/assets/card_backs/card-cover-5.svg",
     ],
-    cardSize: 0,
-    rez: [], // это наша стопка на столе под "рубашкой"
-    rezCount: -1,
-    otb: [], // это стопка которая под картой которая сейчас играет
+    cardHeight: 0,
+    cardWidth: 0,
+    rez:
+      localStorage.getItem("stepTrue") == "true"
+        ? JSON.parse(
+            localStorage.getItem(`step${localStorage.getItem("stepNum")}`)
+          ).rez
+        : [], // это наша стопка на столе под "рубашкой" //
+    rezCount:
+      localStorage.getItem("stepTrue") == "true"
+        ? JSON.parse(
+            localStorage.getItem(`step${localStorage.getItem("stepNum")}`)
+          ).rezCount
+        : -1, //
+    otb:
+      localStorage.getItem("stepTrue") == "true"
+        ? JSON.parse(
+            localStorage.getItem(`step${localStorage.getItem("stepNum")}`)
+          ).otb
+        : [], // это стопка которая под картой которая сейчас играет //
     rule: rule[0],
-    forRule: rule[1],
-    colors: 1,
+    forRule:
+      localStorage.getItem("stepTrue") == "true"
+        ? JSON.parse(
+            localStorage.getItem(`step${localStorage.getItem("stepNum")}`)
+          ).forRule
+        : rule[1], //
+    colors: localStorage.getItem("bgcolor")
+      ? JSON.parse(localStorage.getItem("bgcolor"))
+      : 1,
     hint: false,
     bodyPlay: [29, -1],
     doBack: false,
-    backCard: [0],
+    backCard: localStorage.getItem("backCard")
+      ? JSON.parse(localStorage.getItem("backCard"))
+      : 0, //
+    steps:
+      localStorage.getItem("stepTrue") == "true"
+        ? JSON.parse(
+            localStorage.getItem(`step${localStorage.getItem("stepNum")}`)
+          ).steps
+        : 0, //
+    backStep: false,
   },
   reducers: {
     setSize(state, action) {
-      let size = [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8];
+      let height = [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8];
+      let width = [-7, -5, -4, -3, -1, 0, 1, 3, 4, 5];
 
-      state.cardSize = size[action.payload];
+      state.cardHeight = height[action.payload];
+      state.cardWidth = width[action.payload];
     },
     sortCards(state) {
       state.cards = state.cards.sort(() => Math.random() - 0.5);
@@ -71,6 +104,7 @@ const cardSlice = createSlice({
     },
     setColor(state, action) {
       state.colors = action.payload;
+      localStorage.setItem("bgcolor", JSON.stringify(action.payload));
     },
     moveBack(state) {
       if (state.rezCount > 0) {
@@ -85,6 +119,9 @@ const cardSlice = createSlice({
     // },
     // checkRule(state) {},
     setForRule(state, action) {
+      if (state.steps == 0) {
+        localStorage.setItem("step0", JSON.stringify(state));
+      }
       const updateForRule = [...state.forRule];
       updateForRule[action.payload] = 0;
       return {
@@ -115,6 +152,53 @@ const cardSlice = createSlice({
     },
     setCardBackIndex(state, action) {
       state.backCard = action.payload;
+      localStorage.setItem("backCard", JSON.stringify(action.payload));
+    },
+    setSteps(state) {
+      state.steps = state.steps + 1;
+
+      localStorage.setItem(`step${state.steps}`, JSON.stringify(state));
+
+      localStorage.setItem("stepNum", state.steps);
+      console.log("Мы сохранили шаг по номером - ", `steps${state.steps}`);
+    },
+    restart(state) {
+      localStorage("мы сюда не заходим");
+      state.steps = 0;
+      localStorage.setItem("step0", JSON.stringify(state));
+      localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
+    },
+    stepBack(state) {
+      if (state.steps > 1) {
+        state.steps = state.steps - 1;
+        //localStorage.setItem("step0", JSON.stringify(state));
+        //localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
+        localStorage.setItem("stepTrue", true);
+        // console.log(localStorage.getItem("stepTrue"));
+        // localStorage.setItem("stepNum", state.steps - 1);
+        localStorage.setItem("stepNum", state.steps);
+      } else if (state.steps <= 1) {
+        state.steps = 0;
+        localStorage.setItem("stepNum", state.steps);
+        // localStorage.setItem("step0", JSON.stringify(state));
+        localStorage.setItem("stepTrue", true);
+      }
+
+      // state.backStep = true;
+
+      // console.log(
+      //   JSON.parse(localStorage.getItem(`step${localStorage.getItem("steps")}`))
+      //     .steps
+      // );
+      // console.log(
+      //   "Здесь проверим чему равен steps - ",
+      //   localStorage.getItem("steps")
+      // );
+      // console.log("steps ",localStorage.getItem());
+      // const rezult = JSON.parse(localStorage.getItem(`step${step}`));
+      // console.log(rezult);
+
+      // state = rezult;
     },
   },
 });
@@ -137,6 +221,9 @@ export const {
   setBackStepNorm,
   setShowCard,
   setCardBackIndex,
+  setSteps,
+  stepBack,
+  restart,
 } = cardSlice.actions;
 
 export default cardSlice.reducer;
