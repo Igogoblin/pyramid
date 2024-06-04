@@ -17,47 +17,6 @@ function _mergeNamespaces(n2, m2) {
   }
   return Object.freeze(Object.defineProperty(n2, Symbol.toStringTag, { value: "Module" }));
 }
-(function polyfill() {
-  const relList = document.createElement("link").relList;
-  if (relList && relList.supports && relList.supports("modulepreload")) {
-    return;
-  }
-  for (const link of document.querySelectorAll('link[rel="modulepreload"]')) {
-    processPreload(link);
-  }
-  new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-      if (mutation.type !== "childList") {
-        continue;
-      }
-      for (const node of mutation.addedNodes) {
-        if (node.tagName === "LINK" && node.rel === "modulepreload")
-          processPreload(node);
-      }
-    }
-  }).observe(document, { childList: true, subtree: true });
-  function getFetchOpts(link) {
-    const fetchOpts = {};
-    if (link.integrity)
-      fetchOpts.integrity = link.integrity;
-    if (link.referrerPolicy)
-      fetchOpts.referrerPolicy = link.referrerPolicy;
-    if (link.crossOrigin === "use-credentials")
-      fetchOpts.credentials = "include";
-    else if (link.crossOrigin === "anonymous")
-      fetchOpts.credentials = "omit";
-    else
-      fetchOpts.credentials = "same-origin";
-    return fetchOpts;
-  }
-  function processPreload(link) {
-    if (link.ep)
-      return;
-    link.ep = true;
-    const fetchOpts = getFetchOpts(link);
-    fetch(link.href, fetchOpts);
-  }
-})();
 function getDefaultExportFromCjs(x2) {
   return x2 && x2.__esModule && Object.prototype.hasOwnProperty.call(x2, "default") ? x2["default"] : x2;
 }
@@ -8014,2415 +7973,6 @@ function createDispatchHook(context = ReactReduxContext) {
 }
 var useDispatch = /* @__PURE__ */ createDispatchHook();
 initializeUseSelector(withSelectorExports.useSyncExternalStoreWithSelector);
-function formatProdErrorMessage$1(code) {
-  return `Minified Redux error #${code}; visit https://redux.js.org/Errors?code=${code} for the full message or use the non-minified dev environment for full errors. `;
-}
-var $$observable = /* @__PURE__ */ (() => typeof Symbol === "function" && Symbol.observable || "@@observable")();
-var symbol_observable_default = $$observable;
-var randomString = () => Math.random().toString(36).substring(7).split("").join(".");
-var ActionTypes = {
-  INIT: `@@redux/INIT${/* @__PURE__ */ randomString()}`,
-  REPLACE: `@@redux/REPLACE${/* @__PURE__ */ randomString()}`,
-  PROBE_UNKNOWN_ACTION: () => `@@redux/PROBE_UNKNOWN_ACTION${randomString()}`
-};
-var actionTypes_default = ActionTypes;
-function isPlainObject$1(obj) {
-  if (typeof obj !== "object" || obj === null)
-    return false;
-  let proto = obj;
-  while (Object.getPrototypeOf(proto) !== null) {
-    proto = Object.getPrototypeOf(proto);
-  }
-  return Object.getPrototypeOf(obj) === proto || Object.getPrototypeOf(obj) === null;
-}
-function createStore(reducer, preloadedState, enhancer) {
-  if (typeof reducer !== "function") {
-    throw new Error(formatProdErrorMessage$1(2));
-  }
-  if (typeof preloadedState === "function" && typeof enhancer === "function" || typeof enhancer === "function" && typeof arguments[3] === "function") {
-    throw new Error(formatProdErrorMessage$1(0));
-  }
-  if (typeof preloadedState === "function" && typeof enhancer === "undefined") {
-    enhancer = preloadedState;
-    preloadedState = void 0;
-  }
-  if (typeof enhancer !== "undefined") {
-    if (typeof enhancer !== "function") {
-      throw new Error(formatProdErrorMessage$1(1));
-    }
-    return enhancer(createStore)(reducer, preloadedState);
-  }
-  let currentReducer = reducer;
-  let currentState = preloadedState;
-  let currentListeners = /* @__PURE__ */ new Map();
-  let nextListeners = currentListeners;
-  let listenerIdCounter = 0;
-  let isDispatching = false;
-  function ensureCanMutateNextListeners() {
-    if (nextListeners === currentListeners) {
-      nextListeners = /* @__PURE__ */ new Map();
-      currentListeners.forEach((listener3, key) => {
-        nextListeners.set(key, listener3);
-      });
-    }
-  }
-  function getState() {
-    if (isDispatching) {
-      throw new Error(formatProdErrorMessage$1(3));
-    }
-    return currentState;
-  }
-  function subscribe(listener3) {
-    if (typeof listener3 !== "function") {
-      throw new Error(formatProdErrorMessage$1(4));
-    }
-    if (isDispatching) {
-      throw new Error(formatProdErrorMessage$1(5));
-    }
-    let isSubscribed = true;
-    ensureCanMutateNextListeners();
-    const listenerId = listenerIdCounter++;
-    nextListeners.set(listenerId, listener3);
-    return function unsubscribe() {
-      if (!isSubscribed) {
-        return;
-      }
-      if (isDispatching) {
-        throw new Error(formatProdErrorMessage$1(6));
-      }
-      isSubscribed = false;
-      ensureCanMutateNextListeners();
-      nextListeners.delete(listenerId);
-      currentListeners = null;
-    };
-  }
-  function dispatch(action) {
-    if (!isPlainObject$1(action)) {
-      throw new Error(formatProdErrorMessage$1(7));
-    }
-    if (typeof action.type === "undefined") {
-      throw new Error(formatProdErrorMessage$1(8));
-    }
-    if (typeof action.type !== "string") {
-      throw new Error(formatProdErrorMessage$1(17));
-    }
-    if (isDispatching) {
-      throw new Error(formatProdErrorMessage$1(9));
-    }
-    try {
-      isDispatching = true;
-      currentState = currentReducer(currentState, action);
-    } finally {
-      isDispatching = false;
-    }
-    const listeners = currentListeners = nextListeners;
-    listeners.forEach((listener3) => {
-      listener3();
-    });
-    return action;
-  }
-  function replaceReducer(nextReducer) {
-    if (typeof nextReducer !== "function") {
-      throw new Error(formatProdErrorMessage$1(10));
-    }
-    currentReducer = nextReducer;
-    dispatch({
-      type: actionTypes_default.REPLACE
-    });
-  }
-  function observable() {
-    const outerSubscribe = subscribe;
-    return {
-      /**
-       * The minimal observable subscription method.
-       * @param observer Any object that can be used as an observer.
-       * The observer object should have a `next` method.
-       * @returns An object with an `unsubscribe` method that can
-       * be used to unsubscribe the observable from the store, and prevent further
-       * emission of values from the observable.
-       */
-      subscribe(observer) {
-        if (typeof observer !== "object" || observer === null) {
-          throw new Error(formatProdErrorMessage$1(11));
-        }
-        function observeState() {
-          const observerAsObserver = observer;
-          if (observerAsObserver.next) {
-            observerAsObserver.next(getState());
-          }
-        }
-        observeState();
-        const unsubscribe = outerSubscribe(observeState);
-        return {
-          unsubscribe
-        };
-      },
-      [symbol_observable_default]() {
-        return this;
-      }
-    };
-  }
-  dispatch({
-    type: actionTypes_default.INIT
-  });
-  const store2 = {
-    dispatch,
-    subscribe,
-    getState,
-    replaceReducer,
-    [symbol_observable_default]: observable
-  };
-  return store2;
-}
-function assertReducerShape(reducers) {
-  Object.keys(reducers).forEach((key) => {
-    const reducer = reducers[key];
-    const initialState = reducer(void 0, {
-      type: actionTypes_default.INIT
-    });
-    if (typeof initialState === "undefined") {
-      throw new Error(formatProdErrorMessage$1(12));
-    }
-    if (typeof reducer(void 0, {
-      type: actionTypes_default.PROBE_UNKNOWN_ACTION()
-    }) === "undefined") {
-      throw new Error(formatProdErrorMessage$1(13));
-    }
-  });
-}
-function combineReducers(reducers) {
-  const reducerKeys = Object.keys(reducers);
-  const finalReducers = {};
-  for (let i = 0; i < reducerKeys.length; i++) {
-    const key = reducerKeys[i];
-    if (typeof reducers[key] === "function") {
-      finalReducers[key] = reducers[key];
-    }
-  }
-  const finalReducerKeys = Object.keys(finalReducers);
-  let shapeAssertionError;
-  try {
-    assertReducerShape(finalReducers);
-  } catch (e) {
-    shapeAssertionError = e;
-  }
-  return function combination(state = {}, action) {
-    if (shapeAssertionError) {
-      throw shapeAssertionError;
-    }
-    let hasChanged = false;
-    const nextState = {};
-    for (let i = 0; i < finalReducerKeys.length; i++) {
-      const key = finalReducerKeys[i];
-      const reducer = finalReducers[key];
-      const previousStateForKey = state[key];
-      const nextStateForKey = reducer(previousStateForKey, action);
-      if (typeof nextStateForKey === "undefined") {
-        action && action.type;
-        throw new Error(formatProdErrorMessage$1(14));
-      }
-      nextState[key] = nextStateForKey;
-      hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
-    }
-    hasChanged = hasChanged || finalReducerKeys.length !== Object.keys(state).length;
-    return hasChanged ? nextState : state;
-  };
-}
-function compose(...funcs) {
-  if (funcs.length === 0) {
-    return (arg) => arg;
-  }
-  if (funcs.length === 1) {
-    return funcs[0];
-  }
-  return funcs.reduce((a, b) => (...args) => a(b(...args)));
-}
-function applyMiddleware(...middlewares) {
-  return (createStore2) => (reducer, preloadedState) => {
-    const store2 = createStore2(reducer, preloadedState);
-    let dispatch = () => {
-      throw new Error(formatProdErrorMessage$1(15));
-    };
-    const middlewareAPI = {
-      getState: store2.getState,
-      dispatch: (action, ...args) => dispatch(action, ...args)
-    };
-    const chain = middlewares.map((middleware) => middleware(middlewareAPI));
-    dispatch = compose(...chain)(store2.dispatch);
-    return {
-      ...store2,
-      dispatch
-    };
-  };
-}
-function isAction(action) {
-  return isPlainObject$1(action) && "type" in action && typeof action.type === "string";
-}
-var NOTHING = Symbol.for("immer-nothing");
-var DRAFTABLE = Symbol.for("immer-draftable");
-var DRAFT_STATE = Symbol.for("immer-state");
-function die(error, ...args) {
-  throw new Error(
-    `[Immer] minified error nr: ${error}. Full error at: https://bit.ly/3cXEKWf`
-  );
-}
-var getPrototypeOf = Object.getPrototypeOf;
-function isDraft(value) {
-  return !!value && !!value[DRAFT_STATE];
-}
-function isDraftable(value) {
-  var _a;
-  if (!value)
-    return false;
-  return isPlainObject(value) || Array.isArray(value) || !!value[DRAFTABLE] || !!((_a = value.constructor) == null ? void 0 : _a[DRAFTABLE]) || isMap(value) || isSet(value);
-}
-var objectCtorString = Object.prototype.constructor.toString();
-function isPlainObject(value) {
-  if (!value || typeof value !== "object")
-    return false;
-  const proto = getPrototypeOf(value);
-  if (proto === null) {
-    return true;
-  }
-  const Ctor = Object.hasOwnProperty.call(proto, "constructor") && proto.constructor;
-  if (Ctor === Object)
-    return true;
-  return typeof Ctor == "function" && Function.toString.call(Ctor) === objectCtorString;
-}
-function each(obj, iter) {
-  if (getArchtype(obj) === 0) {
-    Reflect.ownKeys(obj).forEach((key) => {
-      iter(key, obj[key], obj);
-    });
-  } else {
-    obj.forEach((entry, index) => iter(index, entry, obj));
-  }
-}
-function getArchtype(thing) {
-  const state = thing[DRAFT_STATE];
-  return state ? state.type_ : Array.isArray(thing) ? 1 : isMap(thing) ? 2 : isSet(thing) ? 3 : 0;
-}
-function has(thing, prop) {
-  return getArchtype(thing) === 2 ? thing.has(prop) : Object.prototype.hasOwnProperty.call(thing, prop);
-}
-function set(thing, propOrOldValue, value) {
-  const t2 = getArchtype(thing);
-  if (t2 === 2)
-    thing.set(propOrOldValue, value);
-  else if (t2 === 3) {
-    thing.add(value);
-  } else
-    thing[propOrOldValue] = value;
-}
-function is(x2, y2) {
-  if (x2 === y2) {
-    return x2 !== 0 || 1 / x2 === 1 / y2;
-  } else {
-    return x2 !== x2 && y2 !== y2;
-  }
-}
-function isMap(target) {
-  return target instanceof Map;
-}
-function isSet(target) {
-  return target instanceof Set;
-}
-function latest(state) {
-  return state.copy_ || state.base_;
-}
-function shallowCopy(base, strict) {
-  if (isMap(base)) {
-    return new Map(base);
-  }
-  if (isSet(base)) {
-    return new Set(base);
-  }
-  if (Array.isArray(base))
-    return Array.prototype.slice.call(base);
-  if (!strict && isPlainObject(base)) {
-    if (!getPrototypeOf(base)) {
-      const obj = /* @__PURE__ */ Object.create(null);
-      return Object.assign(obj, base);
-    }
-    return { ...base };
-  }
-  const descriptors = Object.getOwnPropertyDescriptors(base);
-  delete descriptors[DRAFT_STATE];
-  let keys = Reflect.ownKeys(descriptors);
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
-    const desc = descriptors[key];
-    if (desc.writable === false) {
-      desc.writable = true;
-      desc.configurable = true;
-    }
-    if (desc.get || desc.set)
-      descriptors[key] = {
-        configurable: true,
-        writable: true,
-        // could live with !!desc.set as well here...
-        enumerable: desc.enumerable,
-        value: base[key]
-      };
-  }
-  return Object.create(getPrototypeOf(base), descriptors);
-}
-function freeze(obj, deep = false) {
-  if (isFrozen(obj) || isDraft(obj) || !isDraftable(obj))
-    return obj;
-  if (getArchtype(obj) > 1) {
-    obj.set = obj.add = obj.clear = obj.delete = dontMutateFrozenCollections;
-  }
-  Object.freeze(obj);
-  if (deep)
-    Object.entries(obj).forEach(([key, value]) => freeze(value, true));
-  return obj;
-}
-function dontMutateFrozenCollections() {
-  die(2);
-}
-function isFrozen(obj) {
-  return Object.isFrozen(obj);
-}
-var plugins$1 = {};
-function getPlugin(pluginKey) {
-  const plugin = plugins$1[pluginKey];
-  if (!plugin) {
-    die(0, pluginKey);
-  }
-  return plugin;
-}
-var currentScope;
-function getCurrentScope() {
-  return currentScope;
-}
-function createScope(parent_, immer_) {
-  return {
-    drafts_: [],
-    parent_,
-    immer_,
-    // Whenever the modified draft contains a draft from another scope, we
-    // need to prevent auto-freezing so the unowned draft can be finalized.
-    canAutoFreeze_: true,
-    unfinalizedDrafts_: 0
-  };
-}
-function usePatchesInScope(scope, patchListener) {
-  if (patchListener) {
-    getPlugin("Patches");
-    scope.patches_ = [];
-    scope.inversePatches_ = [];
-    scope.patchListener_ = patchListener;
-  }
-}
-function revokeScope(scope) {
-  leaveScope(scope);
-  scope.drafts_.forEach(revokeDraft);
-  scope.drafts_ = null;
-}
-function leaveScope(scope) {
-  if (scope === currentScope) {
-    currentScope = scope.parent_;
-  }
-}
-function enterScope(immer2) {
-  return currentScope = createScope(currentScope, immer2);
-}
-function revokeDraft(draft) {
-  const state = draft[DRAFT_STATE];
-  if (state.type_ === 0 || state.type_ === 1)
-    state.revoke_();
-  else
-    state.revoked_ = true;
-}
-function processResult(result, scope) {
-  scope.unfinalizedDrafts_ = scope.drafts_.length;
-  const baseDraft = scope.drafts_[0];
-  const isReplaced = result !== void 0 && result !== baseDraft;
-  if (isReplaced) {
-    if (baseDraft[DRAFT_STATE].modified_) {
-      revokeScope(scope);
-      die(4);
-    }
-    if (isDraftable(result)) {
-      result = finalize(scope, result);
-      if (!scope.parent_)
-        maybeFreeze(scope, result);
-    }
-    if (scope.patches_) {
-      getPlugin("Patches").generateReplacementPatches_(
-        baseDraft[DRAFT_STATE].base_,
-        result,
-        scope.patches_,
-        scope.inversePatches_
-      );
-    }
-  } else {
-    result = finalize(scope, baseDraft, []);
-  }
-  revokeScope(scope);
-  if (scope.patches_) {
-    scope.patchListener_(scope.patches_, scope.inversePatches_);
-  }
-  return result !== NOTHING ? result : void 0;
-}
-function finalize(rootScope, value, path) {
-  if (isFrozen(value))
-    return value;
-  const state = value[DRAFT_STATE];
-  if (!state) {
-    each(
-      value,
-      (key, childValue) => finalizeProperty(rootScope, state, value, key, childValue, path)
-    );
-    return value;
-  }
-  if (state.scope_ !== rootScope)
-    return value;
-  if (!state.modified_) {
-    maybeFreeze(rootScope, state.base_, true);
-    return state.base_;
-  }
-  if (!state.finalized_) {
-    state.finalized_ = true;
-    state.scope_.unfinalizedDrafts_--;
-    const result = state.copy_;
-    let resultEach = result;
-    let isSet2 = false;
-    if (state.type_ === 3) {
-      resultEach = new Set(result);
-      result.clear();
-      isSet2 = true;
-    }
-    each(
-      resultEach,
-      (key, childValue) => finalizeProperty(rootScope, state, result, key, childValue, path, isSet2)
-    );
-    maybeFreeze(rootScope, result, false);
-    if (path && rootScope.patches_) {
-      getPlugin("Patches").generatePatches_(
-        state,
-        path,
-        rootScope.patches_,
-        rootScope.inversePatches_
-      );
-    }
-  }
-  return state.copy_;
-}
-function finalizeProperty(rootScope, parentState, targetObject, prop, childValue, rootPath, targetIsSet) {
-  if (isDraft(childValue)) {
-    const path = rootPath && parentState && parentState.type_ !== 3 && // Set objects are atomic since they have no keys.
-    !has(parentState.assigned_, prop) ? rootPath.concat(prop) : void 0;
-    const res = finalize(rootScope, childValue, path);
-    set(targetObject, prop, res);
-    if (isDraft(res)) {
-      rootScope.canAutoFreeze_ = false;
-    } else
-      return;
-  } else if (targetIsSet) {
-    targetObject.add(childValue);
-  }
-  if (isDraftable(childValue) && !isFrozen(childValue)) {
-    if (!rootScope.immer_.autoFreeze_ && rootScope.unfinalizedDrafts_ < 1) {
-      return;
-    }
-    finalize(rootScope, childValue);
-    if ((!parentState || !parentState.scope_.parent_) && typeof prop !== "symbol" && Object.prototype.propertyIsEnumerable.call(targetObject, prop))
-      maybeFreeze(rootScope, childValue);
-  }
-}
-function maybeFreeze(scope, value, deep = false) {
-  if (!scope.parent_ && scope.immer_.autoFreeze_ && scope.canAutoFreeze_) {
-    freeze(value, deep);
-  }
-}
-function createProxyProxy(base, parent) {
-  const isArray = Array.isArray(base);
-  const state = {
-    type_: isArray ? 1 : 0,
-    // Track which produce call this is associated with.
-    scope_: parent ? parent.scope_ : getCurrentScope(),
-    // True for both shallow and deep changes.
-    modified_: false,
-    // Used during finalization.
-    finalized_: false,
-    // Track which properties have been assigned (true) or deleted (false).
-    assigned_: {},
-    // The parent draft state.
-    parent_: parent,
-    // The base state.
-    base_: base,
-    // The base proxy.
-    draft_: null,
-    // set below
-    // The base copy with any updated values.
-    copy_: null,
-    // Called by the `produce` function.
-    revoke_: null,
-    isManual_: false
-  };
-  let target = state;
-  let traps = objectTraps;
-  if (isArray) {
-    target = [state];
-    traps = arrayTraps;
-  }
-  const { revoke, proxy } = Proxy.revocable(target, traps);
-  state.draft_ = proxy;
-  state.revoke_ = revoke;
-  return proxy;
-}
-var objectTraps = {
-  get(state, prop) {
-    if (prop === DRAFT_STATE)
-      return state;
-    const source = latest(state);
-    if (!has(source, prop)) {
-      return readPropFromProto(state, source, prop);
-    }
-    const value = source[prop];
-    if (state.finalized_ || !isDraftable(value)) {
-      return value;
-    }
-    if (value === peek(state.base_, prop)) {
-      prepareCopy(state);
-      return state.copy_[prop] = createProxy(value, state);
-    }
-    return value;
-  },
-  has(state, prop) {
-    return prop in latest(state);
-  },
-  ownKeys(state) {
-    return Reflect.ownKeys(latest(state));
-  },
-  set(state, prop, value) {
-    const desc = getDescriptorFromProto(latest(state), prop);
-    if (desc == null ? void 0 : desc.set) {
-      desc.set.call(state.draft_, value);
-      return true;
-    }
-    if (!state.modified_) {
-      const current2 = peek(latest(state), prop);
-      const currentState = current2 == null ? void 0 : current2[DRAFT_STATE];
-      if (currentState && currentState.base_ === value) {
-        state.copy_[prop] = value;
-        state.assigned_[prop] = false;
-        return true;
-      }
-      if (is(value, current2) && (value !== void 0 || has(state.base_, prop)))
-        return true;
-      prepareCopy(state);
-      markChanged(state);
-    }
-    if (state.copy_[prop] === value && // special case: handle new props with value 'undefined'
-    (value !== void 0 || prop in state.copy_) || // special case: NaN
-    Number.isNaN(value) && Number.isNaN(state.copy_[prop]))
-      return true;
-    state.copy_[prop] = value;
-    state.assigned_[prop] = true;
-    return true;
-  },
-  deleteProperty(state, prop) {
-    if (peek(state.base_, prop) !== void 0 || prop in state.base_) {
-      state.assigned_[prop] = false;
-      prepareCopy(state);
-      markChanged(state);
-    } else {
-      delete state.assigned_[prop];
-    }
-    if (state.copy_) {
-      delete state.copy_[prop];
-    }
-    return true;
-  },
-  // Note: We never coerce `desc.value` into an Immer draft, because we can't make
-  // the same guarantee in ES5 mode.
-  getOwnPropertyDescriptor(state, prop) {
-    const owner = latest(state);
-    const desc = Reflect.getOwnPropertyDescriptor(owner, prop);
-    if (!desc)
-      return desc;
-    return {
-      writable: true,
-      configurable: state.type_ !== 1 || prop !== "length",
-      enumerable: desc.enumerable,
-      value: owner[prop]
-    };
-  },
-  defineProperty() {
-    die(11);
-  },
-  getPrototypeOf(state) {
-    return getPrototypeOf(state.base_);
-  },
-  setPrototypeOf() {
-    die(12);
-  }
-};
-var arrayTraps = {};
-each(objectTraps, (key, fn) => {
-  arrayTraps[key] = function() {
-    arguments[0] = arguments[0][0];
-    return fn.apply(this, arguments);
-  };
-});
-arrayTraps.deleteProperty = function(state, prop) {
-  return arrayTraps.set.call(this, state, prop, void 0);
-};
-arrayTraps.set = function(state, prop, value) {
-  return objectTraps.set.call(this, state[0], prop, value, state[0]);
-};
-function peek(draft, prop) {
-  const state = draft[DRAFT_STATE];
-  const source = state ? latest(state) : draft;
-  return source[prop];
-}
-function readPropFromProto(state, source, prop) {
-  var _a;
-  const desc = getDescriptorFromProto(source, prop);
-  return desc ? `value` in desc ? desc.value : (
-    // This is a very special case, if the prop is a getter defined by the
-    // prototype, we should invoke it with the draft as context!
-    (_a = desc.get) == null ? void 0 : _a.call(state.draft_)
-  ) : void 0;
-}
-function getDescriptorFromProto(source, prop) {
-  if (!(prop in source))
-    return void 0;
-  let proto = getPrototypeOf(source);
-  while (proto) {
-    const desc = Object.getOwnPropertyDescriptor(proto, prop);
-    if (desc)
-      return desc;
-    proto = getPrototypeOf(proto);
-  }
-  return void 0;
-}
-function markChanged(state) {
-  if (!state.modified_) {
-    state.modified_ = true;
-    if (state.parent_) {
-      markChanged(state.parent_);
-    }
-  }
-}
-function prepareCopy(state) {
-  if (!state.copy_) {
-    state.copy_ = shallowCopy(
-      state.base_,
-      state.scope_.immer_.useStrictShallowCopy_
-    );
-  }
-}
-var Immer2 = class {
-  constructor(config2) {
-    this.autoFreeze_ = true;
-    this.useStrictShallowCopy_ = false;
-    this.produce = (base, recipe, patchListener) => {
-      if (typeof base === "function" && typeof recipe !== "function") {
-        const defaultBase = recipe;
-        recipe = base;
-        const self = this;
-        return function curriedProduce(base2 = defaultBase, ...args) {
-          return self.produce(base2, (draft) => recipe.call(this, draft, ...args));
-        };
-      }
-      if (typeof recipe !== "function")
-        die(6);
-      if (patchListener !== void 0 && typeof patchListener !== "function")
-        die(7);
-      let result;
-      if (isDraftable(base)) {
-        const scope = enterScope(this);
-        const proxy = createProxy(base, void 0);
-        let hasError = true;
-        try {
-          result = recipe(proxy);
-          hasError = false;
-        } finally {
-          if (hasError)
-            revokeScope(scope);
-          else
-            leaveScope(scope);
-        }
-        usePatchesInScope(scope, patchListener);
-        return processResult(result, scope);
-      } else if (!base || typeof base !== "object") {
-        result = recipe(base);
-        if (result === void 0)
-          result = base;
-        if (result === NOTHING)
-          result = void 0;
-        if (this.autoFreeze_)
-          freeze(result, true);
-        if (patchListener) {
-          const p2 = [];
-          const ip = [];
-          getPlugin("Patches").generateReplacementPatches_(base, result, p2, ip);
-          patchListener(p2, ip);
-        }
-        return result;
-      } else
-        die(1, base);
-    };
-    this.produceWithPatches = (base, recipe) => {
-      if (typeof base === "function") {
-        return (state, ...args) => this.produceWithPatches(state, (draft) => base(draft, ...args));
-      }
-      let patches, inversePatches;
-      const result = this.produce(base, recipe, (p2, ip) => {
-        patches = p2;
-        inversePatches = ip;
-      });
-      return [result, patches, inversePatches];
-    };
-    if (typeof (config2 == null ? void 0 : config2.autoFreeze) === "boolean")
-      this.setAutoFreeze(config2.autoFreeze);
-    if (typeof (config2 == null ? void 0 : config2.useStrictShallowCopy) === "boolean")
-      this.setUseStrictShallowCopy(config2.useStrictShallowCopy);
-  }
-  createDraft(base) {
-    if (!isDraftable(base))
-      die(8);
-    if (isDraft(base))
-      base = current(base);
-    const scope = enterScope(this);
-    const proxy = createProxy(base, void 0);
-    proxy[DRAFT_STATE].isManual_ = true;
-    leaveScope(scope);
-    return proxy;
-  }
-  finishDraft(draft, patchListener) {
-    const state = draft && draft[DRAFT_STATE];
-    if (!state || !state.isManual_)
-      die(9);
-    const { scope_: scope } = state;
-    usePatchesInScope(scope, patchListener);
-    return processResult(void 0, scope);
-  }
-  /**
-   * Pass true to automatically freeze all copies created by Immer.
-   *
-   * By default, auto-freezing is enabled.
-   */
-  setAutoFreeze(value) {
-    this.autoFreeze_ = value;
-  }
-  /**
-   * Pass true to enable strict shallow copy.
-   *
-   * By default, immer does not copy the object descriptors such as getter, setter and non-enumrable properties.
-   */
-  setUseStrictShallowCopy(value) {
-    this.useStrictShallowCopy_ = value;
-  }
-  applyPatches(base, patches) {
-    let i;
-    for (i = patches.length - 1; i >= 0; i--) {
-      const patch = patches[i];
-      if (patch.path.length === 0 && patch.op === "replace") {
-        base = patch.value;
-        break;
-      }
-    }
-    if (i > -1) {
-      patches = patches.slice(i + 1);
-    }
-    const applyPatchesImpl = getPlugin("Patches").applyPatches_;
-    if (isDraft(base)) {
-      return applyPatchesImpl(base, patches);
-    }
-    return this.produce(
-      base,
-      (draft) => applyPatchesImpl(draft, patches)
-    );
-  }
-};
-function createProxy(value, parent) {
-  const draft = isMap(value) ? getPlugin("MapSet").proxyMap_(value, parent) : isSet(value) ? getPlugin("MapSet").proxySet_(value, parent) : createProxyProxy(value, parent);
-  const scope = parent ? parent.scope_ : getCurrentScope();
-  scope.drafts_.push(draft);
-  return draft;
-}
-function current(value) {
-  if (!isDraft(value))
-    die(10, value);
-  return currentImpl(value);
-}
-function currentImpl(value) {
-  if (!isDraftable(value) || isFrozen(value))
-    return value;
-  const state = value[DRAFT_STATE];
-  let copy;
-  if (state) {
-    if (!state.modified_)
-      return state.base_;
-    state.finalized_ = true;
-    copy = shallowCopy(value, state.scope_.immer_.useStrictShallowCopy_);
-  } else {
-    copy = shallowCopy(value, true);
-  }
-  each(copy, (key, childValue) => {
-    set(copy, key, currentImpl(childValue));
-  });
-  if (state) {
-    state.finalized_ = false;
-  }
-  return copy;
-}
-var immer = new Immer2();
-var produce = immer.produce;
-immer.produceWithPatches.bind(
-  immer
-);
-immer.setAutoFreeze.bind(immer);
-immer.setUseStrictShallowCopy.bind(immer);
-immer.applyPatches.bind(immer);
-immer.createDraft.bind(immer);
-immer.finishDraft.bind(immer);
-function assertIsFunction(func, errorMessage = `expected a function, instead received ${typeof func}`) {
-  if (typeof func !== "function") {
-    throw new TypeError(errorMessage);
-  }
-}
-function assertIsObject(object, errorMessage = `expected an object, instead received ${typeof object}`) {
-  if (typeof object !== "object") {
-    throw new TypeError(errorMessage);
-  }
-}
-function assertIsArrayOfFunctions(array, errorMessage = `expected all items to be functions, instead received the following types: `) {
-  if (!array.every((item) => typeof item === "function")) {
-    const itemTypes = array.map(
-      (item) => typeof item === "function" ? `function ${item.name || "unnamed"}()` : typeof item
-    ).join(", ");
-    throw new TypeError(`${errorMessage}[${itemTypes}]`);
-  }
-}
-var ensureIsArray = (item) => {
-  return Array.isArray(item) ? item : [item];
-};
-function getDependencies(createSelectorArgs) {
-  const dependencies = Array.isArray(createSelectorArgs[0]) ? createSelectorArgs[0] : createSelectorArgs;
-  assertIsArrayOfFunctions(
-    dependencies,
-    `createSelector expects all input-selectors to be functions, but received the following types: `
-  );
-  return dependencies;
-}
-function collectInputSelectorResults(dependencies, inputSelectorArgs) {
-  const inputSelectorResults = [];
-  const { length } = dependencies;
-  for (let i = 0; i < length; i++) {
-    inputSelectorResults.push(dependencies[i].apply(null, inputSelectorArgs));
-  }
-  return inputSelectorResults;
-}
-var StrongRef = class {
-  constructor(value) {
-    this.value = value;
-  }
-  deref() {
-    return this.value;
-  }
-};
-var Ref = typeof WeakRef !== "undefined" ? WeakRef : StrongRef;
-var UNTERMINATED = 0;
-var TERMINATED = 1;
-function createCacheNode() {
-  return {
-    s: UNTERMINATED,
-    v: void 0,
-    o: null,
-    p: null
-  };
-}
-function weakMapMemoize(func, options2 = {}) {
-  let fnNode = createCacheNode();
-  const { resultEqualityCheck } = options2;
-  let lastResult;
-  let resultsCount = 0;
-  function memoized() {
-    var _a;
-    let cacheNode = fnNode;
-    const { length } = arguments;
-    for (let i = 0, l2 = length; i < l2; i++) {
-      const arg = arguments[i];
-      if (typeof arg === "function" || typeof arg === "object" && arg !== null) {
-        let objectCache = cacheNode.o;
-        if (objectCache === null) {
-          cacheNode.o = objectCache = /* @__PURE__ */ new WeakMap();
-        }
-        const objectNode = objectCache.get(arg);
-        if (objectNode === void 0) {
-          cacheNode = createCacheNode();
-          objectCache.set(arg, cacheNode);
-        } else {
-          cacheNode = objectNode;
-        }
-      } else {
-        let primitiveCache = cacheNode.p;
-        if (primitiveCache === null) {
-          cacheNode.p = primitiveCache = /* @__PURE__ */ new Map();
-        }
-        const primitiveNode = primitiveCache.get(arg);
-        if (primitiveNode === void 0) {
-          cacheNode = createCacheNode();
-          primitiveCache.set(arg, cacheNode);
-        } else {
-          cacheNode = primitiveNode;
-        }
-      }
-    }
-    const terminatedNode = cacheNode;
-    let result;
-    if (cacheNode.s === TERMINATED) {
-      result = cacheNode.v;
-    } else {
-      result = func.apply(null, arguments);
-      resultsCount++;
-    }
-    terminatedNode.s = TERMINATED;
-    if (resultEqualityCheck) {
-      const lastResultValue = ((_a = lastResult == null ? void 0 : lastResult.deref) == null ? void 0 : _a.call(lastResult)) ?? lastResult;
-      if (lastResultValue != null && resultEqualityCheck(lastResultValue, result)) {
-        result = lastResultValue;
-        resultsCount !== 0 && resultsCount--;
-      }
-      const needsWeakRef = typeof result === "object" && result !== null || typeof result === "function";
-      lastResult = needsWeakRef ? new Ref(result) : result;
-    }
-    terminatedNode.v = result;
-    return result;
-  }
-  memoized.clearCache = () => {
-    fnNode = createCacheNode();
-    memoized.resetResultsCount();
-  };
-  memoized.resultsCount = () => resultsCount;
-  memoized.resetResultsCount = () => {
-    resultsCount = 0;
-  };
-  return memoized;
-}
-function createSelectorCreator(memoizeOrOptions, ...memoizeOptionsFromArgs) {
-  const createSelectorCreatorOptions = typeof memoizeOrOptions === "function" ? {
-    memoize: memoizeOrOptions,
-    memoizeOptions: memoizeOptionsFromArgs
-  } : memoizeOrOptions;
-  const createSelector2 = (...createSelectorArgs) => {
-    let recomputations = 0;
-    let dependencyRecomputations = 0;
-    let lastResult;
-    let directlyPassedOptions = {};
-    let resultFunc = createSelectorArgs.pop();
-    if (typeof resultFunc === "object") {
-      directlyPassedOptions = resultFunc;
-      resultFunc = createSelectorArgs.pop();
-    }
-    assertIsFunction(
-      resultFunc,
-      `createSelector expects an output function after the inputs, but received: [${typeof resultFunc}]`
-    );
-    const combinedOptions = {
-      ...createSelectorCreatorOptions,
-      ...directlyPassedOptions
-    };
-    const {
-      memoize,
-      memoizeOptions = [],
-      argsMemoize = weakMapMemoize,
-      argsMemoizeOptions = [],
-      devModeChecks = {}
-    } = combinedOptions;
-    const finalMemoizeOptions = ensureIsArray(memoizeOptions);
-    const finalArgsMemoizeOptions = ensureIsArray(argsMemoizeOptions);
-    const dependencies = getDependencies(createSelectorArgs);
-    const memoizedResultFunc = memoize(function recomputationWrapper() {
-      recomputations++;
-      return resultFunc.apply(
-        null,
-        arguments
-      );
-    }, ...finalMemoizeOptions);
-    const selector = argsMemoize(function dependenciesChecker() {
-      dependencyRecomputations++;
-      const inputSelectorResults = collectInputSelectorResults(
-        dependencies,
-        arguments
-      );
-      lastResult = memoizedResultFunc.apply(null, inputSelectorResults);
-      return lastResult;
-    }, ...finalArgsMemoizeOptions);
-    return Object.assign(selector, {
-      resultFunc,
-      memoizedResultFunc,
-      dependencies,
-      dependencyRecomputations: () => dependencyRecomputations,
-      resetDependencyRecomputations: () => {
-        dependencyRecomputations = 0;
-      },
-      lastResult: () => lastResult,
-      recomputations: () => recomputations,
-      resetRecomputations: () => {
-        recomputations = 0;
-      },
-      memoize,
-      argsMemoize
-    });
-  };
-  Object.assign(createSelector2, {
-    withTypes: () => createSelector2
-  });
-  return createSelector2;
-}
-var createSelector = /* @__PURE__ */ createSelectorCreator(weakMapMemoize);
-var createStructuredSelector = Object.assign(
-  (inputSelectorsObject, selectorCreator = createSelector) => {
-    assertIsObject(
-      inputSelectorsObject,
-      `createStructuredSelector expects first argument to be an object where each property is a selector, instead received a ${typeof inputSelectorsObject}`
-    );
-    const inputSelectorKeys = Object.keys(inputSelectorsObject);
-    const dependencies = inputSelectorKeys.map(
-      (key) => inputSelectorsObject[key]
-    );
-    const structuredSelector = selectorCreator(
-      dependencies,
-      (...inputSelectorResults) => {
-        return inputSelectorResults.reduce((composition, value, index) => {
-          composition[inputSelectorKeys[index]] = value;
-          return composition;
-        }, {});
-      }
-    );
-    return structuredSelector;
-  },
-  { withTypes: () => createStructuredSelector }
-);
-function createThunkMiddleware(extraArgument) {
-  const middleware = ({ dispatch, getState }) => (next) => (action) => {
-    if (typeof action === "function") {
-      return action(dispatch, getState, extraArgument);
-    }
-    return next(action);
-  };
-  return middleware;
-}
-var thunk = createThunkMiddleware();
-var withExtraArgument = createThunkMiddleware;
-var createDraftSafeSelectorCreator = (...args) => {
-  const createSelector2 = createSelectorCreator(...args);
-  const createDraftSafeSelector2 = Object.assign((...args2) => {
-    const selector = createSelector2(...args2);
-    const wrappedSelector = (value, ...rest) => selector(isDraft(value) ? current(value) : value, ...rest);
-    Object.assign(wrappedSelector, selector);
-    return wrappedSelector;
-  }, {
-    withTypes: () => createDraftSafeSelector2
-  });
-  return createDraftSafeSelector2;
-};
-createDraftSafeSelectorCreator(weakMapMemoize);
-var composeWithDevTools = typeof window !== "undefined" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : function() {
-  if (arguments.length === 0)
-    return void 0;
-  if (typeof arguments[0] === "object")
-    return compose;
-  return compose.apply(null, arguments);
-};
-function createAction(type, prepareAction) {
-  function actionCreator(...args) {
-    if (prepareAction) {
-      let prepared = prepareAction(...args);
-      if (!prepared) {
-        throw new Error(formatProdErrorMessage(0));
-      }
-      return {
-        type,
-        payload: prepared.payload,
-        ..."meta" in prepared && {
-          meta: prepared.meta
-        },
-        ..."error" in prepared && {
-          error: prepared.error
-        }
-      };
-    }
-    return {
-      type,
-      payload: args[0]
-    };
-  }
-  actionCreator.toString = () => `${type}`;
-  actionCreator.type = type;
-  actionCreator.match = (action) => isAction(action) && action.type === type;
-  return actionCreator;
-}
-var Tuple = class _Tuple extends Array {
-  constructor(...items) {
-    super(...items);
-    Object.setPrototypeOf(this, _Tuple.prototype);
-  }
-  static get [Symbol.species]() {
-    return _Tuple;
-  }
-  concat(...arr) {
-    return super.concat.apply(this, arr);
-  }
-  prepend(...arr) {
-    if (arr.length === 1 && Array.isArray(arr[0])) {
-      return new _Tuple(...arr[0].concat(this));
-    }
-    return new _Tuple(...arr.concat(this));
-  }
-};
-function freezeDraftable(val) {
-  return isDraftable(val) ? produce(val, () => {
-  }) : val;
-}
-function emplace(map, key, handler) {
-  if (map.has(key)) {
-    let value = map.get(key);
-    if (handler.update) {
-      value = handler.update(value, key, map);
-      map.set(key, value);
-    }
-    return value;
-  }
-  if (!handler.insert)
-    throw new Error(formatProdErrorMessage(10));
-  const inserted = handler.insert(key, map);
-  map.set(key, inserted);
-  return inserted;
-}
-function isBoolean(x2) {
-  return typeof x2 === "boolean";
-}
-var buildGetDefaultMiddleware = () => function getDefaultMiddleware(options2) {
-  const {
-    thunk: thunk$1 = true,
-    immutableCheck = true,
-    serializableCheck = true,
-    actionCreatorCheck = true
-  } = options2 ?? {};
-  let middlewareArray = new Tuple();
-  if (thunk$1) {
-    if (isBoolean(thunk$1)) {
-      middlewareArray.push(thunk);
-    } else {
-      middlewareArray.push(withExtraArgument(thunk$1.extraArgument));
-    }
-  }
-  return middlewareArray;
-};
-var SHOULD_AUTOBATCH = "RTK_autoBatch";
-var createQueueWithTimer = (timeout) => {
-  return (notify) => {
-    setTimeout(notify, timeout);
-  };
-};
-var rAF = typeof window !== "undefined" && window.requestAnimationFrame ? window.requestAnimationFrame : createQueueWithTimer(10);
-var autoBatchEnhancer = (options2 = {
-  type: "raf"
-}) => (next) => (...args) => {
-  const store2 = next(...args);
-  let notifying = true;
-  let shouldNotifyAtEndOfTick = false;
-  let notificationQueued = false;
-  const listeners = /* @__PURE__ */ new Set();
-  const queueCallback = options2.type === "tick" ? queueMicrotask : options2.type === "raf" ? rAF : options2.type === "callback" ? options2.queueNotification : createQueueWithTimer(options2.timeout);
-  const notifyListeners = () => {
-    notificationQueued = false;
-    if (shouldNotifyAtEndOfTick) {
-      shouldNotifyAtEndOfTick = false;
-      listeners.forEach((l2) => l2());
-    }
-  };
-  return Object.assign({}, store2, {
-    // Override the base `store.subscribe` method to keep original listeners
-    // from running if we're delaying notifications
-    subscribe(listener22) {
-      const wrappedListener = () => notifying && listener22();
-      const unsubscribe = store2.subscribe(wrappedListener);
-      listeners.add(listener22);
-      return () => {
-        unsubscribe();
-        listeners.delete(listener22);
-      };
-    },
-    // Override the base `store.dispatch` method so that we can check actions
-    // for the `shouldAutoBatch` flag and determine if batching is active
-    dispatch(action) {
-      var _a;
-      try {
-        notifying = !((_a = action == null ? void 0 : action.meta) == null ? void 0 : _a[SHOULD_AUTOBATCH]);
-        shouldNotifyAtEndOfTick = !notifying;
-        if (shouldNotifyAtEndOfTick) {
-          if (!notificationQueued) {
-            notificationQueued = true;
-            queueCallback(notifyListeners);
-          }
-        }
-        return store2.dispatch(action);
-      } finally {
-        notifying = true;
-      }
-    }
-  });
-};
-var buildGetDefaultEnhancers = (middlewareEnhancer) => function getDefaultEnhancers(options2) {
-  const {
-    autoBatch = true
-  } = options2 ?? {};
-  let enhancerArray = new Tuple(middlewareEnhancer);
-  if (autoBatch) {
-    enhancerArray.push(autoBatchEnhancer(typeof autoBatch === "object" ? autoBatch : void 0));
-  }
-  return enhancerArray;
-};
-var IS_PRODUCTION = true;
-function configureStore(options2) {
-  const getDefaultMiddleware = buildGetDefaultMiddleware();
-  const {
-    reducer = void 0,
-    middleware,
-    devTools = true,
-    preloadedState = void 0,
-    enhancers = void 0
-  } = options2 || {};
-  let rootReducer;
-  if (typeof reducer === "function") {
-    rootReducer = reducer;
-  } else if (isPlainObject$1(reducer)) {
-    rootReducer = combineReducers(reducer);
-  } else {
-    throw new Error(formatProdErrorMessage(1));
-  }
-  let finalMiddleware;
-  if (typeof middleware === "function") {
-    finalMiddleware = middleware(getDefaultMiddleware);
-  } else {
-    finalMiddleware = getDefaultMiddleware();
-  }
-  let finalCompose = compose;
-  if (devTools) {
-    finalCompose = composeWithDevTools({
-      // Enable capture of stack traces for dispatched Redux actions
-      trace: !IS_PRODUCTION,
-      ...typeof devTools === "object" && devTools
-    });
-  }
-  const middlewareEnhancer = applyMiddleware(...finalMiddleware);
-  const getDefaultEnhancers = buildGetDefaultEnhancers(middlewareEnhancer);
-  let storeEnhancers = typeof enhancers === "function" ? enhancers(getDefaultEnhancers) : getDefaultEnhancers();
-  const composedEnhancer = finalCompose(...storeEnhancers);
-  return createStore(rootReducer, preloadedState, composedEnhancer);
-}
-function executeReducerBuilderCallback(builderCallback) {
-  const actionsMap = {};
-  const actionMatchers = [];
-  let defaultCaseReducer;
-  const builder = {
-    addCase(typeOrActionCreator, reducer) {
-      const type = typeof typeOrActionCreator === "string" ? typeOrActionCreator : typeOrActionCreator.type;
-      if (!type) {
-        throw new Error(formatProdErrorMessage(28));
-      }
-      if (type in actionsMap) {
-        throw new Error(formatProdErrorMessage(29));
-      }
-      actionsMap[type] = reducer;
-      return builder;
-    },
-    addMatcher(matcher, reducer) {
-      actionMatchers.push({
-        matcher,
-        reducer
-      });
-      return builder;
-    },
-    addDefaultCase(reducer) {
-      defaultCaseReducer = reducer;
-      return builder;
-    }
-  };
-  builderCallback(builder);
-  return [actionsMap, actionMatchers, defaultCaseReducer];
-}
-function isStateFunction(x2) {
-  return typeof x2 === "function";
-}
-function createReducer(initialState, mapOrBuilderCallback) {
-  let [actionsMap, finalActionMatchers, finalDefaultCaseReducer] = executeReducerBuilderCallback(mapOrBuilderCallback);
-  let getInitialState;
-  if (isStateFunction(initialState)) {
-    getInitialState = () => freezeDraftable(initialState());
-  } else {
-    const frozenInitialState = freezeDraftable(initialState);
-    getInitialState = () => frozenInitialState;
-  }
-  function reducer(state = getInitialState(), action) {
-    let caseReducers = [actionsMap[action.type], ...finalActionMatchers.filter(({
-      matcher
-    }) => matcher(action)).map(({
-      reducer: reducer2
-    }) => reducer2)];
-    if (caseReducers.filter((cr) => !!cr).length === 0) {
-      caseReducers = [finalDefaultCaseReducer];
-    }
-    return caseReducers.reduce((previousState, caseReducer) => {
-      if (caseReducer) {
-        if (isDraft(previousState)) {
-          const draft = previousState;
-          const result = caseReducer(draft, action);
-          if (result === void 0) {
-            return previousState;
-          }
-          return result;
-        } else if (!isDraftable(previousState)) {
-          const result = caseReducer(previousState, action);
-          if (result === void 0) {
-            if (previousState === null) {
-              return previousState;
-            }
-            throw new Error(formatProdErrorMessage(9));
-          }
-          return result;
-        } else {
-          return produce(previousState, (draft) => {
-            return caseReducer(draft, action);
-          });
-        }
-      }
-      return previousState;
-    }, state);
-  }
-  reducer.getInitialState = getInitialState;
-  return reducer;
-}
-var urlAlphabet = "ModuleSymbhasOwnPr-0123456789ABCDEFGHNRVfgctiUvz_KqYTJkLxpZXIjQW";
-var nanoid = (size = 21) => {
-  let id2 = "";
-  let i = size;
-  while (i--) {
-    id2 += urlAlphabet[Math.random() * 64 | 0];
-  }
-  return id2;
-};
-var asyncThunkSymbol = /* @__PURE__ */ Symbol.for("rtk-slice-createasyncthunk");
-function getType(slice, actionKey) {
-  return `${slice}/${actionKey}`;
-}
-function buildCreateSlice({
-  creators
-} = {}) {
-  var _a;
-  const cAT = (_a = creators == null ? void 0 : creators.asyncThunk) == null ? void 0 : _a[asyncThunkSymbol];
-  return function createSlice2(options2) {
-    const {
-      name,
-      reducerPath = name
-    } = options2;
-    if (!name) {
-      throw new Error(formatProdErrorMessage(11));
-    }
-    if (typeof process !== "undefined" && false) {
-      if (options2.initialState === void 0) {
-        console.error("You must provide an `initialState` value that is not `undefined`. You may have misspelled `initialState`");
-      }
-    }
-    const reducers = (typeof options2.reducers === "function" ? options2.reducers(buildReducerCreators()) : options2.reducers) || {};
-    const reducerNames = Object.keys(reducers);
-    const context = {
-      sliceCaseReducersByName: {},
-      sliceCaseReducersByType: {},
-      actionCreators: {},
-      sliceMatchers: []
-    };
-    const contextMethods = {
-      addCase(typeOrActionCreator, reducer2) {
-        const type = typeof typeOrActionCreator === "string" ? typeOrActionCreator : typeOrActionCreator.type;
-        if (!type) {
-          throw new Error(formatProdErrorMessage(12));
-        }
-        if (type in context.sliceCaseReducersByType) {
-          throw new Error(formatProdErrorMessage(13));
-        }
-        context.sliceCaseReducersByType[type] = reducer2;
-        return contextMethods;
-      },
-      addMatcher(matcher, reducer2) {
-        context.sliceMatchers.push({
-          matcher,
-          reducer: reducer2
-        });
-        return contextMethods;
-      },
-      exposeAction(name2, actionCreator) {
-        context.actionCreators[name2] = actionCreator;
-        return contextMethods;
-      },
-      exposeCaseReducer(name2, reducer2) {
-        context.sliceCaseReducersByName[name2] = reducer2;
-        return contextMethods;
-      }
-    };
-    reducerNames.forEach((reducerName) => {
-      const reducerDefinition = reducers[reducerName];
-      const reducerDetails = {
-        reducerName,
-        type: getType(name, reducerName),
-        createNotation: typeof options2.reducers === "function"
-      };
-      if (isAsyncThunkSliceReducerDefinition(reducerDefinition)) {
-        handleThunkCaseReducerDefinition(reducerDetails, reducerDefinition, contextMethods, cAT);
-      } else {
-        handleNormalReducerDefinition(reducerDetails, reducerDefinition, contextMethods);
-      }
-    });
-    function buildReducer() {
-      const [extraReducers = {}, actionMatchers = [], defaultCaseReducer = void 0] = typeof options2.extraReducers === "function" ? executeReducerBuilderCallback(options2.extraReducers) : [options2.extraReducers];
-      const finalCaseReducers = {
-        ...extraReducers,
-        ...context.sliceCaseReducersByType
-      };
-      return createReducer(options2.initialState, (builder) => {
-        for (let key in finalCaseReducers) {
-          builder.addCase(key, finalCaseReducers[key]);
-        }
-        for (let sM of context.sliceMatchers) {
-          builder.addMatcher(sM.matcher, sM.reducer);
-        }
-        for (let m2 of actionMatchers) {
-          builder.addMatcher(m2.matcher, m2.reducer);
-        }
-        if (defaultCaseReducer) {
-          builder.addDefaultCase(defaultCaseReducer);
-        }
-      });
-    }
-    const selectSelf = (state) => state;
-    const injectedSelectorCache = /* @__PURE__ */ new Map();
-    let _reducer;
-    function reducer(state, action) {
-      if (!_reducer)
-        _reducer = buildReducer();
-      return _reducer(state, action);
-    }
-    function getInitialState() {
-      if (!_reducer)
-        _reducer = buildReducer();
-      return _reducer.getInitialState();
-    }
-    function makeSelectorProps(reducerPath2, injected = false) {
-      function selectSlice(state) {
-        let sliceState = state[reducerPath2];
-        if (typeof sliceState === "undefined") {
-          if (injected) {
-            sliceState = getInitialState();
-          }
-        }
-        return sliceState;
-      }
-      function getSelectors(selectState = selectSelf) {
-        const selectorCache = emplace(injectedSelectorCache, injected, {
-          insert: () => /* @__PURE__ */ new WeakMap()
-        });
-        return emplace(selectorCache, selectState, {
-          insert: () => {
-            const map = {};
-            for (const [name2, selector] of Object.entries(options2.selectors ?? {})) {
-              map[name2] = wrapSelector(selector, selectState, getInitialState, injected);
-            }
-            return map;
-          }
-        });
-      }
-      return {
-        reducerPath: reducerPath2,
-        getSelectors,
-        get selectors() {
-          return getSelectors(selectSlice);
-        },
-        selectSlice
-      };
-    }
-    const slice = {
-      name,
-      reducer,
-      actions: context.actionCreators,
-      caseReducers: context.sliceCaseReducersByName,
-      getInitialState,
-      ...makeSelectorProps(reducerPath),
-      injectInto(injectable, {
-        reducerPath: pathOpt,
-        ...config2
-      } = {}) {
-        const newReducerPath = pathOpt ?? reducerPath;
-        injectable.inject({
-          reducerPath: newReducerPath,
-          reducer
-        }, config2);
-        return {
-          ...slice,
-          ...makeSelectorProps(newReducerPath, true)
-        };
-      }
-    };
-    return slice;
-  };
-}
-function wrapSelector(selector, selectState, getInitialState, injected) {
-  function wrapper(rootState, ...args) {
-    let sliceState = selectState(rootState);
-    if (typeof sliceState === "undefined") {
-      if (injected) {
-        sliceState = getInitialState();
-      }
-    }
-    return selector(sliceState, ...args);
-  }
-  wrapper.unwrapped = selector;
-  return wrapper;
-}
-var createSlice = /* @__PURE__ */ buildCreateSlice();
-function buildReducerCreators() {
-  function asyncThunk(payloadCreator, config2) {
-    return {
-      _reducerDefinitionType: "asyncThunk",
-      payloadCreator,
-      ...config2
-    };
-  }
-  asyncThunk.withTypes = () => asyncThunk;
-  return {
-    reducer(caseReducer) {
-      return Object.assign({
-        // hack so the wrapping function has the same name as the original
-        // we need to create a wrapper so the `reducerDefinitionType` is not assigned to the original
-        [caseReducer.name](...args) {
-          return caseReducer(...args);
-        }
-      }[caseReducer.name], {
-        _reducerDefinitionType: "reducer"
-        /* reducer */
-      });
-    },
-    preparedReducer(prepare, reducer) {
-      return {
-        _reducerDefinitionType: "reducerWithPrepare",
-        prepare,
-        reducer
-      };
-    },
-    asyncThunk
-  };
-}
-function handleNormalReducerDefinition({
-  type,
-  reducerName,
-  createNotation
-}, maybeReducerWithPrepare, context) {
-  let caseReducer;
-  let prepareCallback;
-  if ("reducer" in maybeReducerWithPrepare) {
-    if (createNotation && !isCaseReducerWithPrepareDefinition(maybeReducerWithPrepare)) {
-      throw new Error(formatProdErrorMessage(17));
-    }
-    caseReducer = maybeReducerWithPrepare.reducer;
-    prepareCallback = maybeReducerWithPrepare.prepare;
-  } else {
-    caseReducer = maybeReducerWithPrepare;
-  }
-  context.addCase(type, caseReducer).exposeCaseReducer(reducerName, caseReducer).exposeAction(reducerName, prepareCallback ? createAction(type, prepareCallback) : createAction(type));
-}
-function isAsyncThunkSliceReducerDefinition(reducerDefinition) {
-  return reducerDefinition._reducerDefinitionType === "asyncThunk";
-}
-function isCaseReducerWithPrepareDefinition(reducerDefinition) {
-  return reducerDefinition._reducerDefinitionType === "reducerWithPrepare";
-}
-function handleThunkCaseReducerDefinition({
-  type,
-  reducerName
-}, reducerDefinition, context, cAT) {
-  if (!cAT) {
-    throw new Error(formatProdErrorMessage(18));
-  }
-  const {
-    payloadCreator,
-    fulfilled,
-    pending,
-    rejected,
-    settled,
-    options: options2
-  } = reducerDefinition;
-  const thunk2 = cAT(type, payloadCreator, options2);
-  context.exposeAction(reducerName, thunk2);
-  if (fulfilled) {
-    context.addCase(thunk2.fulfilled, fulfilled);
-  }
-  if (pending) {
-    context.addCase(thunk2.pending, pending);
-  }
-  if (rejected) {
-    context.addCase(thunk2.rejected, rejected);
-  }
-  if (settled) {
-    context.addMatcher(thunk2.settled, settled);
-  }
-  context.exposeCaseReducer(reducerName, {
-    fulfilled: fulfilled || noop$3,
-    pending: pending || noop$3,
-    rejected: rejected || noop$3,
-    settled: settled || noop$3
-  });
-}
-function noop$3() {
-}
-var assertFunction = (func, expected) => {
-  if (typeof func !== "function") {
-    throw new Error(formatProdErrorMessage(32));
-  }
-};
-var alm = "listenerMiddleware";
-var getListenerEntryPropsFrom = (options2) => {
-  let {
-    type,
-    actionCreator,
-    matcher,
-    predicate,
-    effect
-  } = options2;
-  if (type) {
-    predicate = createAction(type).match;
-  } else if (actionCreator) {
-    type = actionCreator.type;
-    predicate = actionCreator.match;
-  } else if (matcher) {
-    predicate = matcher;
-  } else if (predicate)
-    ;
-  else {
-    throw new Error(formatProdErrorMessage(21));
-  }
-  assertFunction(effect);
-  return {
-    predicate,
-    type,
-    effect
-  };
-};
-var createListenerEntry = Object.assign((options2) => {
-  const {
-    type,
-    predicate,
-    effect
-  } = getListenerEntryPropsFrom(options2);
-  const id2 = nanoid();
-  const entry = {
-    id: id2,
-    effect,
-    type,
-    predicate,
-    pending: /* @__PURE__ */ new Set(),
-    unsubscribe: () => {
-      throw new Error(formatProdErrorMessage(22));
-    }
-  };
-  return entry;
-}, {
-  withTypes: () => createListenerEntry
-});
-var addListener = Object.assign(createAction(`${alm}/add`), {
-  withTypes: () => addListener
-});
-createAction(`${alm}/removeAll`);
-var removeListener = Object.assign(createAction(`${alm}/remove`), {
-  withTypes: () => removeListener
-});
-function formatProdErrorMessage(code) {
-  return `Minified Redux Toolkit error #${code}; visit https://redux-toolkit.js.org/Errors?code=${code} for the full message or use the non-minified dev environment for full errors. `;
-}
-const allCards = [
-  {
-    id: 0,
-    point: 1,
-    way: "/pyramid/src/assets/cards/clubs-1.svg",
-    show: true
-  },
-  {
-    id: 1,
-    point: 2,
-    way: "/pyramid/src/assets/cards/clubs-2.svg",
-    show: true
-  },
-  {
-    id: 2,
-    point: 3,
-    way: "/pyramid/src/assets/cards/clubs-3.svg",
-    show: true
-  },
-  {
-    id: 3,
-    point: 4,
-    way: "/pyramid/src/assets/cards/clubs-4.svg",
-    show: true
-  },
-  {
-    id: 4,
-    point: 5,
-    way: "/pyramid/src/assets/cards/clubs-5.svg",
-    show: true
-  },
-  {
-    id: 5,
-    point: 6,
-    way: "/pyramid/src/assets/cards/clubs-6.svg",
-    show: true
-  },
-  {
-    id: 6,
-    point: 7,
-    way: "/pyramid/src/assets/cards/clubs-7.svg",
-    show: true
-  },
-  {
-    id: 7,
-    point: 8,
-    way: "/pyramid/src/assets/cards/clubs-8.svg",
-    show: true
-  },
-  {
-    id: 8,
-    point: 9,
-    way: "/pyramid/src/assets/cards/clubs-9.svg",
-    show: true
-  },
-  {
-    id: 9,
-    point: 10,
-    way: "/pyramid/src/assets/cards/clubs-10.svg",
-    show: true
-  },
-  {
-    id: 10,
-    point: 11,
-    way: "/pyramid/src/assets/cards/clubs-11.svg",
-    show: true
-  },
-  {
-    id: 11,
-    point: 12,
-    way: "/pyramid/src/assets/cards/clubs-12.svg",
-    show: true
-  },
-  {
-    id: 12,
-    point: 13,
-    way: "/pyramid/src/assets/cards/clubs-13.svg",
-    show: true
-  },
-  {
-    id: 13,
-    point: 1,
-    way: "/pyramid/src/assets/cards/diamonds-1.svg",
-    show: true
-  },
-  {
-    id: 14,
-    point: 2,
-    way: "/pyramid/src/assets/cards/diamonds-2.svg",
-    show: true
-  },
-  {
-    id: 15,
-    point: 3,
-    way: "/pyramid/src/assets/cards/diamonds-3.svg",
-    show: true
-  },
-  {
-    id: 16,
-    point: 4,
-    way: "/pyramid/src/assets/cards/diamonds-4.svg",
-    show: true
-  },
-  {
-    id: 17,
-    point: 5,
-    way: "/pyramid/src/assets/cards/diamonds-5.svg",
-    show: true
-  },
-  {
-    id: 18,
-    point: 6,
-    way: "/pyramid/src/assets/cards/diamonds-6.svg",
-    show: true
-  },
-  {
-    id: 19,
-    point: 7,
-    way: "/pyramid/src/assets/cards/diamonds-7.svg",
-    show: true
-  },
-  {
-    id: 20,
-    point: 8,
-    way: "/pyramid/src/assets/cards/diamonds-8.svg",
-    show: true
-  },
-  {
-    id: 21,
-    point: 9,
-    way: "/pyramid/src/assets/cards/diamonds-9.svg",
-    show: true
-  },
-  {
-    id: 22,
-    point: 10,
-    way: "/pyramid/src/assets/cards/diamonds-10.svg",
-    show: true
-  },
-  {
-    id: 23,
-    point: 11,
-    way: "/pyramid/src/assets/cards/diamonds-11.svg",
-    show: true
-  },
-  {
-    id: 24,
-    point: 12,
-    way: "/pyramid/src/assets/cards/diamonds-12.svg",
-    show: true
-  },
-  {
-    id: 25,
-    point: 13,
-    way: "/pyramid/src/assets/cards/diamonds-13.svg",
-    show: true
-  },
-  {
-    id: 26,
-    point: 1,
-    way: "/pyramid/src/assets/cards/hearts-1.svg",
-    show: true
-  },
-  {
-    id: 27,
-    point: 2,
-    way: "/pyramid/src/assets/cards/hearts-2.svg",
-    show: true
-  },
-  {
-    id: 28,
-    point: 3,
-    way: "/pyramid/src/assets/cards/hearts-3.svg",
-    show: true
-  },
-  {
-    id: 29,
-    point: 4,
-    way: "/pyramid/src/assets/cards/hearts-4.svg",
-    show: true
-  },
-  {
-    id: 30,
-    point: 5,
-    way: "/pyramid/src/assets/cards/hearts-5.svg",
-    show: true
-  },
-  {
-    id: 31,
-    point: 6,
-    way: "/pyramid/src/assets/cards/hearts-6.svg",
-    show: true
-  },
-  {
-    id: 32,
-    point: 7,
-    way: "/pyramid/src/assets/cards/hearts-7.svg",
-    show: true
-  },
-  {
-    id: 33,
-    point: 8,
-    way: "/pyramid/src/assets/cards/hearts-8.svg",
-    show: true
-  },
-  {
-    id: 34,
-    point: 9,
-    way: "/pyramid/src/assets/cards/hearts-9.svg",
-    show: true
-  },
-  {
-    id: 35,
-    point: 10,
-    way: "/pyramid/src/assets/cards/hearts-10.svg",
-    show: true
-  },
-  {
-    id: 36,
-    point: 11,
-    way: "/pyramid/src/assets/cards/hearts-11.svg",
-    show: true
-  },
-  {
-    id: 37,
-    point: 12,
-    way: "/pyramid/src/assets/cards/hearts-12.svg",
-    show: true
-  },
-  {
-    id: 38,
-    point: 13,
-    way: "/pyramid/src/assets/cards/hearts-13.svg",
-    show: true
-  },
-  {
-    id: 39,
-    point: 1,
-    way: "/pyramid/src/assets/cards/spades-1.svg",
-    show: true
-  },
-  {
-    id: 40,
-    point: 2,
-    way: "/pyramid/src/assets/cards/spades-2.svg",
-    show: true
-  },
-  {
-    id: 41,
-    point: 3,
-    way: "/pyramid/src/assets/cards/spades-3.svg",
-    show: true
-  },
-  {
-    id: 42,
-    point: 4,
-    way: "/pyramid/src/assets/cards/spades-4.svg",
-    show: true
-  },
-  {
-    id: 43,
-    point: 5,
-    way: "/pyramid/src/assets/cards/spades-5.svg",
-    show: true
-  },
-  {
-    id: 44,
-    point: 6,
-    way: "/pyramid/src/assets/cards/spades-6.svg",
-    show: true
-  },
-  {
-    id: 45,
-    point: 7,
-    way: "/pyramid/src/assets/cards/spades-7.svg",
-    show: true
-  },
-  {
-    id: 46,
-    point: 8,
-    way: "/pyramid/src/assets/cards/spades-8.svg",
-    show: true
-  },
-  {
-    id: 47,
-    point: 9,
-    way: "/pyramid/src/assets/cards/spades-9.svg",
-    show: true
-  },
-  {
-    id: 48,
-    point: 10,
-    way: "/pyramid/src/assets/cards/spades-10.svg",
-    show: true
-  },
-  {
-    id: 49,
-    point: 11,
-    way: "/pyramid/src/assets/cards/spades-11.svg",
-    show: true
-  },
-  {
-    id: 50,
-    point: 12,
-    way: "/pyramid/src/assets/cards/spades-12.svg",
-    show: true
-  },
-  {
-    id: 51,
-    point: 13,
-    way: "/pyramid/src/assets/cards/spades-13.svg",
-    show: true
-  }
-];
-const rule = [
-  [
-    {
-      id: 0,
-      rule: [
-        1,
-        2
-      ]
-    },
-    {
-      id: 1,
-      rule: [
-        3,
-        4
-      ]
-    },
-    {
-      id: 2,
-      rule: [
-        4,
-        5
-      ]
-    },
-    {
-      id: 3,
-      rule: [
-        6,
-        7
-      ]
-    },
-    {
-      id: 4,
-      rule: [
-        7,
-        8
-      ]
-    },
-    {
-      id: 5,
-      rule: [
-        8,
-        9
-      ]
-    },
-    {
-      id: 6,
-      rule: [
-        10,
-        11
-      ]
-    },
-    {
-      id: 7,
-      rule: [
-        11,
-        12
-      ]
-    },
-    {
-      id: 8,
-      rule: [
-        12,
-        13
-      ]
-    },
-    {
-      id: 9,
-      rule: [
-        13,
-        14
-      ]
-    },
-    {
-      id: 10,
-      rule: [
-        15,
-        16
-      ]
-    },
-    {
-      id: 11,
-      rule: [
-        16,
-        17
-      ]
-    },
-    {
-      id: 12,
-      rule: [
-        17,
-        18
-      ]
-    },
-    {
-      id: 13,
-      rule: [
-        18,
-        19
-      ]
-    },
-    {
-      id: 14,
-      rule: [
-        19,
-        20
-      ]
-    },
-    {
-      id: 15,
-      rule: [
-        21,
-        22
-      ]
-    },
-    {
-      id: 16,
-      rule: [
-        22,
-        23
-      ]
-    },
-    {
-      id: 17,
-      rule: [
-        23,
-        24
-      ]
-    },
-    {
-      id: 18,
-      rule: [
-        24,
-        25
-      ]
-    },
-    {
-      id: 19,
-      rule: [
-        25,
-        26
-      ]
-    },
-    {
-      id: 20,
-      rule: [
-        26,
-        27
-      ]
-    },
-    {
-      id: 21,
-      rule: [
-        28,
-        29
-      ]
-    },
-    {
-      id: 22,
-      rule: [
-        28,
-        29
-      ]
-    },
-    {
-      id: 23,
-      rule: [
-        28,
-        29
-      ]
-    },
-    {
-      id: 24,
-      rule: [
-        28,
-        29
-      ]
-    },
-    {
-      id: 25,
-      rule: [
-        28,
-        29
-      ]
-    },
-    {
-      id: 26,
-      rule: [
-        28,
-        29
-      ]
-    },
-    {
-      id: 27,
-      rule: [
-        28,
-        29
-      ]
-    }
-  ],
-  [
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    1,
-    0,
-    0
-  ]
-];
-const cardSlice = createSlice({
-  name: "pyramid",
-  initialState: {
-    restart: false,
-    cards: localStorage.getItem("restartPyramidTrue") == "true" ? JSON.parse(localStorage.getItem("restartPyramid")) : allCards,
-    // cards: allCards,
-    backFont: [
-      "/pyramid/src/assets/backgrounds/clouds.jpg",
-      "/pyramid/src/assets/backgrounds/default.jpg",
-      "/pyramid/src/assets/backgrounds/flowers.jpg",
-      "/pyramid/src/assets/backgrounds/flowers-field.jpg",
-      "/pyramid/src/assets/backgrounds/sand.jpg",
-      "/pyramid/src/assets/backgrounds/sea.jpg",
-      "/pyramid/src/assets/backgrounds/space.jpg",
-      "/pyramid/src/assets/backgrounds/sunflower.jpg"
-    ],
-    backs: [
-      "/pyramid/src/assets/card_backs/card-cover-1.png",
-      "/pyramid/src/assets/card_backs/card-cover-2.png",
-      "/pyramid/src/assets/card_backs/card-cover-3.png",
-      "/pyramid/src/assets/card_backs/card-cover-4.png",
-      "/pyramid/src/assets/card_backs/card-cover-5.svg"
-    ],
-    cardSize: 0,
-    rez: [],
-    // это наша стопка на столе под "рубашкой"
-    rezCount: -1,
-    otb: [],
-    // это стопка которая под картой которая сейчас играет
-    rule: rule[0],
-    forRule: rule[1],
-    colors: 1,
-    hint: false,
-    bodyPlay: [29, -1],
-    doBack: false,
-    backCard: [0]
-  },
-  reducers: {
-    setSize(state, action) {
-      let size = [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8];
-      state.cardSize = size[action.payload];
-    },
-    sortCards(state) {
-      state.cards = state.cards.sort(() => Math.random() - 0.5);
-    },
-    createRez(state) {
-      if (state.rezCount === -1) {
-        state.cards.forEach((el2, index) => {
-          if (index > 27) {
-            state.rez.push(el2);
-          }
-        });
-      }
-      if (state.rezCount === 23) {
-        state.rezCount = -1;
-      }
-    },
-    showRez(state) {
-      state.rezCount++;
-    },
-    createOtb(state) {
-      state.otb.push(state.rez[state.rezCount]);
-    },
-    setColor(state, action) {
-      state.colors = action.payload;
-    },
-    moveBack(state) {
-      if (state.rezCount > 0)
-        ;
-    },
-    // createRule(state) {
-    //   if (state.rezCount === -1) {
-    //     state.forRule = new Array(28).fill(1);
-    //   }
-    //   это нужно для заполнения дляПравила массива всеми 1, если понадобится!!!
-    // },
-    // checkRule(state) {},
-    setForRule(state, action) {
-      const updateForRule = [...state.forRule];
-      updateForRule[action.payload] = 0;
-      return {
-        ...state,
-        forRule: updateForRule
-      };
-    },
-    setHint(state, action) {
-      state.hint = action.payload;
-    },
-    setOtb(state) {
-      state.otb.push(state.rez[state.rezCount]);
-    },
-    setBodyGame(state, action) {
-      state.bodyPlay[0] = action.payload;
-    },
-    setBodyGameToo(state, action) {
-      state.bodyPlay[1] = action.payload;
-    },
-    setBackStep(state) {
-      state.doBack = true;
-    },
-    setBackStepNorm(state) {
-      state.doBack = false;
-    },
-    setShowCard(state, action) {
-      state.cards[action.payload].show = false;
-    },
-    setCardBackIndex(state, action) {
-      state.backCard = action.payload;
-    }
-  }
-});
-const {
-  sortCards,
-  setSize,
-  createRez,
-  showRez,
-  createOtb,
-  setColor,
-  moveBack,
-  // createRule,
-  setForRule,
-  setHint,
-  setOtb,
-  setBodyGame,
-  setBodyGameToo,
-  setBackStep,
-  setBackStepNorm,
-  setShowCard,
-  setCardBackIndex
-} = cardSlice.actions;
-const cardSlice$1 = cardSlice.reducer;
 function Timer() {
   const [timer, setTimer] = reactExports.useState(0);
   const startTimeRef = reactExports.useRef(0);
@@ -10437,39 +7987,9 @@ function Timer() {
     let seconds = Math.floor(timer / 1e3 % 60);
     minutes = String(minutes).padStart(2, "0");
     seconds = String(seconds).padStart(2, "0");
-    if (seconds > 0) {
-      localStorage.setItem("restartPyramidTrue", JSON.stringify(false));
-    }
     return `${minutes}:${seconds}`;
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: formatTime() });
-}
-const slider = "_slider_cy237_1";
-const s$3 = {
-  slider
-};
-function Slider() {
-  const [value, setValue] = reactExports.useState(5);
-  const dispatch = useDispatch();
-  const handleChange = (event) => {
-    setValue(event.target.value);
-    dispatch(setSize(event.target.value));
-  };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: s$3.slider, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(
-      "input",
-      {
-        id: "range1",
-        type: "range",
-        min: "0",
-        max: "10",
-        value,
-        onChange: handleChange,
-        style: { zIndex: "1" }
-      }
-    ),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: value })
-  ] });
 }
 function ownKeys$1(object, enumerableOnly) {
   var keys = Object.keys(object);
@@ -10610,14 +8130,14 @@ function _nonIterableSpread$1() {
 function _nonIterableRest() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-var noop = function noop2() {
+var noop$1 = function noop2() {
 };
 var _WINDOW = {};
 var _DOCUMENT = {};
 var _MUTATION_OBSERVER = null;
 var _PERFORMANCE = {
-  mark: noop,
-  measure: noop
+  mark: noop$1,
+  measure: noop$1
 };
 try {
   if (typeof window !== "undefined")
@@ -10835,7 +8355,7 @@ Object.keys(_default).forEach(function(key) {
 });
 Object.defineProperty(config, "familyPrefix", {
   enumerable: true,
-  set: function set2(val) {
+  set: function set(val) {
     _config.cssPrefix = val;
     _onChangeCb.forEach(function(cb2) {
       return cb2(config);
@@ -11818,11 +9338,11 @@ function findIcon(iconName, prefix) {
     }));
   });
 }
-var noop$1 = function noop3() {
+var noop$1$1 = function noop3() {
 };
 var p = config.measurePerformance && PERFORMANCE && PERFORMANCE.mark && PERFORMANCE.measure ? PERFORMANCE : {
-  mark: noop$1,
-  measure: noop$1
+  mark: noop$1$1,
+  measure: noop$1$1
 };
 var preamble = 'FA "6.5.2"';
 var begin = function begin2(name) {
@@ -12929,8 +10449,8 @@ var SvgSymbols = {
     };
   }
 };
-var plugins = [InjectCSS, ReplaceElements, Layers, LayersCounter, LayersText, PseudoElements, MutationObserver$1, PowerTransforms, Masks, MissingIconIndicator, SvgSymbols];
-registerPlugins(plugins, {
+var plugins$1 = [InjectCSS, ReplaceElements, Layers, LayersCounter, LayersText, PseudoElements, MutationObserver$1, PowerTransforms, Masks, MissingIconIndicator, SvgSymbols];
+registerPlugins(plugins$1, {
   mixoutsTo: api
 });
 api.noAuto;
@@ -13345,12 +10865,2468 @@ const Button = ({ icon: icon3, span, data_tooltip, onClick }) => {
     }
   );
 };
+function formatProdErrorMessage$1(code) {
+  return `Minified Redux error #${code}; visit https://redux.js.org/Errors?code=${code} for the full message or use the non-minified dev environment for full errors. `;
+}
+var $$observable = /* @__PURE__ */ (() => typeof Symbol === "function" && Symbol.observable || "@@observable")();
+var symbol_observable_default = $$observable;
+var randomString = () => Math.random().toString(36).substring(7).split("").join(".");
+var ActionTypes = {
+  INIT: `@@redux/INIT${/* @__PURE__ */ randomString()}`,
+  REPLACE: `@@redux/REPLACE${/* @__PURE__ */ randomString()}`,
+  PROBE_UNKNOWN_ACTION: () => `@@redux/PROBE_UNKNOWN_ACTION${randomString()}`
+};
+var actionTypes_default = ActionTypes;
+function isPlainObject$1(obj) {
+  if (typeof obj !== "object" || obj === null)
+    return false;
+  let proto = obj;
+  while (Object.getPrototypeOf(proto) !== null) {
+    proto = Object.getPrototypeOf(proto);
+  }
+  return Object.getPrototypeOf(obj) === proto || Object.getPrototypeOf(obj) === null;
+}
+function createStore(reducer, preloadedState, enhancer) {
+  if (typeof reducer !== "function") {
+    throw new Error(formatProdErrorMessage$1(2));
+  }
+  if (typeof preloadedState === "function" && typeof enhancer === "function" || typeof enhancer === "function" && typeof arguments[3] === "function") {
+    throw new Error(formatProdErrorMessage$1(0));
+  }
+  if (typeof preloadedState === "function" && typeof enhancer === "undefined") {
+    enhancer = preloadedState;
+    preloadedState = void 0;
+  }
+  if (typeof enhancer !== "undefined") {
+    if (typeof enhancer !== "function") {
+      throw new Error(formatProdErrorMessage$1(1));
+    }
+    return enhancer(createStore)(reducer, preloadedState);
+  }
+  let currentReducer = reducer;
+  let currentState = preloadedState;
+  let currentListeners = /* @__PURE__ */ new Map();
+  let nextListeners = currentListeners;
+  let listenerIdCounter = 0;
+  let isDispatching = false;
+  function ensureCanMutateNextListeners() {
+    if (nextListeners === currentListeners) {
+      nextListeners = /* @__PURE__ */ new Map();
+      currentListeners.forEach((listener3, key) => {
+        nextListeners.set(key, listener3);
+      });
+    }
+  }
+  function getState() {
+    if (isDispatching) {
+      throw new Error(formatProdErrorMessage$1(3));
+    }
+    return currentState;
+  }
+  function subscribe(listener3) {
+    if (typeof listener3 !== "function") {
+      throw new Error(formatProdErrorMessage$1(4));
+    }
+    if (isDispatching) {
+      throw new Error(formatProdErrorMessage$1(5));
+    }
+    let isSubscribed = true;
+    ensureCanMutateNextListeners();
+    const listenerId = listenerIdCounter++;
+    nextListeners.set(listenerId, listener3);
+    return function unsubscribe() {
+      if (!isSubscribed) {
+        return;
+      }
+      if (isDispatching) {
+        throw new Error(formatProdErrorMessage$1(6));
+      }
+      isSubscribed = false;
+      ensureCanMutateNextListeners();
+      nextListeners.delete(listenerId);
+      currentListeners = null;
+    };
+  }
+  function dispatch(action) {
+    if (!isPlainObject$1(action)) {
+      throw new Error(formatProdErrorMessage$1(7));
+    }
+    if (typeof action.type === "undefined") {
+      throw new Error(formatProdErrorMessage$1(8));
+    }
+    if (typeof action.type !== "string") {
+      throw new Error(formatProdErrorMessage$1(17));
+    }
+    if (isDispatching) {
+      throw new Error(formatProdErrorMessage$1(9));
+    }
+    try {
+      isDispatching = true;
+      currentState = currentReducer(currentState, action);
+    } finally {
+      isDispatching = false;
+    }
+    const listeners = currentListeners = nextListeners;
+    listeners.forEach((listener3) => {
+      listener3();
+    });
+    return action;
+  }
+  function replaceReducer(nextReducer) {
+    if (typeof nextReducer !== "function") {
+      throw new Error(formatProdErrorMessage$1(10));
+    }
+    currentReducer = nextReducer;
+    dispatch({
+      type: actionTypes_default.REPLACE
+    });
+  }
+  function observable() {
+    const outerSubscribe = subscribe;
+    return {
+      /**
+       * The minimal observable subscription method.
+       * @param observer Any object that can be used as an observer.
+       * The observer object should have a `next` method.
+       * @returns An object with an `unsubscribe` method that can
+       * be used to unsubscribe the observable from the store, and prevent further
+       * emission of values from the observable.
+       */
+      subscribe(observer) {
+        if (typeof observer !== "object" || observer === null) {
+          throw new Error(formatProdErrorMessage$1(11));
+        }
+        function observeState() {
+          const observerAsObserver = observer;
+          if (observerAsObserver.next) {
+            observerAsObserver.next(getState());
+          }
+        }
+        observeState();
+        const unsubscribe = outerSubscribe(observeState);
+        return {
+          unsubscribe
+        };
+      },
+      [symbol_observable_default]() {
+        return this;
+      }
+    };
+  }
+  dispatch({
+    type: actionTypes_default.INIT
+  });
+  const store2 = {
+    dispatch,
+    subscribe,
+    getState,
+    replaceReducer,
+    [symbol_observable_default]: observable
+  };
+  return store2;
+}
+function assertReducerShape(reducers) {
+  Object.keys(reducers).forEach((key) => {
+    const reducer = reducers[key];
+    const initialState = reducer(void 0, {
+      type: actionTypes_default.INIT
+    });
+    if (typeof initialState === "undefined") {
+      throw new Error(formatProdErrorMessage$1(12));
+    }
+    if (typeof reducer(void 0, {
+      type: actionTypes_default.PROBE_UNKNOWN_ACTION()
+    }) === "undefined") {
+      throw new Error(formatProdErrorMessage$1(13));
+    }
+  });
+}
+function combineReducers(reducers) {
+  const reducerKeys = Object.keys(reducers);
+  const finalReducers = {};
+  for (let i = 0; i < reducerKeys.length; i++) {
+    const key = reducerKeys[i];
+    if (typeof reducers[key] === "function") {
+      finalReducers[key] = reducers[key];
+    }
+  }
+  const finalReducerKeys = Object.keys(finalReducers);
+  let shapeAssertionError;
+  try {
+    assertReducerShape(finalReducers);
+  } catch (e) {
+    shapeAssertionError = e;
+  }
+  return function combination(state = {}, action) {
+    if (shapeAssertionError) {
+      throw shapeAssertionError;
+    }
+    let hasChanged = false;
+    const nextState = {};
+    for (let i = 0; i < finalReducerKeys.length; i++) {
+      const key = finalReducerKeys[i];
+      const reducer = finalReducers[key];
+      const previousStateForKey = state[key];
+      const nextStateForKey = reducer(previousStateForKey, action);
+      if (typeof nextStateForKey === "undefined") {
+        action && action.type;
+        throw new Error(formatProdErrorMessage$1(14));
+      }
+      nextState[key] = nextStateForKey;
+      hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
+    }
+    hasChanged = hasChanged || finalReducerKeys.length !== Object.keys(state).length;
+    return hasChanged ? nextState : state;
+  };
+}
+function compose(...funcs) {
+  if (funcs.length === 0) {
+    return (arg) => arg;
+  }
+  if (funcs.length === 1) {
+    return funcs[0];
+  }
+  return funcs.reduce((a, b) => (...args) => a(b(...args)));
+}
+function applyMiddleware(...middlewares) {
+  return (createStore2) => (reducer, preloadedState) => {
+    const store2 = createStore2(reducer, preloadedState);
+    let dispatch = () => {
+      throw new Error(formatProdErrorMessage$1(15));
+    };
+    const middlewareAPI = {
+      getState: store2.getState,
+      dispatch: (action, ...args) => dispatch(action, ...args)
+    };
+    const chain = middlewares.map((middleware) => middleware(middlewareAPI));
+    dispatch = compose(...chain)(store2.dispatch);
+    return {
+      ...store2,
+      dispatch
+    };
+  };
+}
+function isAction(action) {
+  return isPlainObject$1(action) && "type" in action && typeof action.type === "string";
+}
+var NOTHING = Symbol.for("immer-nothing");
+var DRAFTABLE = Symbol.for("immer-draftable");
+var DRAFT_STATE = Symbol.for("immer-state");
+function die(error, ...args) {
+  throw new Error(
+    `[Immer] minified error nr: ${error}. Full error at: https://bit.ly/3cXEKWf`
+  );
+}
+var getPrototypeOf = Object.getPrototypeOf;
+function isDraft(value) {
+  return !!value && !!value[DRAFT_STATE];
+}
+function isDraftable(value) {
+  var _a;
+  if (!value)
+    return false;
+  return isPlainObject(value) || Array.isArray(value) || !!value[DRAFTABLE] || !!((_a = value.constructor) == null ? void 0 : _a[DRAFTABLE]) || isMap(value) || isSet(value);
+}
+var objectCtorString = Object.prototype.constructor.toString();
+function isPlainObject(value) {
+  if (!value || typeof value !== "object")
+    return false;
+  const proto = getPrototypeOf(value);
+  if (proto === null) {
+    return true;
+  }
+  const Ctor = Object.hasOwnProperty.call(proto, "constructor") && proto.constructor;
+  if (Ctor === Object)
+    return true;
+  return typeof Ctor == "function" && Function.toString.call(Ctor) === objectCtorString;
+}
+function each(obj, iter) {
+  if (getArchtype(obj) === 0) {
+    Reflect.ownKeys(obj).forEach((key) => {
+      iter(key, obj[key], obj);
+    });
+  } else {
+    obj.forEach((entry, index) => iter(index, entry, obj));
+  }
+}
+function getArchtype(thing) {
+  const state = thing[DRAFT_STATE];
+  return state ? state.type_ : Array.isArray(thing) ? 1 : isMap(thing) ? 2 : isSet(thing) ? 3 : 0;
+}
+function has(thing, prop) {
+  return getArchtype(thing) === 2 ? thing.has(prop) : Object.prototype.hasOwnProperty.call(thing, prop);
+}
+function set2(thing, propOrOldValue, value) {
+  const t2 = getArchtype(thing);
+  if (t2 === 2)
+    thing.set(propOrOldValue, value);
+  else if (t2 === 3) {
+    thing.add(value);
+  } else
+    thing[propOrOldValue] = value;
+}
+function is(x2, y2) {
+  if (x2 === y2) {
+    return x2 !== 0 || 1 / x2 === 1 / y2;
+  } else {
+    return x2 !== x2 && y2 !== y2;
+  }
+}
+function isMap(target) {
+  return target instanceof Map;
+}
+function isSet(target) {
+  return target instanceof Set;
+}
+function latest(state) {
+  return state.copy_ || state.base_;
+}
+function shallowCopy(base, strict) {
+  if (isMap(base)) {
+    return new Map(base);
+  }
+  if (isSet(base)) {
+    return new Set(base);
+  }
+  if (Array.isArray(base))
+    return Array.prototype.slice.call(base);
+  if (!strict && isPlainObject(base)) {
+    if (!getPrototypeOf(base)) {
+      const obj = /* @__PURE__ */ Object.create(null);
+      return Object.assign(obj, base);
+    }
+    return { ...base };
+  }
+  const descriptors = Object.getOwnPropertyDescriptors(base);
+  delete descriptors[DRAFT_STATE];
+  let keys = Reflect.ownKeys(descriptors);
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    const desc = descriptors[key];
+    if (desc.writable === false) {
+      desc.writable = true;
+      desc.configurable = true;
+    }
+    if (desc.get || desc.set)
+      descriptors[key] = {
+        configurable: true,
+        writable: true,
+        // could live with !!desc.set as well here...
+        enumerable: desc.enumerable,
+        value: base[key]
+      };
+  }
+  return Object.create(getPrototypeOf(base), descriptors);
+}
+function freeze(obj, deep = false) {
+  if (isFrozen(obj) || isDraft(obj) || !isDraftable(obj))
+    return obj;
+  if (getArchtype(obj) > 1) {
+    obj.set = obj.add = obj.clear = obj.delete = dontMutateFrozenCollections;
+  }
+  Object.freeze(obj);
+  if (deep)
+    Object.entries(obj).forEach(([key, value]) => freeze(value, true));
+  return obj;
+}
+function dontMutateFrozenCollections() {
+  die(2);
+}
+function isFrozen(obj) {
+  return Object.isFrozen(obj);
+}
+var plugins = {};
+function getPlugin(pluginKey) {
+  const plugin = plugins[pluginKey];
+  if (!plugin) {
+    die(0, pluginKey);
+  }
+  return plugin;
+}
+var currentScope;
+function getCurrentScope() {
+  return currentScope;
+}
+function createScope(parent_, immer_) {
+  return {
+    drafts_: [],
+    parent_,
+    immer_,
+    // Whenever the modified draft contains a draft from another scope, we
+    // need to prevent auto-freezing so the unowned draft can be finalized.
+    canAutoFreeze_: true,
+    unfinalizedDrafts_: 0
+  };
+}
+function usePatchesInScope(scope, patchListener) {
+  if (patchListener) {
+    getPlugin("Patches");
+    scope.patches_ = [];
+    scope.inversePatches_ = [];
+    scope.patchListener_ = patchListener;
+  }
+}
+function revokeScope(scope) {
+  leaveScope(scope);
+  scope.drafts_.forEach(revokeDraft);
+  scope.drafts_ = null;
+}
+function leaveScope(scope) {
+  if (scope === currentScope) {
+    currentScope = scope.parent_;
+  }
+}
+function enterScope(immer2) {
+  return currentScope = createScope(currentScope, immer2);
+}
+function revokeDraft(draft) {
+  const state = draft[DRAFT_STATE];
+  if (state.type_ === 0 || state.type_ === 1)
+    state.revoke_();
+  else
+    state.revoked_ = true;
+}
+function processResult(result, scope) {
+  scope.unfinalizedDrafts_ = scope.drafts_.length;
+  const baseDraft = scope.drafts_[0];
+  const isReplaced = result !== void 0 && result !== baseDraft;
+  if (isReplaced) {
+    if (baseDraft[DRAFT_STATE].modified_) {
+      revokeScope(scope);
+      die(4);
+    }
+    if (isDraftable(result)) {
+      result = finalize(scope, result);
+      if (!scope.parent_)
+        maybeFreeze(scope, result);
+    }
+    if (scope.patches_) {
+      getPlugin("Patches").generateReplacementPatches_(
+        baseDraft[DRAFT_STATE].base_,
+        result,
+        scope.patches_,
+        scope.inversePatches_
+      );
+    }
+  } else {
+    result = finalize(scope, baseDraft, []);
+  }
+  revokeScope(scope);
+  if (scope.patches_) {
+    scope.patchListener_(scope.patches_, scope.inversePatches_);
+  }
+  return result !== NOTHING ? result : void 0;
+}
+function finalize(rootScope, value, path) {
+  if (isFrozen(value))
+    return value;
+  const state = value[DRAFT_STATE];
+  if (!state) {
+    each(
+      value,
+      (key, childValue) => finalizeProperty(rootScope, state, value, key, childValue, path)
+    );
+    return value;
+  }
+  if (state.scope_ !== rootScope)
+    return value;
+  if (!state.modified_) {
+    maybeFreeze(rootScope, state.base_, true);
+    return state.base_;
+  }
+  if (!state.finalized_) {
+    state.finalized_ = true;
+    state.scope_.unfinalizedDrafts_--;
+    const result = state.copy_;
+    let resultEach = result;
+    let isSet2 = false;
+    if (state.type_ === 3) {
+      resultEach = new Set(result);
+      result.clear();
+      isSet2 = true;
+    }
+    each(
+      resultEach,
+      (key, childValue) => finalizeProperty(rootScope, state, result, key, childValue, path, isSet2)
+    );
+    maybeFreeze(rootScope, result, false);
+    if (path && rootScope.patches_) {
+      getPlugin("Patches").generatePatches_(
+        state,
+        path,
+        rootScope.patches_,
+        rootScope.inversePatches_
+      );
+    }
+  }
+  return state.copy_;
+}
+function finalizeProperty(rootScope, parentState, targetObject, prop, childValue, rootPath, targetIsSet) {
+  if (isDraft(childValue)) {
+    const path = rootPath && parentState && parentState.type_ !== 3 && // Set objects are atomic since they have no keys.
+    !has(parentState.assigned_, prop) ? rootPath.concat(prop) : void 0;
+    const res = finalize(rootScope, childValue, path);
+    set2(targetObject, prop, res);
+    if (isDraft(res)) {
+      rootScope.canAutoFreeze_ = false;
+    } else
+      return;
+  } else if (targetIsSet) {
+    targetObject.add(childValue);
+  }
+  if (isDraftable(childValue) && !isFrozen(childValue)) {
+    if (!rootScope.immer_.autoFreeze_ && rootScope.unfinalizedDrafts_ < 1) {
+      return;
+    }
+    finalize(rootScope, childValue);
+    if ((!parentState || !parentState.scope_.parent_) && typeof prop !== "symbol" && Object.prototype.propertyIsEnumerable.call(targetObject, prop))
+      maybeFreeze(rootScope, childValue);
+  }
+}
+function maybeFreeze(scope, value, deep = false) {
+  if (!scope.parent_ && scope.immer_.autoFreeze_ && scope.canAutoFreeze_) {
+    freeze(value, deep);
+  }
+}
+function createProxyProxy(base, parent) {
+  const isArray = Array.isArray(base);
+  const state = {
+    type_: isArray ? 1 : 0,
+    // Track which produce call this is associated with.
+    scope_: parent ? parent.scope_ : getCurrentScope(),
+    // True for both shallow and deep changes.
+    modified_: false,
+    // Used during finalization.
+    finalized_: false,
+    // Track which properties have been assigned (true) or deleted (false).
+    assigned_: {},
+    // The parent draft state.
+    parent_: parent,
+    // The base state.
+    base_: base,
+    // The base proxy.
+    draft_: null,
+    // set below
+    // The base copy with any updated values.
+    copy_: null,
+    // Called by the `produce` function.
+    revoke_: null,
+    isManual_: false
+  };
+  let target = state;
+  let traps = objectTraps;
+  if (isArray) {
+    target = [state];
+    traps = arrayTraps;
+  }
+  const { revoke, proxy } = Proxy.revocable(target, traps);
+  state.draft_ = proxy;
+  state.revoke_ = revoke;
+  return proxy;
+}
+var objectTraps = {
+  get(state, prop) {
+    if (prop === DRAFT_STATE)
+      return state;
+    const source = latest(state);
+    if (!has(source, prop)) {
+      return readPropFromProto(state, source, prop);
+    }
+    const value = source[prop];
+    if (state.finalized_ || !isDraftable(value)) {
+      return value;
+    }
+    if (value === peek(state.base_, prop)) {
+      prepareCopy(state);
+      return state.copy_[prop] = createProxy(value, state);
+    }
+    return value;
+  },
+  has(state, prop) {
+    return prop in latest(state);
+  },
+  ownKeys(state) {
+    return Reflect.ownKeys(latest(state));
+  },
+  set(state, prop, value) {
+    const desc = getDescriptorFromProto(latest(state), prop);
+    if (desc == null ? void 0 : desc.set) {
+      desc.set.call(state.draft_, value);
+      return true;
+    }
+    if (!state.modified_) {
+      const current2 = peek(latest(state), prop);
+      const currentState = current2 == null ? void 0 : current2[DRAFT_STATE];
+      if (currentState && currentState.base_ === value) {
+        state.copy_[prop] = value;
+        state.assigned_[prop] = false;
+        return true;
+      }
+      if (is(value, current2) && (value !== void 0 || has(state.base_, prop)))
+        return true;
+      prepareCopy(state);
+      markChanged(state);
+    }
+    if (state.copy_[prop] === value && // special case: handle new props with value 'undefined'
+    (value !== void 0 || prop in state.copy_) || // special case: NaN
+    Number.isNaN(value) && Number.isNaN(state.copy_[prop]))
+      return true;
+    state.copy_[prop] = value;
+    state.assigned_[prop] = true;
+    return true;
+  },
+  deleteProperty(state, prop) {
+    if (peek(state.base_, prop) !== void 0 || prop in state.base_) {
+      state.assigned_[prop] = false;
+      prepareCopy(state);
+      markChanged(state);
+    } else {
+      delete state.assigned_[prop];
+    }
+    if (state.copy_) {
+      delete state.copy_[prop];
+    }
+    return true;
+  },
+  // Note: We never coerce `desc.value` into an Immer draft, because we can't make
+  // the same guarantee in ES5 mode.
+  getOwnPropertyDescriptor(state, prop) {
+    const owner = latest(state);
+    const desc = Reflect.getOwnPropertyDescriptor(owner, prop);
+    if (!desc)
+      return desc;
+    return {
+      writable: true,
+      configurable: state.type_ !== 1 || prop !== "length",
+      enumerable: desc.enumerable,
+      value: owner[prop]
+    };
+  },
+  defineProperty() {
+    die(11);
+  },
+  getPrototypeOf(state) {
+    return getPrototypeOf(state.base_);
+  },
+  setPrototypeOf() {
+    die(12);
+  }
+};
+var arrayTraps = {};
+each(objectTraps, (key, fn) => {
+  arrayTraps[key] = function() {
+    arguments[0] = arguments[0][0];
+    return fn.apply(this, arguments);
+  };
+});
+arrayTraps.deleteProperty = function(state, prop) {
+  return arrayTraps.set.call(this, state, prop, void 0);
+};
+arrayTraps.set = function(state, prop, value) {
+  return objectTraps.set.call(this, state[0], prop, value, state[0]);
+};
+function peek(draft, prop) {
+  const state = draft[DRAFT_STATE];
+  const source = state ? latest(state) : draft;
+  return source[prop];
+}
+function readPropFromProto(state, source, prop) {
+  var _a;
+  const desc = getDescriptorFromProto(source, prop);
+  return desc ? `value` in desc ? desc.value : (
+    // This is a very special case, if the prop is a getter defined by the
+    // prototype, we should invoke it with the draft as context!
+    (_a = desc.get) == null ? void 0 : _a.call(state.draft_)
+  ) : void 0;
+}
+function getDescriptorFromProto(source, prop) {
+  if (!(prop in source))
+    return void 0;
+  let proto = getPrototypeOf(source);
+  while (proto) {
+    const desc = Object.getOwnPropertyDescriptor(proto, prop);
+    if (desc)
+      return desc;
+    proto = getPrototypeOf(proto);
+  }
+  return void 0;
+}
+function markChanged(state) {
+  if (!state.modified_) {
+    state.modified_ = true;
+    if (state.parent_) {
+      markChanged(state.parent_);
+    }
+  }
+}
+function prepareCopy(state) {
+  if (!state.copy_) {
+    state.copy_ = shallowCopy(
+      state.base_,
+      state.scope_.immer_.useStrictShallowCopy_
+    );
+  }
+}
+var Immer2 = class {
+  constructor(config2) {
+    this.autoFreeze_ = true;
+    this.useStrictShallowCopy_ = false;
+    this.produce = (base, recipe, patchListener) => {
+      if (typeof base === "function" && typeof recipe !== "function") {
+        const defaultBase = recipe;
+        recipe = base;
+        const self = this;
+        return function curriedProduce(base2 = defaultBase, ...args) {
+          return self.produce(base2, (draft) => recipe.call(this, draft, ...args));
+        };
+      }
+      if (typeof recipe !== "function")
+        die(6);
+      if (patchListener !== void 0 && typeof patchListener !== "function")
+        die(7);
+      let result;
+      if (isDraftable(base)) {
+        const scope = enterScope(this);
+        const proxy = createProxy(base, void 0);
+        let hasError = true;
+        try {
+          result = recipe(proxy);
+          hasError = false;
+        } finally {
+          if (hasError)
+            revokeScope(scope);
+          else
+            leaveScope(scope);
+        }
+        usePatchesInScope(scope, patchListener);
+        return processResult(result, scope);
+      } else if (!base || typeof base !== "object") {
+        result = recipe(base);
+        if (result === void 0)
+          result = base;
+        if (result === NOTHING)
+          result = void 0;
+        if (this.autoFreeze_)
+          freeze(result, true);
+        if (patchListener) {
+          const p2 = [];
+          const ip = [];
+          getPlugin("Patches").generateReplacementPatches_(base, result, p2, ip);
+          patchListener(p2, ip);
+        }
+        return result;
+      } else
+        die(1, base);
+    };
+    this.produceWithPatches = (base, recipe) => {
+      if (typeof base === "function") {
+        return (state, ...args) => this.produceWithPatches(state, (draft) => base(draft, ...args));
+      }
+      let patches, inversePatches;
+      const result = this.produce(base, recipe, (p2, ip) => {
+        patches = p2;
+        inversePatches = ip;
+      });
+      return [result, patches, inversePatches];
+    };
+    if (typeof (config2 == null ? void 0 : config2.autoFreeze) === "boolean")
+      this.setAutoFreeze(config2.autoFreeze);
+    if (typeof (config2 == null ? void 0 : config2.useStrictShallowCopy) === "boolean")
+      this.setUseStrictShallowCopy(config2.useStrictShallowCopy);
+  }
+  createDraft(base) {
+    if (!isDraftable(base))
+      die(8);
+    if (isDraft(base))
+      base = current(base);
+    const scope = enterScope(this);
+    const proxy = createProxy(base, void 0);
+    proxy[DRAFT_STATE].isManual_ = true;
+    leaveScope(scope);
+    return proxy;
+  }
+  finishDraft(draft, patchListener) {
+    const state = draft && draft[DRAFT_STATE];
+    if (!state || !state.isManual_)
+      die(9);
+    const { scope_: scope } = state;
+    usePatchesInScope(scope, patchListener);
+    return processResult(void 0, scope);
+  }
+  /**
+   * Pass true to automatically freeze all copies created by Immer.
+   *
+   * By default, auto-freezing is enabled.
+   */
+  setAutoFreeze(value) {
+    this.autoFreeze_ = value;
+  }
+  /**
+   * Pass true to enable strict shallow copy.
+   *
+   * By default, immer does not copy the object descriptors such as getter, setter and non-enumrable properties.
+   */
+  setUseStrictShallowCopy(value) {
+    this.useStrictShallowCopy_ = value;
+  }
+  applyPatches(base, patches) {
+    let i;
+    for (i = patches.length - 1; i >= 0; i--) {
+      const patch = patches[i];
+      if (patch.path.length === 0 && patch.op === "replace") {
+        base = patch.value;
+        break;
+      }
+    }
+    if (i > -1) {
+      patches = patches.slice(i + 1);
+    }
+    const applyPatchesImpl = getPlugin("Patches").applyPatches_;
+    if (isDraft(base)) {
+      return applyPatchesImpl(base, patches);
+    }
+    return this.produce(
+      base,
+      (draft) => applyPatchesImpl(draft, patches)
+    );
+  }
+};
+function createProxy(value, parent) {
+  const draft = isMap(value) ? getPlugin("MapSet").proxyMap_(value, parent) : isSet(value) ? getPlugin("MapSet").proxySet_(value, parent) : createProxyProxy(value, parent);
+  const scope = parent ? parent.scope_ : getCurrentScope();
+  scope.drafts_.push(draft);
+  return draft;
+}
+function current(value) {
+  if (!isDraft(value))
+    die(10, value);
+  return currentImpl(value);
+}
+function currentImpl(value) {
+  if (!isDraftable(value) || isFrozen(value))
+    return value;
+  const state = value[DRAFT_STATE];
+  let copy;
+  if (state) {
+    if (!state.modified_)
+      return state.base_;
+    state.finalized_ = true;
+    copy = shallowCopy(value, state.scope_.immer_.useStrictShallowCopy_);
+  } else {
+    copy = shallowCopy(value, true);
+  }
+  each(copy, (key, childValue) => {
+    set2(copy, key, currentImpl(childValue));
+  });
+  if (state) {
+    state.finalized_ = false;
+  }
+  return copy;
+}
+var immer = new Immer2();
+var produce = immer.produce;
+immer.produceWithPatches.bind(
+  immer
+);
+immer.setAutoFreeze.bind(immer);
+immer.setUseStrictShallowCopy.bind(immer);
+immer.applyPatches.bind(immer);
+immer.createDraft.bind(immer);
+immer.finishDraft.bind(immer);
+function assertIsFunction(func, errorMessage = `expected a function, instead received ${typeof func}`) {
+  if (typeof func !== "function") {
+    throw new TypeError(errorMessage);
+  }
+}
+function assertIsObject(object, errorMessage = `expected an object, instead received ${typeof object}`) {
+  if (typeof object !== "object") {
+    throw new TypeError(errorMessage);
+  }
+}
+function assertIsArrayOfFunctions(array, errorMessage = `expected all items to be functions, instead received the following types: `) {
+  if (!array.every((item) => typeof item === "function")) {
+    const itemTypes = array.map(
+      (item) => typeof item === "function" ? `function ${item.name || "unnamed"}()` : typeof item
+    ).join(", ");
+    throw new TypeError(`${errorMessage}[${itemTypes}]`);
+  }
+}
+var ensureIsArray = (item) => {
+  return Array.isArray(item) ? item : [item];
+};
+function getDependencies(createSelectorArgs) {
+  const dependencies = Array.isArray(createSelectorArgs[0]) ? createSelectorArgs[0] : createSelectorArgs;
+  assertIsArrayOfFunctions(
+    dependencies,
+    `createSelector expects all input-selectors to be functions, but received the following types: `
+  );
+  return dependencies;
+}
+function collectInputSelectorResults(dependencies, inputSelectorArgs) {
+  const inputSelectorResults = [];
+  const { length } = dependencies;
+  for (let i = 0; i < length; i++) {
+    inputSelectorResults.push(dependencies[i].apply(null, inputSelectorArgs));
+  }
+  return inputSelectorResults;
+}
+var StrongRef = class {
+  constructor(value) {
+    this.value = value;
+  }
+  deref() {
+    return this.value;
+  }
+};
+var Ref = typeof WeakRef !== "undefined" ? WeakRef : StrongRef;
+var UNTERMINATED = 0;
+var TERMINATED = 1;
+function createCacheNode() {
+  return {
+    s: UNTERMINATED,
+    v: void 0,
+    o: null,
+    p: null
+  };
+}
+function weakMapMemoize(func, options2 = {}) {
+  let fnNode = createCacheNode();
+  const { resultEqualityCheck } = options2;
+  let lastResult;
+  let resultsCount = 0;
+  function memoized() {
+    var _a;
+    let cacheNode = fnNode;
+    const { length } = arguments;
+    for (let i = 0, l2 = length; i < l2; i++) {
+      const arg = arguments[i];
+      if (typeof arg === "function" || typeof arg === "object" && arg !== null) {
+        let objectCache = cacheNode.o;
+        if (objectCache === null) {
+          cacheNode.o = objectCache = /* @__PURE__ */ new WeakMap();
+        }
+        const objectNode = objectCache.get(arg);
+        if (objectNode === void 0) {
+          cacheNode = createCacheNode();
+          objectCache.set(arg, cacheNode);
+        } else {
+          cacheNode = objectNode;
+        }
+      } else {
+        let primitiveCache = cacheNode.p;
+        if (primitiveCache === null) {
+          cacheNode.p = primitiveCache = /* @__PURE__ */ new Map();
+        }
+        const primitiveNode = primitiveCache.get(arg);
+        if (primitiveNode === void 0) {
+          cacheNode = createCacheNode();
+          primitiveCache.set(arg, cacheNode);
+        } else {
+          cacheNode = primitiveNode;
+        }
+      }
+    }
+    const terminatedNode = cacheNode;
+    let result;
+    if (cacheNode.s === TERMINATED) {
+      result = cacheNode.v;
+    } else {
+      result = func.apply(null, arguments);
+      resultsCount++;
+    }
+    terminatedNode.s = TERMINATED;
+    if (resultEqualityCheck) {
+      const lastResultValue = ((_a = lastResult == null ? void 0 : lastResult.deref) == null ? void 0 : _a.call(lastResult)) ?? lastResult;
+      if (lastResultValue != null && resultEqualityCheck(lastResultValue, result)) {
+        result = lastResultValue;
+        resultsCount !== 0 && resultsCount--;
+      }
+      const needsWeakRef = typeof result === "object" && result !== null || typeof result === "function";
+      lastResult = needsWeakRef ? new Ref(result) : result;
+    }
+    terminatedNode.v = result;
+    return result;
+  }
+  memoized.clearCache = () => {
+    fnNode = createCacheNode();
+    memoized.resetResultsCount();
+  };
+  memoized.resultsCount = () => resultsCount;
+  memoized.resetResultsCount = () => {
+    resultsCount = 0;
+  };
+  return memoized;
+}
+function createSelectorCreator(memoizeOrOptions, ...memoizeOptionsFromArgs) {
+  const createSelectorCreatorOptions = typeof memoizeOrOptions === "function" ? {
+    memoize: memoizeOrOptions,
+    memoizeOptions: memoizeOptionsFromArgs
+  } : memoizeOrOptions;
+  const createSelector2 = (...createSelectorArgs) => {
+    let recomputations = 0;
+    let dependencyRecomputations = 0;
+    let lastResult;
+    let directlyPassedOptions = {};
+    let resultFunc = createSelectorArgs.pop();
+    if (typeof resultFunc === "object") {
+      directlyPassedOptions = resultFunc;
+      resultFunc = createSelectorArgs.pop();
+    }
+    assertIsFunction(
+      resultFunc,
+      `createSelector expects an output function after the inputs, but received: [${typeof resultFunc}]`
+    );
+    const combinedOptions = {
+      ...createSelectorCreatorOptions,
+      ...directlyPassedOptions
+    };
+    const {
+      memoize,
+      memoizeOptions = [],
+      argsMemoize = weakMapMemoize,
+      argsMemoizeOptions = [],
+      devModeChecks = {}
+    } = combinedOptions;
+    const finalMemoizeOptions = ensureIsArray(memoizeOptions);
+    const finalArgsMemoizeOptions = ensureIsArray(argsMemoizeOptions);
+    const dependencies = getDependencies(createSelectorArgs);
+    const memoizedResultFunc = memoize(function recomputationWrapper() {
+      recomputations++;
+      return resultFunc.apply(
+        null,
+        arguments
+      );
+    }, ...finalMemoizeOptions);
+    const selector = argsMemoize(function dependenciesChecker() {
+      dependencyRecomputations++;
+      const inputSelectorResults = collectInputSelectorResults(
+        dependencies,
+        arguments
+      );
+      lastResult = memoizedResultFunc.apply(null, inputSelectorResults);
+      return lastResult;
+    }, ...finalArgsMemoizeOptions);
+    return Object.assign(selector, {
+      resultFunc,
+      memoizedResultFunc,
+      dependencies,
+      dependencyRecomputations: () => dependencyRecomputations,
+      resetDependencyRecomputations: () => {
+        dependencyRecomputations = 0;
+      },
+      lastResult: () => lastResult,
+      recomputations: () => recomputations,
+      resetRecomputations: () => {
+        recomputations = 0;
+      },
+      memoize,
+      argsMemoize
+    });
+  };
+  Object.assign(createSelector2, {
+    withTypes: () => createSelector2
+  });
+  return createSelector2;
+}
+var createSelector = /* @__PURE__ */ createSelectorCreator(weakMapMemoize);
+var createStructuredSelector = Object.assign(
+  (inputSelectorsObject, selectorCreator = createSelector) => {
+    assertIsObject(
+      inputSelectorsObject,
+      `createStructuredSelector expects first argument to be an object where each property is a selector, instead received a ${typeof inputSelectorsObject}`
+    );
+    const inputSelectorKeys = Object.keys(inputSelectorsObject);
+    const dependencies = inputSelectorKeys.map(
+      (key) => inputSelectorsObject[key]
+    );
+    const structuredSelector = selectorCreator(
+      dependencies,
+      (...inputSelectorResults) => {
+        return inputSelectorResults.reduce((composition, value, index) => {
+          composition[inputSelectorKeys[index]] = value;
+          return composition;
+        }, {});
+      }
+    );
+    return structuredSelector;
+  },
+  { withTypes: () => createStructuredSelector }
+);
+function createThunkMiddleware(extraArgument) {
+  const middleware = ({ dispatch, getState }) => (next) => (action) => {
+    if (typeof action === "function") {
+      return action(dispatch, getState, extraArgument);
+    }
+    return next(action);
+  };
+  return middleware;
+}
+var thunk = createThunkMiddleware();
+var withExtraArgument = createThunkMiddleware;
+var createDraftSafeSelectorCreator = (...args) => {
+  const createSelector2 = createSelectorCreator(...args);
+  const createDraftSafeSelector2 = Object.assign((...args2) => {
+    const selector = createSelector2(...args2);
+    const wrappedSelector = (value, ...rest) => selector(isDraft(value) ? current(value) : value, ...rest);
+    Object.assign(wrappedSelector, selector);
+    return wrappedSelector;
+  }, {
+    withTypes: () => createDraftSafeSelector2
+  });
+  return createDraftSafeSelector2;
+};
+createDraftSafeSelectorCreator(weakMapMemoize);
+var composeWithDevTools = typeof window !== "undefined" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : function() {
+  if (arguments.length === 0)
+    return void 0;
+  if (typeof arguments[0] === "object")
+    return compose;
+  return compose.apply(null, arguments);
+};
+function createAction(type, prepareAction) {
+  function actionCreator(...args) {
+    if (prepareAction) {
+      let prepared = prepareAction(...args);
+      if (!prepared) {
+        throw new Error(formatProdErrorMessage(0));
+      }
+      return {
+        type,
+        payload: prepared.payload,
+        ..."meta" in prepared && {
+          meta: prepared.meta
+        },
+        ..."error" in prepared && {
+          error: prepared.error
+        }
+      };
+    }
+    return {
+      type,
+      payload: args[0]
+    };
+  }
+  actionCreator.toString = () => `${type}`;
+  actionCreator.type = type;
+  actionCreator.match = (action) => isAction(action) && action.type === type;
+  return actionCreator;
+}
+var Tuple = class _Tuple extends Array {
+  constructor(...items) {
+    super(...items);
+    Object.setPrototypeOf(this, _Tuple.prototype);
+  }
+  static get [Symbol.species]() {
+    return _Tuple;
+  }
+  concat(...arr) {
+    return super.concat.apply(this, arr);
+  }
+  prepend(...arr) {
+    if (arr.length === 1 && Array.isArray(arr[0])) {
+      return new _Tuple(...arr[0].concat(this));
+    }
+    return new _Tuple(...arr.concat(this));
+  }
+};
+function freezeDraftable(val) {
+  return isDraftable(val) ? produce(val, () => {
+  }) : val;
+}
+function emplace(map, key, handler) {
+  if (map.has(key)) {
+    let value = map.get(key);
+    if (handler.update) {
+      value = handler.update(value, key, map);
+      map.set(key, value);
+    }
+    return value;
+  }
+  if (!handler.insert)
+    throw new Error(formatProdErrorMessage(10));
+  const inserted = handler.insert(key, map);
+  map.set(key, inserted);
+  return inserted;
+}
+function isBoolean(x2) {
+  return typeof x2 === "boolean";
+}
+var buildGetDefaultMiddleware = () => function getDefaultMiddleware(options2) {
+  const {
+    thunk: thunk$1 = true,
+    immutableCheck = true,
+    serializableCheck = true,
+    actionCreatorCheck = true
+  } = options2 ?? {};
+  let middlewareArray = new Tuple();
+  if (thunk$1) {
+    if (isBoolean(thunk$1)) {
+      middlewareArray.push(thunk);
+    } else {
+      middlewareArray.push(withExtraArgument(thunk$1.extraArgument));
+    }
+  }
+  return middlewareArray;
+};
+var SHOULD_AUTOBATCH = "RTK_autoBatch";
+var createQueueWithTimer = (timeout) => {
+  return (notify) => {
+    setTimeout(notify, timeout);
+  };
+};
+var rAF = typeof window !== "undefined" && window.requestAnimationFrame ? window.requestAnimationFrame : createQueueWithTimer(10);
+var autoBatchEnhancer = (options2 = {
+  type: "raf"
+}) => (next) => (...args) => {
+  const store2 = next(...args);
+  let notifying = true;
+  let shouldNotifyAtEndOfTick = false;
+  let notificationQueued = false;
+  const listeners = /* @__PURE__ */ new Set();
+  const queueCallback = options2.type === "tick" ? queueMicrotask : options2.type === "raf" ? rAF : options2.type === "callback" ? options2.queueNotification : createQueueWithTimer(options2.timeout);
+  const notifyListeners = () => {
+    notificationQueued = false;
+    if (shouldNotifyAtEndOfTick) {
+      shouldNotifyAtEndOfTick = false;
+      listeners.forEach((l2) => l2());
+    }
+  };
+  return Object.assign({}, store2, {
+    // Override the base `store.subscribe` method to keep original listeners
+    // from running if we're delaying notifications
+    subscribe(listener22) {
+      const wrappedListener = () => notifying && listener22();
+      const unsubscribe = store2.subscribe(wrappedListener);
+      listeners.add(listener22);
+      return () => {
+        unsubscribe();
+        listeners.delete(listener22);
+      };
+    },
+    // Override the base `store.dispatch` method so that we can check actions
+    // for the `shouldAutoBatch` flag and determine if batching is active
+    dispatch(action) {
+      var _a;
+      try {
+        notifying = !((_a = action == null ? void 0 : action.meta) == null ? void 0 : _a[SHOULD_AUTOBATCH]);
+        shouldNotifyAtEndOfTick = !notifying;
+        if (shouldNotifyAtEndOfTick) {
+          if (!notificationQueued) {
+            notificationQueued = true;
+            queueCallback(notifyListeners);
+          }
+        }
+        return store2.dispatch(action);
+      } finally {
+        notifying = true;
+      }
+    }
+  });
+};
+var buildGetDefaultEnhancers = (middlewareEnhancer) => function getDefaultEnhancers(options2) {
+  const {
+    autoBatch = true
+  } = options2 ?? {};
+  let enhancerArray = new Tuple(middlewareEnhancer);
+  if (autoBatch) {
+    enhancerArray.push(autoBatchEnhancer(typeof autoBatch === "object" ? autoBatch : void 0));
+  }
+  return enhancerArray;
+};
+var IS_PRODUCTION = true;
+function configureStore(options2) {
+  const getDefaultMiddleware = buildGetDefaultMiddleware();
+  const {
+    reducer = void 0,
+    middleware,
+    devTools = true,
+    preloadedState = void 0,
+    enhancers = void 0
+  } = options2 || {};
+  let rootReducer;
+  if (typeof reducer === "function") {
+    rootReducer = reducer;
+  } else if (isPlainObject$1(reducer)) {
+    rootReducer = combineReducers(reducer);
+  } else {
+    throw new Error(formatProdErrorMessage(1));
+  }
+  let finalMiddleware;
+  if (typeof middleware === "function") {
+    finalMiddleware = middleware(getDefaultMiddleware);
+  } else {
+    finalMiddleware = getDefaultMiddleware();
+  }
+  let finalCompose = compose;
+  if (devTools) {
+    finalCompose = composeWithDevTools({
+      // Enable capture of stack traces for dispatched Redux actions
+      trace: !IS_PRODUCTION,
+      ...typeof devTools === "object" && devTools
+    });
+  }
+  const middlewareEnhancer = applyMiddleware(...finalMiddleware);
+  const getDefaultEnhancers = buildGetDefaultEnhancers(middlewareEnhancer);
+  let storeEnhancers = typeof enhancers === "function" ? enhancers(getDefaultEnhancers) : getDefaultEnhancers();
+  const composedEnhancer = finalCompose(...storeEnhancers);
+  return createStore(rootReducer, preloadedState, composedEnhancer);
+}
+function executeReducerBuilderCallback(builderCallback) {
+  const actionsMap = {};
+  const actionMatchers = [];
+  let defaultCaseReducer;
+  const builder = {
+    addCase(typeOrActionCreator, reducer) {
+      const type = typeof typeOrActionCreator === "string" ? typeOrActionCreator : typeOrActionCreator.type;
+      if (!type) {
+        throw new Error(formatProdErrorMessage(28));
+      }
+      if (type in actionsMap) {
+        throw new Error(formatProdErrorMessage(29));
+      }
+      actionsMap[type] = reducer;
+      return builder;
+    },
+    addMatcher(matcher, reducer) {
+      actionMatchers.push({
+        matcher,
+        reducer
+      });
+      return builder;
+    },
+    addDefaultCase(reducer) {
+      defaultCaseReducer = reducer;
+      return builder;
+    }
+  };
+  builderCallback(builder);
+  return [actionsMap, actionMatchers, defaultCaseReducer];
+}
+function isStateFunction(x2) {
+  return typeof x2 === "function";
+}
+function createReducer(initialState, mapOrBuilderCallback) {
+  let [actionsMap, finalActionMatchers, finalDefaultCaseReducer] = executeReducerBuilderCallback(mapOrBuilderCallback);
+  let getInitialState;
+  if (isStateFunction(initialState)) {
+    getInitialState = () => freezeDraftable(initialState());
+  } else {
+    const frozenInitialState = freezeDraftable(initialState);
+    getInitialState = () => frozenInitialState;
+  }
+  function reducer(state = getInitialState(), action) {
+    let caseReducers = [actionsMap[action.type], ...finalActionMatchers.filter(({
+      matcher
+    }) => matcher(action)).map(({
+      reducer: reducer2
+    }) => reducer2)];
+    if (caseReducers.filter((cr) => !!cr).length === 0) {
+      caseReducers = [finalDefaultCaseReducer];
+    }
+    return caseReducers.reduce((previousState, caseReducer) => {
+      if (caseReducer) {
+        if (isDraft(previousState)) {
+          const draft = previousState;
+          const result = caseReducer(draft, action);
+          if (result === void 0) {
+            return previousState;
+          }
+          return result;
+        } else if (!isDraftable(previousState)) {
+          const result = caseReducer(previousState, action);
+          if (result === void 0) {
+            if (previousState === null) {
+              return previousState;
+            }
+            throw new Error(formatProdErrorMessage(9));
+          }
+          return result;
+        } else {
+          return produce(previousState, (draft) => {
+            return caseReducer(draft, action);
+          });
+        }
+      }
+      return previousState;
+    }, state);
+  }
+  reducer.getInitialState = getInitialState;
+  return reducer;
+}
+var urlAlphabet = "ModuleSymbhasOwnPr-0123456789ABCDEFGHNRVfgctiUvz_KqYTJkLxpZXIjQW";
+var nanoid = (size = 21) => {
+  let id2 = "";
+  let i = size;
+  while (i--) {
+    id2 += urlAlphabet[Math.random() * 64 | 0];
+  }
+  return id2;
+};
+var asyncThunkSymbol = /* @__PURE__ */ Symbol.for("rtk-slice-createasyncthunk");
+function getType(slice, actionKey) {
+  return `${slice}/${actionKey}`;
+}
+function buildCreateSlice({
+  creators
+} = {}) {
+  var _a;
+  const cAT = (_a = creators == null ? void 0 : creators.asyncThunk) == null ? void 0 : _a[asyncThunkSymbol];
+  return function createSlice2(options2) {
+    const {
+      name,
+      reducerPath = name
+    } = options2;
+    if (!name) {
+      throw new Error(formatProdErrorMessage(11));
+    }
+    if (typeof process !== "undefined" && false) {
+      if (options2.initialState === void 0) {
+        console.error("You must provide an `initialState` value that is not `undefined`. You may have misspelled `initialState`");
+      }
+    }
+    const reducers = (typeof options2.reducers === "function" ? options2.reducers(buildReducerCreators()) : options2.reducers) || {};
+    const reducerNames = Object.keys(reducers);
+    const context = {
+      sliceCaseReducersByName: {},
+      sliceCaseReducersByType: {},
+      actionCreators: {},
+      sliceMatchers: []
+    };
+    const contextMethods = {
+      addCase(typeOrActionCreator, reducer2) {
+        const type = typeof typeOrActionCreator === "string" ? typeOrActionCreator : typeOrActionCreator.type;
+        if (!type) {
+          throw new Error(formatProdErrorMessage(12));
+        }
+        if (type in context.sliceCaseReducersByType) {
+          throw new Error(formatProdErrorMessage(13));
+        }
+        context.sliceCaseReducersByType[type] = reducer2;
+        return contextMethods;
+      },
+      addMatcher(matcher, reducer2) {
+        context.sliceMatchers.push({
+          matcher,
+          reducer: reducer2
+        });
+        return contextMethods;
+      },
+      exposeAction(name2, actionCreator) {
+        context.actionCreators[name2] = actionCreator;
+        return contextMethods;
+      },
+      exposeCaseReducer(name2, reducer2) {
+        context.sliceCaseReducersByName[name2] = reducer2;
+        return contextMethods;
+      }
+    };
+    reducerNames.forEach((reducerName) => {
+      const reducerDefinition = reducers[reducerName];
+      const reducerDetails = {
+        reducerName,
+        type: getType(name, reducerName),
+        createNotation: typeof options2.reducers === "function"
+      };
+      if (isAsyncThunkSliceReducerDefinition(reducerDefinition)) {
+        handleThunkCaseReducerDefinition(reducerDetails, reducerDefinition, contextMethods, cAT);
+      } else {
+        handleNormalReducerDefinition(reducerDetails, reducerDefinition, contextMethods);
+      }
+    });
+    function buildReducer() {
+      const [extraReducers = {}, actionMatchers = [], defaultCaseReducer = void 0] = typeof options2.extraReducers === "function" ? executeReducerBuilderCallback(options2.extraReducers) : [options2.extraReducers];
+      const finalCaseReducers = {
+        ...extraReducers,
+        ...context.sliceCaseReducersByType
+      };
+      return createReducer(options2.initialState, (builder) => {
+        for (let key in finalCaseReducers) {
+          builder.addCase(key, finalCaseReducers[key]);
+        }
+        for (let sM of context.sliceMatchers) {
+          builder.addMatcher(sM.matcher, sM.reducer);
+        }
+        for (let m2 of actionMatchers) {
+          builder.addMatcher(m2.matcher, m2.reducer);
+        }
+        if (defaultCaseReducer) {
+          builder.addDefaultCase(defaultCaseReducer);
+        }
+      });
+    }
+    const selectSelf = (state) => state;
+    const injectedSelectorCache = /* @__PURE__ */ new Map();
+    let _reducer;
+    function reducer(state, action) {
+      if (!_reducer)
+        _reducer = buildReducer();
+      return _reducer(state, action);
+    }
+    function getInitialState() {
+      if (!_reducer)
+        _reducer = buildReducer();
+      return _reducer.getInitialState();
+    }
+    function makeSelectorProps(reducerPath2, injected = false) {
+      function selectSlice(state) {
+        let sliceState = state[reducerPath2];
+        if (typeof sliceState === "undefined") {
+          if (injected) {
+            sliceState = getInitialState();
+          }
+        }
+        return sliceState;
+      }
+      function getSelectors(selectState = selectSelf) {
+        const selectorCache = emplace(injectedSelectorCache, injected, {
+          insert: () => /* @__PURE__ */ new WeakMap()
+        });
+        return emplace(selectorCache, selectState, {
+          insert: () => {
+            const map = {};
+            for (const [name2, selector] of Object.entries(options2.selectors ?? {})) {
+              map[name2] = wrapSelector(selector, selectState, getInitialState, injected);
+            }
+            return map;
+          }
+        });
+      }
+      return {
+        reducerPath: reducerPath2,
+        getSelectors,
+        get selectors() {
+          return getSelectors(selectSlice);
+        },
+        selectSlice
+      };
+    }
+    const slice = {
+      name,
+      reducer,
+      actions: context.actionCreators,
+      caseReducers: context.sliceCaseReducersByName,
+      getInitialState,
+      ...makeSelectorProps(reducerPath),
+      injectInto(injectable, {
+        reducerPath: pathOpt,
+        ...config2
+      } = {}) {
+        const newReducerPath = pathOpt ?? reducerPath;
+        injectable.inject({
+          reducerPath: newReducerPath,
+          reducer
+        }, config2);
+        return {
+          ...slice,
+          ...makeSelectorProps(newReducerPath, true)
+        };
+      }
+    };
+    return slice;
+  };
+}
+function wrapSelector(selector, selectState, getInitialState, injected) {
+  function wrapper(rootState, ...args) {
+    let sliceState = selectState(rootState);
+    if (typeof sliceState === "undefined") {
+      if (injected) {
+        sliceState = getInitialState();
+      }
+    }
+    return selector(sliceState, ...args);
+  }
+  wrapper.unwrapped = selector;
+  return wrapper;
+}
+var createSlice = /* @__PURE__ */ buildCreateSlice();
+function buildReducerCreators() {
+  function asyncThunk(payloadCreator, config2) {
+    return {
+      _reducerDefinitionType: "asyncThunk",
+      payloadCreator,
+      ...config2
+    };
+  }
+  asyncThunk.withTypes = () => asyncThunk;
+  return {
+    reducer(caseReducer) {
+      return Object.assign({
+        // hack so the wrapping function has the same name as the original
+        // we need to create a wrapper so the `reducerDefinitionType` is not assigned to the original
+        [caseReducer.name](...args) {
+          return caseReducer(...args);
+        }
+      }[caseReducer.name], {
+        _reducerDefinitionType: "reducer"
+        /* reducer */
+      });
+    },
+    preparedReducer(prepare, reducer) {
+      return {
+        _reducerDefinitionType: "reducerWithPrepare",
+        prepare,
+        reducer
+      };
+    },
+    asyncThunk
+  };
+}
+function handleNormalReducerDefinition({
+  type,
+  reducerName,
+  createNotation
+}, maybeReducerWithPrepare, context) {
+  let caseReducer;
+  let prepareCallback;
+  if ("reducer" in maybeReducerWithPrepare) {
+    if (createNotation && !isCaseReducerWithPrepareDefinition(maybeReducerWithPrepare)) {
+      throw new Error(formatProdErrorMessage(17));
+    }
+    caseReducer = maybeReducerWithPrepare.reducer;
+    prepareCallback = maybeReducerWithPrepare.prepare;
+  } else {
+    caseReducer = maybeReducerWithPrepare;
+  }
+  context.addCase(type, caseReducer).exposeCaseReducer(reducerName, caseReducer).exposeAction(reducerName, prepareCallback ? createAction(type, prepareCallback) : createAction(type));
+}
+function isAsyncThunkSliceReducerDefinition(reducerDefinition) {
+  return reducerDefinition._reducerDefinitionType === "asyncThunk";
+}
+function isCaseReducerWithPrepareDefinition(reducerDefinition) {
+  return reducerDefinition._reducerDefinitionType === "reducerWithPrepare";
+}
+function handleThunkCaseReducerDefinition({
+  type,
+  reducerName
+}, reducerDefinition, context, cAT) {
+  if (!cAT) {
+    throw new Error(formatProdErrorMessage(18));
+  }
+  const {
+    payloadCreator,
+    fulfilled,
+    pending,
+    rejected,
+    settled,
+    options: options2
+  } = reducerDefinition;
+  const thunk2 = cAT(type, payloadCreator, options2);
+  context.exposeAction(reducerName, thunk2);
+  if (fulfilled) {
+    context.addCase(thunk2.fulfilled, fulfilled);
+  }
+  if (pending) {
+    context.addCase(thunk2.pending, pending);
+  }
+  if (rejected) {
+    context.addCase(thunk2.rejected, rejected);
+  }
+  if (settled) {
+    context.addMatcher(thunk2.settled, settled);
+  }
+  context.exposeCaseReducer(reducerName, {
+    fulfilled: fulfilled || noop,
+    pending: pending || noop,
+    rejected: rejected || noop,
+    settled: settled || noop
+  });
+}
+function noop() {
+}
+var assertFunction = (func, expected) => {
+  if (typeof func !== "function") {
+    throw new Error(formatProdErrorMessage(32));
+  }
+};
+var alm = "listenerMiddleware";
+var getListenerEntryPropsFrom = (options2) => {
+  let {
+    type,
+    actionCreator,
+    matcher,
+    predicate,
+    effect
+  } = options2;
+  if (type) {
+    predicate = createAction(type).match;
+  } else if (actionCreator) {
+    type = actionCreator.type;
+    predicate = actionCreator.match;
+  } else if (matcher) {
+    predicate = matcher;
+  } else if (predicate)
+    ;
+  else {
+    throw new Error(formatProdErrorMessage(21));
+  }
+  assertFunction(effect);
+  return {
+    predicate,
+    type,
+    effect
+  };
+};
+var createListenerEntry = Object.assign((options2) => {
+  const {
+    type,
+    predicate,
+    effect
+  } = getListenerEntryPropsFrom(options2);
+  const id2 = nanoid();
+  const entry = {
+    id: id2,
+    effect,
+    type,
+    predicate,
+    pending: /* @__PURE__ */ new Set(),
+    unsubscribe: () => {
+      throw new Error(formatProdErrorMessage(22));
+    }
+  };
+  return entry;
+}, {
+  withTypes: () => createListenerEntry
+});
+var addListener = Object.assign(createAction(`${alm}/add`), {
+  withTypes: () => addListener
+});
+createAction(`${alm}/removeAll`);
+var removeListener = Object.assign(createAction(`${alm}/remove`), {
+  withTypes: () => removeListener
+});
+function formatProdErrorMessage(code) {
+  return `Minified Redux Toolkit error #${code}; visit https://redux-toolkit.js.org/Errors?code=${code} for the full message or use the non-minified dev environment for full errors. `;
+}
+const allCards = [
+  {
+    id: 0,
+    point: 1,
+    way: "/pyramid/src/assets/cards/clubs-1.svg",
+    show: true
+  },
+  {
+    id: 1,
+    point: 2,
+    way: "/pyramid/src/assets/cards/clubs-2.svg",
+    show: true
+  },
+  {
+    id: 2,
+    point: 3,
+    way: "/pyramid/src/assets/cards/clubs-3.svg",
+    show: true
+  },
+  {
+    id: 3,
+    point: 4,
+    way: "/pyramid/src/assets/cards/clubs-4.svg",
+    show: true
+  },
+  {
+    id: 4,
+    point: 5,
+    way: "/pyramid/src/assets/cards/clubs-5.svg",
+    show: true
+  },
+  {
+    id: 5,
+    point: 6,
+    way: "/pyramid/src/assets/cards/clubs-6.svg",
+    show: true
+  },
+  {
+    id: 6,
+    point: 7,
+    way: "/pyramid/src/assets/cards/clubs-7.svg",
+    show: true
+  },
+  {
+    id: 7,
+    point: 8,
+    way: "/pyramid/src/assets/cards/clubs-8.svg",
+    show: true
+  },
+  {
+    id: 8,
+    point: 9,
+    way: "/pyramid/src/assets/cards/clubs-9.svg",
+    show: true
+  },
+  {
+    id: 9,
+    point: 10,
+    way: "/pyramid/src/assets/cards/clubs-10.svg",
+    show: true
+  },
+  {
+    id: 10,
+    point: 11,
+    way: "/pyramid/src/assets/cards/clubs-11.svg",
+    show: true
+  },
+  {
+    id: 11,
+    point: 12,
+    way: "/pyramid/src/assets/cards/clubs-12.svg",
+    show: true
+  },
+  {
+    id: 12,
+    point: 13,
+    way: "/pyramid/src/assets/cards/clubs-13.svg",
+    show: true
+  },
+  {
+    id: 13,
+    point: 1,
+    way: "/pyramid/src/assets/cards/diamonds-1.svg",
+    show: true
+  },
+  {
+    id: 14,
+    point: 2,
+    way: "/pyramid/src/assets/cards/diamonds-2.svg",
+    show: true
+  },
+  {
+    id: 15,
+    point: 3,
+    way: "/pyramid/src/assets/cards/diamonds-3.svg",
+    show: true
+  },
+  {
+    id: 16,
+    point: 4,
+    way: "/pyramid/src/assets/cards/diamonds-4.svg",
+    show: true
+  },
+  {
+    id: 17,
+    point: 5,
+    way: "/pyramid/src/assets/cards/diamonds-5.svg",
+    show: true
+  },
+  {
+    id: 18,
+    point: 6,
+    way: "/pyramid/src/assets/cards/diamonds-6.svg",
+    show: true
+  },
+  {
+    id: 19,
+    point: 7,
+    way: "/pyramid/src/assets/cards/diamonds-7.svg",
+    show: true
+  },
+  {
+    id: 20,
+    point: 8,
+    way: "/pyramid/src/assets/cards/diamonds-8.svg",
+    show: true
+  },
+  {
+    id: 21,
+    point: 9,
+    way: "/pyramid/src/assets/cards/diamonds-9.svg",
+    show: true
+  },
+  {
+    id: 22,
+    point: 10,
+    way: "/pyramid/src/assets/cards/diamonds-10.svg",
+    show: true
+  },
+  {
+    id: 23,
+    point: 11,
+    way: "/pyramid/src/assets/cards/diamonds-11.svg",
+    show: true
+  },
+  {
+    id: 24,
+    point: 12,
+    way: "/pyramid/src/assets/cards/diamonds-12.svg",
+    show: true
+  },
+  {
+    id: 25,
+    point: 13,
+    way: "/pyramid/src/assets/cards/diamonds-13.svg",
+    show: true
+  },
+  {
+    id: 26,
+    point: 1,
+    way: "/pyramid/src/assets/cards/hearts-1.svg",
+    show: true
+  },
+  {
+    id: 27,
+    point: 2,
+    way: "/pyramid/src/assets/cards/hearts-2.svg",
+    show: true
+  },
+  {
+    id: 28,
+    point: 3,
+    way: "/pyramid/src/assets/cards/hearts-3.svg",
+    show: true
+  },
+  {
+    id: 29,
+    point: 4,
+    way: "/pyramid/src/assets/cards/hearts-4.svg",
+    show: true
+  },
+  {
+    id: 30,
+    point: 5,
+    way: "/pyramid/src/assets/cards/hearts-5.svg",
+    show: true
+  },
+  {
+    id: 31,
+    point: 6,
+    way: "/pyramid/src/assets/cards/hearts-6.svg",
+    show: true
+  },
+  {
+    id: 32,
+    point: 7,
+    way: "/pyramid/src/assets/cards/hearts-7.svg",
+    show: true
+  },
+  {
+    id: 33,
+    point: 8,
+    way: "/pyramid/src/assets/cards/hearts-8.svg",
+    show: true
+  },
+  {
+    id: 34,
+    point: 9,
+    way: "/pyramid/src/assets/cards/hearts-9.svg",
+    show: true
+  },
+  {
+    id: 35,
+    point: 10,
+    way: "/pyramid/src/assets/cards/hearts-10.svg",
+    show: true
+  },
+  {
+    id: 36,
+    point: 11,
+    way: "/pyramid/src/assets/cards/hearts-11.svg",
+    show: true
+  },
+  {
+    id: 37,
+    point: 12,
+    way: "/pyramid/src/assets/cards/hearts-12.svg",
+    show: true
+  },
+  {
+    id: 38,
+    point: 13,
+    way: "/pyramid/src/assets/cards/hearts-13.svg",
+    show: true
+  },
+  {
+    id: 39,
+    point: 1,
+    way: "/pyramid/src/assets/cards/spades-1.svg",
+    show: true
+  },
+  {
+    id: 40,
+    point: 2,
+    way: "/pyramid/src/assets/cards/spades-2.svg",
+    show: true
+  },
+  {
+    id: 41,
+    point: 3,
+    way: "/pyramid/src/assets/cards/spades-3.svg",
+    show: true
+  },
+  {
+    id: 42,
+    point: 4,
+    way: "/pyramid/src/assets/cards/spades-4.svg",
+    show: true
+  },
+  {
+    id: 43,
+    point: 5,
+    way: "/pyramid/src/assets/cards/spades-5.svg",
+    show: true
+  },
+  {
+    id: 44,
+    point: 6,
+    way: "/pyramid/src/assets/cards/spades-6.svg",
+    show: true
+  },
+  {
+    id: 45,
+    point: 7,
+    way: "/pyramid/src/assets/cards/spades-7.svg",
+    show: true
+  },
+  {
+    id: 46,
+    point: 8,
+    way: "/pyramid/src/assets/cards/spades-8.svg",
+    show: true
+  },
+  {
+    id: 47,
+    point: 9,
+    way: "/pyramid/src/assets/cards/spades-9.svg",
+    show: true
+  },
+  {
+    id: 48,
+    point: 10,
+    way: "/pyramid/src/assets/cards/spades-10.svg",
+    show: true
+  },
+  {
+    id: 49,
+    point: 11,
+    way: "/pyramid/src/assets/cards/spades-11.svg",
+    show: true
+  },
+  {
+    id: 50,
+    point: 12,
+    way: "/pyramid/src/assets/cards/spades-12.svg",
+    show: true
+  },
+  {
+    id: 51,
+    point: 13,
+    way: "/pyramid/src/assets/cards/spades-13.svg",
+    show: true
+  }
+];
+const rule = [
+  [
+    {
+      id: 0,
+      rule: [
+        1,
+        2
+      ]
+    },
+    {
+      id: 1,
+      rule: [
+        3,
+        4
+      ]
+    },
+    {
+      id: 2,
+      rule: [
+        4,
+        5
+      ]
+    },
+    {
+      id: 3,
+      rule: [
+        6,
+        7
+      ]
+    },
+    {
+      id: 4,
+      rule: [
+        7,
+        8
+      ]
+    },
+    {
+      id: 5,
+      rule: [
+        8,
+        9
+      ]
+    },
+    {
+      id: 6,
+      rule: [
+        10,
+        11
+      ]
+    },
+    {
+      id: 7,
+      rule: [
+        11,
+        12
+      ]
+    },
+    {
+      id: 8,
+      rule: [
+        12,
+        13
+      ]
+    },
+    {
+      id: 9,
+      rule: [
+        13,
+        14
+      ]
+    },
+    {
+      id: 10,
+      rule: [
+        15,
+        16
+      ]
+    },
+    {
+      id: 11,
+      rule: [
+        16,
+        17
+      ]
+    },
+    {
+      id: 12,
+      rule: [
+        17,
+        18
+      ]
+    },
+    {
+      id: 13,
+      rule: [
+        18,
+        19
+      ]
+    },
+    {
+      id: 14,
+      rule: [
+        19,
+        20
+      ]
+    },
+    {
+      id: 15,
+      rule: [
+        21,
+        22
+      ]
+    },
+    {
+      id: 16,
+      rule: [
+        22,
+        23
+      ]
+    },
+    {
+      id: 17,
+      rule: [
+        23,
+        24
+      ]
+    },
+    {
+      id: 18,
+      rule: [
+        24,
+        25
+      ]
+    },
+    {
+      id: 19,
+      rule: [
+        25,
+        26
+      ]
+    },
+    {
+      id: 20,
+      rule: [
+        26,
+        27
+      ]
+    },
+    {
+      id: 21,
+      rule: [
+        28,
+        29
+      ]
+    },
+    {
+      id: 22,
+      rule: [
+        28,
+        29
+      ]
+    },
+    {
+      id: 23,
+      rule: [
+        28,
+        29
+      ]
+    },
+    {
+      id: 24,
+      rule: [
+        28,
+        29
+      ]
+    },
+    {
+      id: 25,
+      rule: [
+        28,
+        29
+      ]
+    },
+    {
+      id: 26,
+      rule: [
+        28,
+        29
+      ]
+    },
+    {
+      id: 27,
+      rule: [
+        28,
+        29
+      ]
+    }
+  ],
+  [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+  ]
+];
+const cardSlice = createSlice({
+  name: "pyramid",
+  initialState: {
+    cards: localStorage.getItem("restartPyramidTrue") == "true" || localStorage.getItem("stepTrue") == "true" ? JSON.parse(localStorage.getItem("step1")).cards : allCards,
+    backFont: [
+      "/pyramid/src/assets/backgrounds/clouds.jpg",
+      "/pyramid/src/assets/backgrounds/default.jpg",
+      "/pyramid/src/assets/backgrounds/flowers.jpg",
+      "/pyramid/src/assets/backgrounds/flowers-field.jpg",
+      "/pyramid/src/assets/backgrounds/sand.jpg",
+      "/pyramid/src/assets/backgrounds/sea.jpg",
+      "/pyramid/src/assets/backgrounds/space.jpg",
+      "/pyramid/src/assets/backgrounds/sunflower.jpg"
+    ],
+    backs: [
+      "/pyramid/src/assets/card_backs/card-cover-1.png",
+      "/pyramid/src/assets/card_backs/card-cover-2.png",
+      "/pyramid/src/assets/card_backs/card-cover-3.png",
+      "/pyramid/src/assets/card_backs/card-cover-4.png",
+      "/pyramid/src/assets/card_backs/card-cover-5.svg"
+    ],
+    cardHeight: 0,
+    cardWidth: 0,
+    rez: localStorage.getItem("stepTrue") == "true" ? JSON.parse(
+      localStorage.getItem(`step${localStorage.getItem("stepNum")}`)
+    ).rez : [],
+    // это наша стопка на столе под "рубашкой" //
+    rezCount: localStorage.getItem("stepTrue") == "true" ? JSON.parse(
+      localStorage.getItem(`step${localStorage.getItem("stepNum")}`)
+    ).rezCount : -1,
+    //
+    otb: localStorage.getItem("stepTrue") == "true" ? JSON.parse(
+      localStorage.getItem(`step${localStorage.getItem("stepNum")}`)
+    ).otb : [],
+    // это стопка которая под картой которая сейчас играет //
+    rule: rule[0],
+    forRule: localStorage.getItem("stepTrue") == "true" ? JSON.parse(
+      localStorage.getItem(`step${localStorage.getItem("stepNum")}`)
+    ).forRule : rule[1],
+    //
+    colors: localStorage.getItem("bgcolor") ? JSON.parse(localStorage.getItem("bgcolor")) : 1,
+    hint: false,
+    bodyPlay: [29, -1],
+    doBack: false,
+    backCard: localStorage.getItem("backCard") ? JSON.parse(localStorage.getItem("backCard")) : 0,
+    //
+    steps: localStorage.getItem("stepTrue") == "true" ? JSON.parse(
+      localStorage.getItem(`step${localStorage.getItem("stepNum")}`)
+    ).steps : 0,
+    //
+    backStep: false
+  },
+  reducers: {
+    setSize(state, action) {
+      let height = [-10, -8, -6, -4, -2, 0, 2, 4, 6, 8];
+      let width = [-7, -5, -4, -3, -1, 0, 1, 3, 4, 5];
+      state.cardHeight = height[action.payload];
+      state.cardWidth = width[action.payload];
+    },
+    sortCards(state) {
+      state.cards = state.cards.sort(() => Math.random() - 0.5);
+    },
+    createRez(state) {
+      if (state.rezCount === -1) {
+        state.cards.forEach((el2, index) => {
+          if (index > 27) {
+            state.rez.push(el2);
+          }
+        });
+      }
+      if (state.rezCount === 23) {
+        state.rezCount = -1;
+      }
+    },
+    showRez(state) {
+      state.rezCount++;
+    },
+    createOtb(state) {
+      state.otb.push(state.rez[state.rezCount]);
+    },
+    setColor(state, action) {
+      state.colors = action.payload;
+      localStorage.setItem("bgcolor", JSON.stringify(action.payload));
+    },
+    moveBack(state) {
+      if (state.rezCount > 0)
+        ;
+    },
+    // createRule(state) {
+    //   if (state.rezCount === -1) {
+    //     state.forRule = new Array(28).fill(1);
+    //   }
+    //   это нужно для заполнения дляПравила массива всеми 1, если понадобится!!!
+    // },
+    // checkRule(state) {},
+    setForRule(state, action) {
+      if (state.steps == 0) {
+        localStorage.setItem("step0", JSON.stringify(state));
+      }
+      const updateForRule = [...state.forRule];
+      updateForRule[action.payload] = 0;
+      return {
+        ...state,
+        forRule: updateForRule
+      };
+    },
+    setHint(state, action) {
+      state.hint = action.payload;
+    },
+    setOtb(state) {
+      state.otb.push(state.rez[state.rezCount]);
+    },
+    setBodyGame(state, action) {
+      state.bodyPlay[0] = action.payload;
+    },
+    setBodyGameToo(state, action) {
+      state.bodyPlay[1] = action.payload;
+    },
+    setBackStep(state) {
+      state.doBack = true;
+    },
+    setBackStepNorm(state) {
+      state.doBack = false;
+    },
+    setShowCard(state, action) {
+      state.cards[action.payload].show = false;
+    },
+    setCardBackIndex(state, action) {
+      state.backCard = action.payload;
+      localStorage.setItem("backCard", JSON.stringify(action.payload));
+    },
+    setSteps(state) {
+      state.steps = state.steps + 1;
+      localStorage.setItem(`step${state.steps}`, JSON.stringify(state));
+      localStorage.setItem("stepNum", state.steps);
+      console.log("Мы сохранили шаг по номером - ", `steps${state.steps}`);
+    },
+    restart(state) {
+      localStorage("мы сюда не заходим");
+      state.steps = 0;
+      localStorage.setItem("step0", JSON.stringify(state));
+      localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
+    },
+    stepBack(state) {
+      if (state.steps > 1) {
+        state.steps = state.steps - 1;
+        localStorage.setItem("stepTrue", true);
+        localStorage.setItem("stepNum", state.steps);
+      } else if (state.steps <= 1) {
+        state.steps = 0;
+        localStorage.setItem("stepNum", state.steps);
+        localStorage.setItem("stepTrue", true);
+      }
+    }
+  }
+});
+const {
+  sortCards,
+  setSize,
+  createRez,
+  showRez,
+  createOtb,
+  setColor,
+  moveBack,
+  // createRule,
+  setForRule,
+  setHint,
+  setOtb,
+  setBodyGame,
+  setBodyGameToo,
+  setBackStep,
+  setBackStepNorm,
+  setShowCard,
+  setCardBackIndex,
+  setSteps,
+  stepBack,
+  restart
+} = cardSlice.actions;
+const cardSlice$1 = cardSlice.reducer;
 function Header() {
   const dispatch = useDispatch();
   const [options2, setOptions] = reactExports.useState(false);
   const back2 = useSelector((state) => state.pyramid.backFont);
   const backCard = useSelector((state) => state.pyramid.backs);
-  const cards = useSelector((state) => state.pyramid);
   const hint = () => {
     dispatch(setHint(true));
     setTimeout(() => {
@@ -13364,10 +13340,8 @@ function Header() {
       setOptions(false);
     }
   };
-  const restart = () => {
-    console.log("push restart");
-    localStorage.setItem("restartPyramid", JSON.stringify(cards.cards));
-    localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
+  const restartButton = () => {
+    dispatch(restart());
   };
   const changeBackground = (index) => {
     dispatch(setColor(index));
@@ -13375,17 +13349,25 @@ function Header() {
   const changeCardBack = (index) => {
     dispatch(setCardBackIndex(index));
   };
+  const backMove = () => {
+    dispatch(stepBack());
+  };
+  reactExports.useEffect(() => {
+    localStorage.setItem("restartPyramidTrue", false);
+    localStorage.setItem("stepTrue", false);
+  }, []);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: s$4.header, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: s$4.buttons, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: s$4.tac_one_regular, children: "Pyramid" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx(
+      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
         Button,
         {
           icon: faArrowLeft,
           span: "CANCEL",
-          data_tooltip: "One Move Back"
+          data_tooltip: "One Move Back",
+          onClick: backMove
         }
-      ),
+      ) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         Button,
         {
@@ -13395,21 +13377,14 @@ function Header() {
           onClick: hint
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        Button,
-        {
-          icon: faPlus,
-          span: "NEW GAME",
-          data_tooltip: "New Game"
-        }
-      ) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { icon: faPlus, span: "NEW GAME", data_tooltip: "New Game" }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
         Button,
         {
           icon: faRotateLeft,
           span: "RESTART",
           data_tooltip: "Restart This Game",
-          onClick: restart
+          onClick: restartButton
         }
       ) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -13428,13 +13403,7 @@ function Header() {
         className: `${s$4.block_options}`,
         style: { display: options2 ? "block" : "none" },
         children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            "div",
-            {
-              onClick: openOptions,
-              className: s$4.close_options
-            }
-          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { onClick: openOptions, className: s$4.close_options }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `${s$4.options}`, children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { children: "Backgrounds:" }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `${s$4.backgrounds}`, children: [
@@ -13469,10 +13438,6 @@ function Header() {
               index
             )) }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "backs", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { children: "Card Size" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Slider, {})
-            ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "backs", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
               /* @__PURE__ */ jsxRuntimeExports.jsx(Timer, {})
             ] })
@@ -13489,15 +13454,16 @@ function Header() {
     )
   ] });
 }
-const main = "_main_1swjy_1";
-const basement = "_basement_1swjy_17";
-const deck = "_deck_1swjy_37";
-const back = "_back_1swjy_51";
-const area = "_area_1swjy_69";
-const animate = "_animate_1swjy_111";
-const shakeAndScale = "_shakeAndScale_1swjy_1";
-const level = "_level_1swjy_131";
-const s$2 = {
+const main = "_main_13pj8_1";
+const basement = "_basement_13pj8_17";
+const deck = "_deck_13pj8_37";
+const back = "_back_13pj8_51";
+const area = "_area_13pj8_69";
+const animate = "_animate_13pj8_111";
+const shakeAndScale = "_shakeAndScale_13pj8_1";
+const level = "_level_13pj8_133";
+const card = "_card_13pj8_1";
+const s$3 = {
   main,
   basement,
   deck,
@@ -13505,7 +13471,8 @@ const s$2 = {
   area,
   animate,
   shakeAndScale,
-  level
+  level,
+  card
 };
 const BackCard = () => {
   const dispatch = useDispatch();
@@ -13517,63 +13484,78 @@ const BackCard = () => {
     dispatch(showRez());
     dispatch(setOtb());
     dispatch(setHint(false));
+    dispatch(setSteps());
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "div",
     {
-      className: s$2.back,
+      className: s$3.back,
       onClick: next,
       style: { backgroundImage: `url(${backImage[backImageIndex]})` }
     }
   );
 };
 const Res = () => {
-  const card = useSelector((state) => state.pyramid);
+  const card2 = useSelector((state) => state.pyramid);
   return (
     // card[itemCard] !== otb[otb.length - 1] && ( // уходит из рез в отб
-    card.rezCount >= 0 && !card.doBack && /* @__PURE__ */ jsxRuntimeExports.jsx(
+    card2.rezCount >= 0 && !card2.doBack && /* @__PURE__ */ jsxRuntimeExports.jsx(
       "div",
       {
         style: {
-          backgroundImage: `url(${card.rez[card.rezCount].way})`
+          backgroundImage: `url(${card2.rez[card2.rezCount].way})`
         }
       }
     )
   );
 };
 const CardItem = ({ el: el2, index, animate: animate2, bodyGame }) => {
-  const card = useSelector((state) => state.pyramid);
+  const card2 = useSelector((state) => state.pyramid);
+  const [windowWidth, setWindowWidth] = reactExports.useState(window.innerWidth);
+  reactExports.useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   const [comparison, setComparison] = reactExports.useState(false);
   const dispatch = useDispatch();
   function actionCard(forCard) {
+    console.log(windowWidth);
     dispatch(setHint(false));
-    if (card.forRule[card.rule[index].rule[0]] === 0 && card.forRule[card.rule[index].rule[1]] === 0) {
+    if (card2.forRule[card2.rule[index].rule[0]] === 0 && card2.forRule[card2.rule[index].rule[1]] === 0) {
       if (forCard.point === 13) {
         setComparison(true);
         dispatch(setForRule(index));
         dispatch(setShowCard(index));
+        dispatch(setSteps());
         return;
       }
-      if (card.rezCount >= 0) {
-        if (forCard.point + card.rez[card.rezCount].point === 13) {
+      if (card2.rezCount >= 0) {
+        if (forCard.point + card2.rez[card2.rezCount].point === 13) {
           setComparison(true);
           dispatch(setForRule(index));
           dispatch(setBackStep());
           dispatch(setShowCard(index));
+          dispatch(setSteps());
           return;
         }
       }
-      if (card.bodyPlay[0] === 29) {
+      if (card2.bodyPlay[0] === 29) {
         dispatch(setBodyGame(index));
         return;
       }
-      if (card.bodyPlay[0] < 29) {
-        if (el2.point + card.cards[card.bodyPlay[0]].point === 13) {
-          dispatch(setBodyGameToo(card.bodyPlay[0]));
+      if (card2.bodyPlay[0] < 29) {
+        if (el2.point + card2.cards[card2.bodyPlay[0]].point === 13) {
+          dispatch(setBodyGameToo(card2.bodyPlay[0]));
           setComparison(true);
           dispatch(setForRule(index));
-          dispatch(setForRule(card.bodyPlay[0]));
+          dispatch(setForRule(card2.bodyPlay[0]));
           dispatch(setShowCard(index));
+          dispatch(setSteps());
         }
         dispatch(setBodyGame(29));
         return;
@@ -13583,13 +13565,14 @@ const CardItem = ({ el: el2, index, animate: animate2, bodyGame }) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "div",
     {
-      className: `${s$2.level} ${animate2 ? s$2.animate : ""}`,
+      className: `${s$3.level} ${animate2 ? s$3.animate : ""}`,
+      id: s$3["card"],
       style: {
-        backgroundImage: comparison || card.forRule[index] === 0 ? "none" : `url(${el2.way})`,
-        zIndex: comparison || card.forRule[index] === 0 ? 0 : 9,
-        pointerEvents: comparison || card.forRule[index] === 0 ? "none" : "auto",
-        width: `calc(49px + ${card.cardSize}px)`,
-        height: `calc(75px + ${card.cardSize * 2}px)`,
+        backgroundImage: comparison || card2.forRule[index] === 0 ? "none" : `url(${el2.way})`,
+        zIndex: comparison || card2.forRule[index] === 0 ? 0 : 9,
+        pointerEvents: comparison || card2.forRule[index] === 0 ? "none" : "auto",
+        width: windowWidth < 500 ? "55px" : `calc(80px + ${card2.cardWidth}px)`,
+        height: windowWidth < 500 ? "83px" : `calc(120px + ${card2.cardHeight}px)`,
         transform: bodyGame ? "scale(1.2)" : "scale(1)"
       },
       onClick: () => actionCard(el2)
@@ -13605,24 +13588,24 @@ CardItem.propTypes = {
   // animate: PropTypes.boolean.isRequired,
 };
 const Body = () => {
-  const card = useSelector((state) => state.pyramid);
+  const card2 = useSelector((state) => state.pyramid);
   const dispatch = useDispatch();
-  if (card.cards[0].id === 0) {
+  if (card2.cards[0].id === 0) {
     dispatch(sortCards());
   }
   const checkHint = (index, forCard) => {
-    if (card.forRule[card.rule[index].rule[0]] === 0 && card.forRule[card.rule[index].rule[1]] === 0) {
+    if (card2.forRule[card2.rule[index].rule[0]] === 0 && card2.forRule[card2.rule[index].rule[1]] === 0) {
       if (forCard.point === 13) {
         return true;
       }
-      if (card.rezCount >= 0) {
-        if (forCard.point + card.rez[card.rezCount].point === 13) {
+      if (card2.rezCount >= 0) {
+        if (forCard.point + card2.rez[card2.rezCount].point === 13) {
           return true;
         }
       }
-      let ourArr = card.cards.filter((i, ind) => {
+      let ourArr = card2.cards.filter((i, ind) => {
         if (ind < 28) {
-          if (card.forRule[card.rule[ind].rule[0]] === 0 && card.forRule[card.rule[ind].rule[1]] === 0 && i.show === true) {
+          if (card2.forRule[card2.rule[ind].rule[0]] === 0 && card2.forRule[card2.rule[ind].rule[1]] === 0 && i.show === true) {
             return true;
           }
         }
@@ -13632,7 +13615,7 @@ const Body = () => {
         const result = [];
         for (let i = 0; i < arr.length; i++) {
           for (let j = i + 1; j < arr.length; j++) {
-            if (arr[j].point + arr[i].point === 13 && card.cards[index].show === true) {
+            if (arr[j].point + arr[i].point === 13 && card2.cards[index].show === true) {
               result.push(arr[i].id);
               result.push(arr[j].id);
             }
@@ -13645,26 +13628,26 @@ const Body = () => {
     return false;
   };
   const checkPlay = (index) => {
-    if (card.bodyPlay[0] === index) {
+    if (card2.bodyPlay[0] === index) {
       dispatch(setBodyGameToo(-1));
       return true;
     }
     return false;
   };
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: s$2.main, children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: s$2.area, children: card.cards.map(
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: s$3.main, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: s$3.area, children: card2.cards.map(
       (el2, index) => 28 > index && /* @__PURE__ */ jsxRuntimeExports.jsx(
         CardItem,
         {
           el: el2,
           index,
-          animate: checkHint(index, el2) && card.hint,
+          animate: checkHint(index, el2) && card2.hint,
           bodyGame: checkPlay(index)
         },
         index
       )
     ) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: s$2.basement, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: s$2.deck, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: s$3.basement, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: s$3.deck, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(BackCard, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Res, {})
     ] }) })
@@ -13674,7 +13657,7 @@ const place = "_place_15e9b_1";
 const imageSlider1 = "_imageSlider1_15e9b_13";
 const imageSlider2 = "_imageSlider2_15e9b_15";
 const bordSlider = "_bordSlider_15e9b_31";
-const s$1 = {
+const s$2 = {
   place,
   imageSlider1,
   imageSlider2,
@@ -13689,13 +13672,13 @@ const BackSlider = () => {
   function setBackWhite() {
     dispatch(setColor(0));
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: s$1.place, children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: s$2.place, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       "img",
       {
         src: back2[1],
         alt: "background image",
-        className: s$1.imageSlider1,
+        className: s$2.imageSlider1,
         onClick: setBackGreen
       }
     ),
@@ -13704,12 +13687,39 @@ const BackSlider = () => {
       {
         src: back2[0],
         alt: "background image",
-        className: s$1.imageSlider2,
+        className: s$2.imageSlider2,
         onClick: setBackWhite
       }
     )
   ] });
 };
+const slider = "_slider_cy237_1";
+const s$1 = {
+  slider
+};
+function Slider() {
+  const [value, setValue] = reactExports.useState(5);
+  const dispatch = useDispatch();
+  const handleChange = (event) => {
+    setValue(event.target.value);
+    dispatch(setSize(event.target.value));
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: s$1.slider, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "input",
+      {
+        id: "range1",
+        type: "range",
+        min: "0",
+        max: "10",
+        value,
+        onChange: handleChange,
+        style: { zIndex: "1" }
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: value })
+  ] });
+}
 const footer = "_footer_15zzt_1";
 const mob_display = "_mob_display_15zzt_31";
 const information = "_information_15zzt_41";
@@ -13753,7 +13763,7 @@ const Footer = () => {
             }
           ),
           " ",
-          "00"
+          c.steps
         ] })
       ]
     }
@@ -13785,4 +13795,4 @@ const store = configureStore({
 client.createRoot(document.getElementById("root")).render(
   /* @__PURE__ */ jsxRuntimeExports.jsx(React$1.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Provider_default, { store, children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) }) })
 );
-//# sourceMappingURL=index-DtXSgbji.js.map
+//# sourceMappingURL=bundle.js.map

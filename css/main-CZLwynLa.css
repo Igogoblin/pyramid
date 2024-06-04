@@ -2,7 +2,7 @@ body {
   display: flex;
   justify-content: center;
   height: 100%;
-  background-image: url("/pyramid/assets/default-ChkdOWgj.jpg");
+  background-image: url("/pyramid/images/default-ChkdOWgj.jpg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-size: cover;
@@ -428,12 +428,7 @@ div h4 {
   opacity: 1;
   transition-delay: 0s;
 }
-._slider_cy237_1 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-._main_1swjy_1 {
+._main_13pj8_1 {
   /* width: 80vw; */
   width: 100%;
   display: flex;
@@ -441,33 +436,33 @@ div h4 {
   justify-content: center;
 }
 
-._basement_1swjy_17 {
+._basement_13pj8_17 {
   display: flex;
   justify-content: center;
   gap: 80px;
 }
-._basement_1swjy_17 div {
+._basement_13pj8_17 div {
   width: 73px;
   height: 109px;
   /* border: 1px solid rgb(111, 111, 221); */
 }
-._deck_1swjy_37 {
+._deck_13pj8_37 {
   min-width: 200px;
   height: 106px;
   display: flex;
   justify-content: space-between;
   border: none;
 }
-._back_1swjy_51 {
+._back_13pj8_51 {
   width: 73px;
-  background-image: url("/pyramid/assets/card-cover-2-B54MS2AL.svg");
+  background-image: url("/pyramid/images/card-cover-2-B54MS2AL.svg");
   background-size: cover;
 
   background-repeat: no-repeat;
   /* width: "100%";
   height: "100%"; */
 }
-._area_1swjy_69 {
+._area_13pj8_69 {
   /* width: 100%; */
   min-width: 768px;
   /* min-width: 380px; */
@@ -478,7 +473,7 @@ div h4 {
   z-index: 1;
 }
 /*  для анимации подсказки (hint) start------------------------------------------------- */
-@keyframes _shakeAndScale_1swjy_1 {
+@keyframes _shakeAndScale_13pj8_1 {
   0%,
   100% {
     transform: scale(1) translateX(0) rotate(0);
@@ -488,149 +483,155 @@ div h4 {
   }
 }
 
-._animate_1swjy_111 {
-  animation: _shakeAndScale_1swjy_1 1s ease-in-out;
+._animate_13pj8_111 {
+  animation: _shakeAndScale_13pj8_1 1s ease-in-out;
 }
 /*  для анимации подсказки (hint) finish------------------------------------------------- */
 @media (max-width: 767px) {
-  ._area_1swjy_69 {
-    width: 80%;
+  ._area_13pj8_69 {
+    width: 90%;
     min-width: 350px;
+    margin: 20% auto;
+  }
+
+  div ._level_13pj8_133 #_card_13pj8_1 {
+    width: 60px;
+    height: 90px;
   }
 }
-._level_1swjy_131 {
+._level_13pj8_133 {
   position: absolute;
-  width: 73px;
-  height: 109px;
+  width: 60px;
+  height: 90px;
   /* border: 1px solid blue; */
   /* background-image: url("../../assets/cards/clubs-7.svg"); */
   background-size: cover;
 
   background-repeat: no-repeat;
 }
-._level_1swjy_131:nth-child(1) {
+._level_13pj8_133:nth-child(1) {
   top: 15%;
   left: 45%; /* Расположение первого уровня */
 }
 
-._level_1swjy_131:nth-child(2) {
+._level_13pj8_133:nth-child(2) {
   top: 20%;
   left: 37%; /* Расположение второго уровня */
 }
 
-._level_1swjy_131:nth-child(3) {
+._level_13pj8_133:nth-child(3) {
   top: 20%;
   left: 53%; /* Расположение второго уровня */
 }
 
-._level_1swjy_131:nth-child(4) {
+._level_13pj8_133:nth-child(4) {
   top: 25%;
   left: 29%; /* Расположение третьего уровня */
 }
-._level_1swjy_131:nth-child(5) {
+._level_13pj8_133:nth-child(5) {
   top: 25%;
   left: 45%; /* Расположение третьего уровня */
 }
 
-._level_1swjy_131:nth-child(6) {
+._level_13pj8_133:nth-child(6) {
   top: 25%;
   left: 61%; /* Расположение третьего уровня */
 }
 
-._level_1swjy_131:nth-child(7) {
+._level_13pj8_133:nth-child(7) {
   top: 30%;
   left: 21%; /* Расположение четвертого уровня */
 }
-._level_1swjy_131:nth-child(8) {
+._level_13pj8_133:nth-child(8) {
   top: 30%;
   left: 37%; /* Расположение четвертого уровня */
 }
 
-._level_1swjy_131:nth-child(9) {
+._level_13pj8_133:nth-child(9) {
   top: 30%;
   left: 53%; /* Расположение четвертого уровня */
 }
 
-._level_1swjy_131:nth-child(10) {
+._level_13pj8_133:nth-child(10) {
   top: 30%;
   left: 69%; /* Расположение четвертого уровня */
 }
-._level_1swjy_131:nth-child(11) {
+._level_13pj8_133:nth-child(11) {
   top: 35%;
   left: 13%; /* Расположение пятого уровня */
 }
 
-._level_1swjy_131:nth-child(12) {
+._level_13pj8_133:nth-child(12) {
   top: 35%;
   left: 29%; /* Расположение пятого уровня */
 }
-._level_1swjy_131:nth-child(13) {
+._level_13pj8_133:nth-child(13) {
   top: 35%;
   left: 45%; /* Расположение пятого уровня */
 }
 
-._level_1swjy_131:nth-child(14) {
+._level_13pj8_133:nth-child(14) {
   top: 35%;
   left: 61%; /* Расположение пятого уровня */
 }
 
-._level_1swjy_131:nth-child(15) {
+._level_13pj8_133:nth-child(15) {
   top: 35%;
   left: 77%; /* Расположение пятого уровня */
 }
-._level_1swjy_131:nth-child(16) {
+._level_13pj8_133:nth-child(16) {
   top: 40%;
   left: 6%; /* Расположение шестого уровня */
 }
 
-._level_1swjy_131:nth-child(17) {
+._level_13pj8_133:nth-child(17) {
   top: 40%;
   left: 21%; /* Расположение шестого уровня */
 }
-._level_1swjy_131:nth-child(18) {
+._level_13pj8_133:nth-child(18) {
   top: 40%;
   left: 37%; /* Расположение шестого уровня */
 }
 
-._level_1swjy_131:nth-child(19) {
+._level_13pj8_133:nth-child(19) {
   top: 40%;
   left: 53%; /* Расположение шестого уровня */
 }
-._level_1swjy_131:nth-child(20) {
+._level_13pj8_133:nth-child(20) {
   top: 40%;
   left: 69%; /* Расположение шестого уровня */
 }
 
-._level_1swjy_131:nth-child(21) {
+._level_13pj8_133:nth-child(21) {
   top: 40%;
   left: 84%; /* Расположение шестого уровня */
 }
 
-._level_1swjy_131:nth-child(22) {
+._level_13pj8_133:nth-child(22) {
   top: 45%;
   left: 1%; /* Расположение седьмого уровня */
 }
-._level_1swjy_131:nth-child(23) {
+._level_13pj8_133:nth-child(23) {
   top: 45%;
   left: 15%; /* Расположение седьмого уровня */
 }
-._level_1swjy_131:nth-child(24) {
+._level_13pj8_133:nth-child(24) {
   top: 45%;
   left: 29%; /* Расположение седьмого уровня */
 }
-._level_1swjy_131:nth-child(25) {
+._level_13pj8_133:nth-child(25) {
   top: 45%;
   left: 44%; /* Расположение седьмого уровня */
 }
-._level_1swjy_131:nth-child(26) {
+._level_13pj8_133:nth-child(26) {
   top: 45%;
   left: 59%; /* Расположение седьмого уровня */
 }
-._level_1swjy_131:nth-child(27) {
+._level_13pj8_133:nth-child(27) {
   top: 45%;
   left: 73%; /* Расположение седьмого уровня */
 }
-._level_1swjy_131:nth-child(28) {
+._level_13pj8_133:nth-child(28) {
   top: 45%;
   left: 87%; /* Расположение седьмого уровня */
 }
@@ -660,6 +661,11 @@ div h4 {
 }
 body {
   /* background-image: url("../../assets/backgrounds/clouds.jpg"); */
+}
+._slider_cy237_1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 ._footer_15zzt_1 {
   /* border-top: 1px solid black; */
