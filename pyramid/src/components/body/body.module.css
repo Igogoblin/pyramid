@@ -59,14 +59,20 @@
 /*  для анимации подсказки (hint) finish------------------------------------------------- */
 @media (max-width: 767px) {
   .area {
-    width: 80%;
+    width: 90%;
     min-width: 350px;
+    margin: 20% auto;
+  }
+
+  div .level #card {
+    width: 60px;
+    height: 90px;
   }
 }
 .level {
   position: absolute;
-  width: 73px;
-  height: 109px;
+  width: 60px;
+  height: 90px;
   /* border: 1px solid blue; */
   /* background-image: url("../../assets/cards/clubs-7.svg"); */
   background-size: cover;

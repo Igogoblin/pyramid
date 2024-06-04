@@ -7,21 +7,27 @@ import {
   faGear,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { setHint } from "../../store/cardSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Timer from "../footer/Timer";
-import Slider from "../slider/Slider";
 import Button from "../Button/Button";
-import { setColor } from "../../store/cardSlice";
-import { setCardBackIndex } from "../../store/cardSlice";
+import {
+  setColor,
+  stepBack,
+  setCardBackIndex,
+  setHint,
+  restart,
+} from "../../store/cardSlice";
+
 // import { Link } from "react-router-dom";
 
 export default function Header() {
   const dispatch = useDispatch();
   const [options, setOptions] = useState(false);
+
+  // const [reload, setReload] = useState(false);
   const back = useSelector((state) => state.pyramid.backFont);
   const backCard = useSelector((state) => state.pyramid.backs);
-  const cards = useSelector((state) => state.pyramid);
+  // const cards = useSelector((state) => state.pyramid);
 
   const hint = () => {
     dispatch(setHint(true));
@@ -38,10 +44,8 @@ export default function Header() {
     }
   };
 
-  const restart = () => {
-    console.log("push restart");
-    localStorage.setItem("restartPyramid", JSON.stringify(cards.cards));
-    localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
+  const restartButton = () => {
+    dispatch(restart());
   };
 
   const changeBackground = (index) => {
@@ -52,18 +56,30 @@ export default function Header() {
     dispatch(setCardBackIndex(index));
   };
 
+  const backMove = () => {
+    // if (cards.steps <= 0) {
+    //   return restartButton();
+    // }
+    dispatch(stepBack());
+  };
+
+  useEffect(() => {
+    localStorage.setItem("restartPyramidTrue", false);
+    localStorage.setItem("stepTrue", false);
+  }, []);
+  // localStorage.clear();
   return (
     <div className={s.header}>
       <div className={s.buttons}>
         <h1 className={s.tac_one_regular}>Pyramid</h1>
-
-        <Button
-          icon={faArrowLeft}
-          span={"CANCEL"}
-          data_tooltip="One Move Back"
-          // onClick={backMove}
-        />
-
+        <a href="/">
+          <Button
+            icon={faArrowLeft}
+            span={"CANCEL"}
+            data_tooltip="One Move Back"
+            onClick={backMove}
+          />
+        </a>
         <Button
           icon={faLightbulb}
           span={"HINT"}
@@ -71,12 +87,7 @@ export default function Header() {
           onClick={hint}
         />
         <a href="/">
-          <Button
-            icon={faPlus}
-            span={"NEW GAME"}
-            data_tooltip="New Game"
-            // onClick={hint}
-          />
+          <Button icon={faPlus} span={"NEW GAME"} data_tooltip="New Game" />
         </a>
 
         {/* <Link to="/"> */}
@@ -85,7 +96,7 @@ export default function Header() {
             icon={faRotateLeft}
             span={"RESTART"}
             data_tooltip="Restart This Game"
-            onClick={restart}
+            onClick={restartButton}
           />
         </a>
 
@@ -102,10 +113,7 @@ export default function Header() {
         className={`${s.block_options}`}
         style={{ display: options ? "block" : "none" }}
       >
-        <div
-          onClick={openOptions}
-          className={s.close_options}
-        ></div>
+        <div onClick={openOptions} className={s.close_options}></div>
         <div className={`${s.options}`}>
           <h4>Backgrounds:</h4>
           <div className={`${s.backgrounds}`}>
@@ -144,10 +152,7 @@ export default function Header() {
               />
             ))}
           </div>
-          <div className="backs">
-            <h4>Card Size</h4>
-            <Slider />
-          </div>
+
           <div className="backs">
             <br />
             <Timer />

@@ -8,13 +8,27 @@ import {
   setBodyGameToo,
   setShowCard,
   setHint,
+  setSteps,
 } from "../../store/cardSlice";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const CardItem = ({ el, index, animate, bodyGame }) => {
   const card = useSelector((state) => state.pyramid);
+  //const {width = 0 } = useWindowSize();
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   const [comparison, setComparison] = useState(false);
 
   const dispatch = useDispatch();
@@ -26,6 +40,7 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
     // console.log("el", el);
     // console.log(comparison);
     // console.log(animate);
+    console.log(windowWidth);
     dispatch(setHint(false));
     if (
       card.forRule[card.rule[index].rule[0]] === 0 &&
@@ -35,6 +50,7 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
         setComparison(true);
         dispatch(setForRule(index));
         dispatch(setShowCard(index));
+        dispatch(setSteps());
         return;
       }
       // для первоочередном взаимодействии карт с поля
@@ -50,6 +66,7 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
           dispatch(setForRule(index));
           dispatch(setBackStep());
           dispatch(setShowCard(index));
+          dispatch(setSteps());
           return;
         }
       }
@@ -64,6 +81,7 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
           dispatch(setForRule(index));
           dispatch(setForRule(card.bodyPlay[0]));
           dispatch(setShowCard(index));
+          dispatch(setSteps());
         }
 
         dispatch(setBodyGame(29));
@@ -76,6 +94,7 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
     <div
       key={el.id}
       className={`${s.level} ${animate ? s.animate : ""}`}
+      id={s["card"]}
       style={{
         backgroundImage:
           comparison || card.forRule[index] === 0 ? "none" : `url(${el.way})`,
@@ -83,8 +102,9 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
         pointerEvents:
           comparison || card.forRule[index] === 0 ? "none" : "auto",
 
-        width: `calc(49px + ${card.cardSize}px)`,
-        height: `calc(75px + ${card.cardSize * 2}px)`,
+        width: windowWidth < 500 ? "55px" : `calc(80px + ${card.cardWidth}px)`,
+        height:
+          windowWidth < 500 ? "83px" : `calc(120px + ${card.cardHeight}px)`,
         transform: bodyGame ? "scale(1.2)" : "scale(1)",
       }}
       onClick={() => actionCard(el)}
