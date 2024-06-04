@@ -2,7 +2,7 @@ body {
   display: flex;
   justify-content: center;
   height: 100%;
-  background-image: url("/pyramid/images/default-ChkdOWgj.jpg");
+  background-image: url("/pyramid/assets/default-ChkdOWgj.jpg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-size: cover;
@@ -455,7 +455,7 @@ div h4 {
 }
 ._back_13pj8_51 {
   width: 73px;
-  background-image: url("/pyramid/images/card-cover-2-B54MS2AL.svg");
+  background-image: url("/pyramid/assets/card-cover-2-B54MS2AL.svg");
   background-size: cover;
 
   background-repeat: no-repeat;
