@@ -13190,6 +13190,7 @@ const cardSlice = createSlice({
     cards: localStorage.getItem("restartPyramidTrue") == "true" || localStorage.getItem("stepTrue") == "true" ? JSON.parse(localStorage.getItem("step1")).cards : allCards,
     backFont: [
       "/pyramid/src/assets/backgrounds/clouds.jpg",
+      // "../assets/backgrounds/clouds.jpg",
       "/pyramid/src/assets/backgrounds/default.jpg",
       "/pyramid/src/assets/backgrounds/flowers.jpg",
       "/pyramid/src/assets/backgrounds/flowers-field.jpg",
@@ -13197,6 +13198,13 @@ const cardSlice = createSlice({
       "/pyramid/src/assets/backgrounds/sea.jpg",
       "/pyramid/src/assets/backgrounds/space.jpg",
       "/pyramid/src/assets/backgrounds/sunflower.jpg"
+      // "../assets/backgrounds/default.jpg",
+      // "../assets/backgrounds/flowers.jpg",
+      // "../assets/backgrounds/flowers-field.jpg",
+      // "../assets/backgrounds/sand.jpg",
+      // "../assets/backgrounds/sea.jpg",
+      // "../assets/backgrounds/space.jpg",
+      // "../assets/backgrounds/sunflower.jpg",
     ],
     backs: [
       "/pyramid/src/assets/card_backs/card-cover-1.png",
@@ -13836,4 +13844,4 @@ const store = configureStore({
 client.createRoot(document.getElementById("root")).render(
   /* @__PURE__ */ jsxRuntimeExports.jsx(React$1.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Provider_default, { store, children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) }) })
 );
-//# sourceMappingURL=index-CygL2GUz.js.map
+//# sourceMappingURL=index-DDd5uCDE.js.map
