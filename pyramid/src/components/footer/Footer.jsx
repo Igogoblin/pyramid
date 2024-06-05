@@ -10,9 +10,9 @@ const Footer = () => {
   const c = useSelector((state) => state.pyramid);
   const colors = useSelector((state) => state.pyramid.colors);
 
-  function info() {
-    console.log(c);
-  }
+  // function info() {
+  //   console.log(c);
+  // }
 
   return (
     <footer
@@ -29,12 +29,12 @@ const Footer = () => {
       <div className={s.mob_display}>
         <BackSlider />
       </div>
-      <div
+      {/* <div
         onClick={info}
         className={s.information}
       >
         info
-      </div>
+      </div> */}
       <Timer />
       <div>
         {" "}

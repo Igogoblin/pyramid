@@ -23,6 +23,7 @@ import {
 export default function Header() {
   const dispatch = useDispatch();
   const [options, setOptions] = useState(false);
+  const [rools, setRools] = useState(false);
 
   // const [reload, setReload] = useState(false);
   const back = useSelector((state) => state.pyramid.backFont);
@@ -41,6 +42,7 @@ export default function Header() {
       setOptions(true);
     } else {
       setOptions(false);
+      setRools(false);
     }
   };
 
@@ -72,7 +74,7 @@ export default function Header() {
     <div className={s.header}>
       <div className={s.buttons}>
         <h1 className={s.tac_one_regular}>Pyramid</h1>
-        <a href="/">
+        <a href="/pyramid/">
           <Button
             icon={faArrowLeft}
             span={"CANCEL"}
@@ -86,12 +88,12 @@ export default function Header() {
           data_tooltip="Hint"
           onClick={hint}
         />
-        <a href="/">
+        <a href="/pyramid/">
           <Button icon={faPlus} span={"NEW GAME"} data_tooltip="New Game" />
         </a>
 
         {/* <Link to="/"> */}
-        <a href="/">
+        <a href="/pyramid/">
           <Button
             icon={faRotateLeft}
             span={"RESTART"}
@@ -115,46 +117,75 @@ export default function Header() {
       >
         <div onClick={openOptions} className={s.close_options}></div>
         <div className={`${s.options}`}>
-          <h4>Backgrounds:</h4>
-          <div className={`${s.backgrounds}`}>
-            <div className={`${s.block}`}>
-              {back.map(
-                (el, index) =>
-                  index < 4 && (
-                    <img
-                      src={back[index]}
-                      key={index}
-                      onClick={() => changeBackground(index)}
-                    />
-                  )
-              )}
-            </div>
-            <div className={`${s.block}`}>
-              {back.map(
-                (el, index) =>
-                  index > 3 && (
-                    <img
-                      src={back[index]}
-                      key={index}
-                      onClick={() => changeBackground(index)}
-                    />
-                  )
-              )}
-            </div>
-          </div>
-          <h4>Backs:</h4>
-          <div className={`${s.backs}`}>
-            {backCard.map((el, index) => (
-              <img
-                src={backCard[index]}
-                key={index}
-                onClick={() => changeCardBack(index)}
-              />
-            ))}
-          </div>
+          {rools ? (
+            <>
+              <h5>About game</h5>
+              <p>
+                Цель игры — разобрать пирамиду, подбирая карты так, чтобы в
+                сумме пара стоила 13 очков. Вы можете использовать только те
+                карты, которые не заблокированы другими картами. Тузы стоят одно
+                очко, валеты 11, дамы 12, а короли 13 и могут быть удалены сами
+                по себе, без пары. Нажмите кнопку цикла, чтобы переместить карты
+                из резерва в сброс. Вы можете пройти цикл через резерв только
+                три раза, так что будьте внимательны.
+              </p>
+              <h5>How to play?</h5>
+              <p>
+                Pазобрать пирамиду, подбирая карты так, чтобы в сумме пара
+                стоила 13 очков. Вы можете использовать только те карты, которые
+                не заблокированы другими картами.
+              </p>
+            </>
+          ) : (
+            <>
+              <h4>Backgrounds:</h4>
+              <div className={`${s.backgrounds}`}>
+                <div className={`${s.block}`}>
+                  {back.map(
+                    (el, index) =>
+                      index < 4 && (
+                        <img
+                          src={back[index]}
+                          key={index}
+                          onClick={() => changeBackground(index)}
+                        />
+                      )
+                  )}
+                </div>
+                <div className={`${s.block}`}>
+                  {back.map(
+                    (el, index) =>
+                      index > 3 && (
+                        <img
+                          src={back[index]}
+                          key={index}
+                          onClick={() => changeBackground(index)}
+                        />
+                      )
+                  )}
+                </div>
+              </div>
+              <h4>Backs:</h4>
+              <div className={`${s.backs}`}>
+                {backCard.map((el, index) => (
+                  <img
+                    src={backCard[index]}
+                    key={index}
+                    onClick={() => changeCardBack(index)}
+                  />
+                ))}
+              </div>
+            </>
+          )}
 
           <div className="backs">
             <br />
+            <button
+              className={`${s.btn_hover} ${s.color_5} ${s.tooltip}`}
+              onClick={() => setRools(!rools)}
+            >
+              Rools
+            </button>
             <Timer />
           </div>
         </div>
