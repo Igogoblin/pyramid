@@ -13401,7 +13401,7 @@ function Header() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: s$4.header, children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: s$4.buttons, children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: s$4.tac_one_regular, children: "Pyramid" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/pyramid/", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
         Button,
         {
           icon: faArrowLeft,
@@ -13419,7 +13419,7 @@ function Header() {
           onClick: hint
         }
       ),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { icon: faPlus, span: "NEW GAME", data_tooltip: "New Game" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/pyramid/", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { icon: faPlus, span: "NEW GAME", data_tooltip: "New Game" }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("a", { href: "/", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
         Button,
         {
@@ -13841,4 +13841,4 @@ const store = configureStore({
 client.createRoot(document.getElementById("root")).render(
   /* @__PURE__ */ jsxRuntimeExports.jsx(React$1.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Provider_default, { store, children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) }) })
 );
-//# sourceMappingURL=index-Bz6QLDMD.js.map
+//# sourceMappingURL=index-Cjs4Nxgt.js.map
