@@ -13190,7 +13190,6 @@ const cardSlice = createSlice({
     cards: localStorage.getItem("restartPyramidTrue") == "true" || localStorage.getItem("stepTrue") == "true" ? JSON.parse(localStorage.getItem("step1")).cards : allCards,
     backFont: [
       "/pyramid/src/assets/backgrounds/clouds.jpg",
-      // "../assets/backgrounds/clouds.jpg",
       "/pyramid/src/assets/backgrounds/default.jpg",
       "/pyramid/src/assets/backgrounds/flowers.jpg",
       "/pyramid/src/assets/backgrounds/flowers-field.jpg",
@@ -13198,13 +13197,6 @@ const cardSlice = createSlice({
       "/pyramid/src/assets/backgrounds/sea.jpg",
       "/pyramid/src/assets/backgrounds/space.jpg",
       "/pyramid/src/assets/backgrounds/sunflower.jpg"
-      // "../assets/backgrounds/default.jpg",
-      // "../assets/backgrounds/flowers.jpg",
-      // "../assets/backgrounds/flowers-field.jpg",
-      // "../assets/backgrounds/sand.jpg",
-      // "../assets/backgrounds/sea.jpg",
-      // "../assets/backgrounds/space.jpg",
-      // "../assets/backgrounds/sunflower.jpg",
     ],
     backs: [
       "/pyramid/src/assets/card_backs/card-cover-1.png",
@@ -13330,7 +13322,6 @@ const cardSlice = createSlice({
       console.log("Мы сохранили шаг по номером - ", `steps${state.steps}`);
     },
     restart(state) {
-      localStorage("мы сюда не заходим");
       state.steps = 0;
       localStorage.setItem("step0", JSON.stringify(state));
       localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
@@ -13374,6 +13365,7 @@ const cardSlice$1 = cardSlice.reducer;
 function Header() {
   const dispatch = useDispatch();
   const [options2, setOptions] = reactExports.useState(false);
+  const [rools, setRools] = reactExports.useState(false);
   const back2 = useSelector((state) => state.pyramid.backFont);
   const backCard = useSelector((state) => state.pyramid.backs);
   const hint = () => {
@@ -13387,6 +13379,7 @@ function Header() {
       setOptions(true);
     } else {
       setOptions(false);
+      setRools(false);
     }
   };
   const restartButton = () => {
@@ -13454,40 +13447,55 @@ function Header() {
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { onClick: openOptions, className: s$4.close_options }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `${s$4.options}`, children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { children: "Backgrounds:" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `${s$4.backgrounds}`, children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `${s$4.block}`, children: back2.map(
-                (el2, index) => index < 4 && /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "img",
-                  {
-                    src: back2[index],
-                    onClick: () => changeBackground(index)
-                  },
-                  index
-                )
-              ) }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `${s$4.block}`, children: back2.map(
-                (el2, index) => index > 3 && /* @__PURE__ */ jsxRuntimeExports.jsx(
-                  "img",
-                  {
-                    src: back2[index],
-                    onClick: () => changeBackground(index)
-                  },
-                  index
-                )
-              ) })
+            rools ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h5", { children: "About game" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Цель игры — разобрать пирамиду, подбирая карты так, чтобы в сумме пара стоила 13 очков. Вы можете использовать только те карты, которые не заблокированы другими картами. Тузы стоят одно очко, валеты 11, дамы 12, а короли 13 и могут быть удалены сами по себе, без пары. Нажмите кнопку цикла, чтобы переместить карты из резерва в сброс. Вы можете пройти цикл через резерв только три раза, так что будьте внимательны." }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h5", { children: "How to play?" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Pазобрать пирамиду, подбирая карты так, чтобы в сумме пара стоила 13 очков. Вы можете использовать только те карты, которые не заблокированы другими картами." })
+            ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { children: "Backgrounds:" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `${s$4.backgrounds}`, children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `${s$4.block}`, children: back2.map(
+                  (el2, index) => index < 4 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "img",
+                    {
+                      src: back2[index],
+                      onClick: () => changeBackground(index)
+                    },
+                    index
+                  )
+                ) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `${s$4.block}`, children: back2.map(
+                  (el2, index) => index > 3 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "img",
+                    {
+                      src: back2[index],
+                      onClick: () => changeBackground(index)
+                    },
+                    index
+                  )
+                ) })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { children: "Backs:" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `${s$4.backs}`, children: backCard.map((el2, index) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "img",
+                {
+                  src: backCard[index],
+                  onClick: () => changeCardBack(index)
+                },
+                index
+              )) })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { children: "Backs:" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `${s$4.backs}`, children: backCard.map((el2, index) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-              "img",
-              {
-                src: backCard[index],
-                onClick: () => changeCardBack(index)
-              },
-              index
-            )) }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "backs", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  className: `${s$4.btn_hover} ${s$4.color_5} ${s$4.tooltip}`,
+                  onClick: () => setRools(!rools),
+                  children: "Rools"
+                }
+              ),
               /* @__PURE__ */ jsxRuntimeExports.jsx(Timer, {})
             ] })
           ] }),
@@ -13780,9 +13788,6 @@ const s = {
 const Footer = () => {
   const c = useSelector((state) => state.pyramid);
   const colors = useSelector((state) => state.pyramid.colors);
-  function info() {
-    console.log(c);
-  }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "footer",
     {
@@ -13793,14 +13798,6 @@ const Footer = () => {
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: s.mob_display, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Slider, {}) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: s.mob_display, children: /* @__PURE__ */ jsxRuntimeExports.jsx(BackSlider, {}) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "div",
-          {
-            onClick: info,
-            className: s.information,
-            children: "info"
-          }
-        ),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Timer, {}),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
           " ",
@@ -13844,4 +13841,4 @@ const store = configureStore({
 client.createRoot(document.getElementById("root")).render(
   /* @__PURE__ */ jsxRuntimeExports.jsx(React$1.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Provider_default, { store, children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) }) })
 );
-//# sourceMappingURL=index-DDd5uCDE.js.map
+//# sourceMappingURL=index-Bz6QLDMD.js.map

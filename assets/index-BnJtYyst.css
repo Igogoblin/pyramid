@@ -1,11 +1,13 @@
 body {
   display: flex;
   justify-content: center;
-  height: 100%;
+  /* height: 100%; */
   background-image: url("/pyramid/assets/default-ChkdOWgj.jpg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-size: cover;
+  width: 100%;
+  height: 100%;
 }
 
 .main {
@@ -13,12 +15,15 @@ body {
   height: 100%;
   background-size: cover;
   background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .footer-bottom {
   display: flex;
   justify-content: center;
-  position: fixed;
+  /* position: fixed; */
   bottom: 0;
   width: 100%;
 }
@@ -723,14 +728,21 @@ dd {
 }
 
 /* Set core body defaults */
+html,
 body {
-  min-height: 100vh;
-  min-width: 100vw;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* Отключаем скроллбары */
+}
+body {
   scroll-behavior: smooth;
   text-rendering: optimizeSpeed;
   line-height: 1.5;
   margin: 0;
   padding: 0;
+  width: 100%;
+  height: 100%;
 }
 
 /* Remove list styles on ul, ol elements with a class attribute */
@@ -775,8 +787,12 @@ select {
 #root {
   margin: 0;
   padding: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 title {
