@@ -1,11 +1,13 @@
 body {
   display: flex;
   justify-content: center;
-  height: 100%;
+  /* height: 100%; */
   background-image: url("../src/assets/backgrounds/default.jpg");
   background-size: 100%;
   background-repeat: no-repeat;
   background-size: cover;
+  width: 100%;
+  height: 100%;
 }
 
 .main {
@@ -13,12 +15,15 @@ body {
   height: 100%;
   background-size: cover;
   background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .footer-bottom {
   display: flex;
   justify-content: center;
-  position: fixed;
+  /* position: fixed; */
   bottom: 0;
   width: 100%;
 }
