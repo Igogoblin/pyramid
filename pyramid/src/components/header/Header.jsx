@@ -74,7 +74,7 @@ export default function Header() {
     <div className={s.header}>
       <div className={s.buttons}>
         <h1 className={s.tac_one_regular}>Pyramid</h1>
-        <a href="/">
+        <a href="/pyramid/">
           <Button
             icon={faArrowLeft}
             span={"CANCEL"}
@@ -88,12 +88,12 @@ export default function Header() {
           data_tooltip="Hint"
           onClick={hint}
         />
-        <a href="/">
+        <a href="/pyramid/">
           <Button icon={faPlus} span={"NEW GAME"} data_tooltip="New Game" />
         </a>
 
         {/* <Link to="/"> */}
-        <a href="/">
+        <a href="/pyramid/">
           <Button
             icon={faRotateLeft}
             span={"RESTART"}
