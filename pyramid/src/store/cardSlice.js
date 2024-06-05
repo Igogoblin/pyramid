@@ -163,7 +163,6 @@ const cardSlice = createSlice({
       console.log("Мы сохранили шаг по номером - ", `steps${state.steps}`);
     },
     restart(state) {
-      localStorage("мы сюда не заходим");
       state.steps = 0;
       localStorage.setItem("step0", JSON.stringify(state));
       localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
@@ -171,34 +170,13 @@ const cardSlice = createSlice({
     stepBack(state) {
       if (state.steps > 1) {
         state.steps = state.steps - 1;
-        //localStorage.setItem("step0", JSON.stringify(state));
-        //localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
         localStorage.setItem("stepTrue", true);
-        // console.log(localStorage.getItem("stepTrue"));
-        // localStorage.setItem("stepNum", state.steps - 1);
         localStorage.setItem("stepNum", state.steps);
       } else if (state.steps <= 1) {
         state.steps = 0;
         localStorage.setItem("stepNum", state.steps);
-        // localStorage.setItem("step0", JSON.stringify(state));
         localStorage.setItem("stepTrue", true);
       }
-
-      // state.backStep = true;
-
-      // console.log(
-      //   JSON.parse(localStorage.getItem(`step${localStorage.getItem("steps")}`))
-      //     .steps
-      // );
-      // console.log(
-      //   "Здесь проверим чему равен steps - ",
-      //   localStorage.getItem("steps")
-      // );
-      // console.log("steps ",localStorage.getItem());
-      // const rezult = JSON.parse(localStorage.getItem(`step${step}`));
-      // console.log(rezult);
-
-      // state = rezult;
     },
   },
 });
