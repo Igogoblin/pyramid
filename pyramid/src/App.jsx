@@ -11,19 +11,19 @@ function App() {
   return (
     <div
       style={{ backgroundImage: `url(${background[index]})` }}
-      className='main'
+      className="main"
     >
-      <div className='header-top'>
+      <div className="header-top">
         <Header />
       </div>
-      <div className='footer-top'>
+      <div className="footer-top">
         <Footer />
       </div>
       <Body />
-      <div className='footer-bottom'>
+      <div className="footer-bottom">
         <Footer />
       </div>
-      <div className='header-bottom'>
+      <div className="header-bottom">
         <Header />
       </div>
     </div>
