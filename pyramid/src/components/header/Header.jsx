@@ -74,7 +74,7 @@ export default function Header() {
     <div className={s.header}>
       <div className={s.buttons}>
         <h1 className={s.tac_one_regular}>Pyramid</h1>
-        <a href="/">
+        <a href="/pyramid/">
           <Button
             icon={faArrowLeft}
             span={"CANCEL"}
@@ -88,12 +88,16 @@ export default function Header() {
           data_tooltip="Hint"
           onClick={hint}
         />
-        <a href="/">
-          <Button icon={faPlus} span={"NEW GAME"} data_tooltip="New Game" />
+        <a href="/pyramid/">
+          <Button
+            icon={faPlus}
+            span={"NEW GAME"}
+            data_tooltip="New Game"
+          />
         </a>
 
         {/* <Link to="/"> */}
-        <a href="/">
+        <a href="/pyramid/">
           <Button
             icon={faRotateLeft}
             span={"RESTART"}
@@ -115,10 +119,13 @@ export default function Header() {
         className={`${s.block_options}`}
         style={{ display: options ? "block" : "none" }}
       >
-        <div onClick={openOptions} className={s.close_options}></div>
+        <div
+          onClick={openOptions}
+          className={s.close_options}
+        ></div>
         <div className={`${s.options}`}>
           {rools ? (
-            <>
+            <div>
               <h5>About game</h5>
               <p>
                 Цель игры — разобрать пирамиду, подбирая карты так, чтобы в
@@ -135,9 +142,9 @@ export default function Header() {
                 стоила 13 очков. Вы можете использовать только те карты, которые
                 не заблокированы другими картами.
               </p>
-            </>
+            </div>
           ) : (
-            <>
+            <div>
               <h4>Backgrounds:</h4>
               <div className={`${s.backgrounds}`}>
                 <div className={`${s.block}`}>
@@ -175,7 +182,7 @@ export default function Header() {
                   />
                 ))}
               </div>
-            </>
+            </div>
           )}
 
           <div className="backs">
