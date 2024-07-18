@@ -40,7 +40,7 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
     // console.log("el", el);
     // console.log(comparison);
     // console.log(animate);
-    console.log(windowWidth);
+
     dispatch(setHint(false));
     if (
       card.forRule[card.rule[index].rule[0]] === 0 &&
@@ -60,31 +60,37 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
       //   dispatch(setBackStep());
       //   dispatch(setShowCard(index));
       //   return;
+
+      if (card.bodyPlay[0] === 99) {
+        dispatch(setBodyGame(index));
+        return;
+      }
+
+      if (el.point + card.cards[card.bodyPlay[0]].point === 13) {
+        //dispatch(setBodyGameToo(card.bodyPlay[0]));
+        setComparison(true);
+        dispatch(setForRule(index));
+        dispatch(setForRule(card.bodyPlay[0]));
+        dispatch(setShowCard(index));
+        dispatch(setSteps());
+
+        // dispatch(setForRule(99));
+        // dispatch(setBodyGameToo(-1));
+      }
+
       if (card.rezCount >= 0) {
         if (forCard.point + card.rez[card.rezCount].point === 13) {
           setComparison(true);
           dispatch(setForRule(index));
-          dispatch(setBackStep());
+          dispatch(setBackStep()); //для исчезания из реза внизу
           dispatch(setShowCard(index));
           dispatch(setSteps());
+          dispatch(setForRule(99));
+          dispatch(setBodyGameToo(-1));
           return;
         }
-      }
-      if (card.bodyPlay[0] === 29) {
-        dispatch(setBodyGame(index));
-        return;
-      }
-      if (card.bodyPlay[0] < 29) {
-        if (el.point + card.cards[card.bodyPlay[0]].point === 13) {
-          dispatch(setBodyGameToo(card.bodyPlay[0]));
-          setComparison(true);
-          dispatch(setForRule(index));
-          dispatch(setForRule(card.bodyPlay[0]));
-          dispatch(setShowCard(index));
-          dispatch(setSteps());
-        }
 
-        dispatch(setBodyGame(29));
+        dispatch(setBodyGame(99));
         return;
       }
     }

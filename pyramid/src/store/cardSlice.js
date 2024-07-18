@@ -59,7 +59,7 @@ const cardSlice = createSlice({
       ? JSON.parse(localStorage.getItem("bgcolor"))
       : 1,
     hint: false,
-    bodyPlay: [29, -1],
+    bodyPlay: [99, -1],
     doBack: false,
     backCard: localStorage.getItem("backCard")
       ? JSON.parse(localStorage.getItem("backCard"))
@@ -119,8 +119,12 @@ const cardSlice = createSlice({
     // },
     // checkRule(state) {},
     setForRule(state, action) {
+      // if (state.steps == 0) {
+      //   localStorage.setItem("step0", JSON.stringify(state));
+      // }
       const updateForRule = [...state.forRule];
       updateForRule[action.payload] = 0;
+      console.log(action.payload);
       return {
         ...state,
         forRule: updateForRule,
@@ -145,7 +149,8 @@ const cardSlice = createSlice({
       state.doBack = false;
     },
     setShowCard(state, action) {
-      state.cards[action.payload].show = false;
+      // state.cards[action.payload].show = false;
+      console.log("try show card", action);
     },
     setCardBackIndex(state, action) {
       state.backCard = action.payload;
