@@ -108,9 +108,9 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
         pointerEvents:
           comparison || card.forRule[index] === 0 ? "none" : "auto",
 
-        width: windowWidth < 500 ? "55px" : `calc(80px + ${card.cardWidth}px)`,
+        width: windowWidth < 500 ? "55px" : `calc(90px + ${card.cardWidth}px)`,
         height:
-          windowWidth < 500 ? "83px" : `calc(120px + ${card.cardHeight}px)`,
+          windowWidth < 500 ? "83px" : `calc(135px + ${card.cardHeight}px)`,
         transform: bodyGame ? "scale(1.2)" : "scale(1)",
       }}
       onClick={() => actionCard(el)}
