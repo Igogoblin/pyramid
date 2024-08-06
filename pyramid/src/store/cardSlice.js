@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import allCards from "./cards.json";
 import rule from "./rule.json";
 // localStorage.clear();
+
 const cardSlice = createSlice({
   name: "pyramid",
 
@@ -148,10 +149,10 @@ const cardSlice = createSlice({
     setBackStepNorm(state) {
       state.doBack = false;
     },
-    setShowCard(state, action) {
-      // state.cards[action.payload].show = false;
-      console.log("try show card", action);
-    },
+    // setShowCard(state, action) {
+    //   // state.cards[action.payload].show = false;
+    //   console.log("try show card", action);
+    // },
     setCardBackIndex(state, action) {
       state.backCard = action.payload;
       localStorage.setItem("backCard", JSON.stringify(action.payload));
@@ -165,9 +166,9 @@ const cardSlice = createSlice({
       console.log("Мы сохранили шаг по номером - ", `steps${state.steps}`);
     },
     restart(state) {
-      localStorage("мы сюда не заходим");
+      console.log("мы сюда не заходим");
       state.steps = 0;
-      localStorage.setItem("step0", JSON.stringify(state));
+      localStorage.setItem(`step${state.steps}`, JSON.stringify(state));
       localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
     },
     stepBack(state) {
@@ -180,7 +181,6 @@ const cardSlice = createSlice({
         // localStorage.setItem("stepNum", state.steps - 1);
         localStorage.setItem("stepNum", state.steps);
       } else {
-        localStorage("мы сюда не заходим");
         state.steps = 0;
         localStorage.setItem("step0", JSON.stringify(state));
         localStorage.setItem("restartPyramidTrue", JSON.stringify(true));

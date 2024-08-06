@@ -6,7 +6,7 @@ import {
   setBodyGame,
   setBackStep,
   setBodyGameToo,
-  setShowCard,
+  // setShowCard,
   setHint,
   setSteps,
 } from "../../store/cardSlice";
@@ -49,7 +49,7 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
       if (forCard.point === 13) {
         setComparison(true);
         dispatch(setForRule(index));
-        dispatch(setShowCard(index));
+        // dispatch(setShowCard(index));
         dispatch(setSteps());
         return;
       }
@@ -66,16 +66,41 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
         return;
       }
 
+      // ЗАКОНЧИЛИ ЗДЕСЬ -----
+      //ПОЧЕМУ ФАЙНД НЕ РАБОТАЕТ И ПРОХОДИТСЯ 2 РАЗА
+      if (card.bodyPlay[0] === index) {
+        // повторное нажатие
+        card.cards.find((el, index) => {
+          if (
+            index < 28 &&
+            card.forRule[card.rule[index].rule[0]] === 0 &&
+            card.forRule[card.rule[index].rule[1]] === 0 &&
+            el.point + card.cards[card.bodyPlay[0]].point === 13
+          ) {
+            dispatch(setBodyGame(99));
+            dispatch(setBodyGameToo(-1));
+            setComparison(true);
+            dispatch(setForRule(index));
+            dispatch(setForRule(card.bodyPlay[0]));
+            console.log("index ", index);
+            console.log(card.bodyPlay[0]);
+            // dispatch(setShowCard(index));
+            dispatch(setSteps());
+          }
+        });
+        return;
+      }
+
       if (el.point + card.cards[card.bodyPlay[0]].point === 13) {
         //dispatch(setBodyGameToo(card.bodyPlay[0]));
         setComparison(true);
         dispatch(setForRule(index));
         dispatch(setForRule(card.bodyPlay[0]));
-        dispatch(setShowCard(index));
+        // dispatch(setShowCard(index));
         dispatch(setSteps());
 
-        // dispatch(setForRule(99));
-        // dispatch(setBodyGameToo(-1));
+        dispatch(setBodyGame(99));
+        dispatch(setBodyGameToo(-1));
       }
 
       if (card.rezCount >= 0) {
@@ -83,16 +108,16 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
           setComparison(true);
           dispatch(setForRule(index));
           dispatch(setBackStep()); //для исчезания из реза внизу
-          dispatch(setShowCard(index));
+          // dispatch(setShowCard(index));
           dispatch(setSteps());
           dispatch(setForRule(99));
           dispatch(setBodyGameToo(-1));
           return;
         }
-
-        dispatch(setBodyGame(99));
-        return;
       }
+
+      dispatch(setBodyGame(99));
+      return;
     }
   }
 

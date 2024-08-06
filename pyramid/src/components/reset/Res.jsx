@@ -11,7 +11,7 @@ const Res = () => {
     const otbCard = card.otb.length + 27; // индексом в картах через отбой
     console.log(otbCard);
 
-    dispatch(setBodyGame(otbCard));
+    // dispatch(setBodyGame(otbCard));
   }
 
   return (

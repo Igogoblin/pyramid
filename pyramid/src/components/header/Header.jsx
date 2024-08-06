@@ -69,7 +69,7 @@ export default function Header() {
     localStorage.setItem("restartPyramidTrue", false);
     localStorage.setItem("stepTrue", false);
   }, []);
-  // localStorage.clear();
+
   return (
     <div className={s.header}>
       <div className={s.buttons}>

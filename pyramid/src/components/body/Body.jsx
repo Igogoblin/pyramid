@@ -66,7 +66,7 @@ const Body = () => {
 
   const checkPlay = (index) => {
     if (card.bodyPlay[0] === index) {
-      dispatch(setBodyGameToo(-1));
+      // dispatch(setBodyGameToo(-1));
       return true;
     }
     return false;
