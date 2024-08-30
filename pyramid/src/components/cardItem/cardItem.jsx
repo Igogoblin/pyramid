@@ -40,6 +40,10 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
     // console.log("el", el);
     // console.log(comparison);
     // console.log(animate);
+    if (card.steps == 0) {
+      localStorage.setItem("step0", JSON.stringify(card));
+      localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
+    }
 
     dispatch(setHint(false));
     if (
@@ -88,6 +92,21 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
             dispatch(setSteps());
           }
         });
+
+        if (card.rezCount >= 0) {
+          if (forCard.point + card.rez[card.rezCount].point === 13) {
+            setComparison(true);
+            dispatch(setForRule(index));
+            dispatch(setBackStep()); //для исчезания из реза внизу
+            // dispatch(setShowCard(index));
+            dispatch(setSteps());
+            dispatch(setForRule(99));
+            dispatch(setBodyGameToo(-1));
+          }
+        }
+
+        dispatch(setBodyGame(99));
+
         return;
       }
 
@@ -101,19 +120,6 @@ const CardItem = ({ el, index, animate, bodyGame }) => {
 
         dispatch(setBodyGame(99));
         dispatch(setBodyGameToo(-1));
-      }
-
-      if (card.rezCount >= 0) {
-        if (forCard.point + card.rez[card.rezCount].point === 13) {
-          setComparison(true);
-          dispatch(setForRule(index));
-          dispatch(setBackStep()); //для исчезания из реза внизу
-          // dispatch(setShowCard(index));
-          dispatch(setSteps());
-          dispatch(setForRule(99));
-          dispatch(setBodyGameToo(-1));
-          return;
-        }
       }
 
       dispatch(setBodyGame(99));

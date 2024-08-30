@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const BackCard = () => {
   const dispatch = useDispatch();
+  const card = useSelector((state) => state.pyramid);
   const backImage = useSelector((state) => state.pyramid.backs);
   const backImageIndex = useSelector((state) => state.pyramid.backCard);
 
@@ -21,6 +22,10 @@ const BackCard = () => {
     dispatch(setOtb());
     dispatch(setHint(false));
     dispatch(setSteps());
+    if (card.steps == 0) {
+      localStorage.setItem("step0", JSON.stringify(card));
+      localStorage.setItem("restartPyramidTrue", JSON.stringify(true));
+    }
     // dispatch(createRule()); в будущем может понадобится
   }
 
